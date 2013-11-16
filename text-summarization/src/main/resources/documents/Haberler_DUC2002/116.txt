@@ -1,0 +1,54 @@
+health: test identifies patients at risk of heart attack
+the experiment also hinted that the blood and urine test, which measures the activity of a blood protein called renin, might suggest a new "risk factor" for heart attacks.
+about half of the 1.5 million americans who suffer a heart attack each year don't have the known risk factors for heart disease, such as high cholesterol levels, cigarette smoking, obesity and high blood pressure.
+it is unknown what distinguishes these seemingly healthy people from those who don't suffer heart attacks.
+the blood and urine test is already being done in many commercial laboratories but for medical conditions other than heart attack risk, said john h.
+laragh of the cardiovascular center at cornell university and new york hospital.
+"in our hands, it cost about $40 and in other labs it may cost the patient $40 to $80," he said.
+dr. laragh pioneered the research underlying use of the test, which was developed by his wife, biochemist jean e.
+sealey. the test, which isn't patented, is available in kit form to laboratories.
+the blood portion of the test determines whether the kidneys are releasing renin into the blood stream and how active the chemical is.
+the release of renin is the first step in a rapid chemical chain reaction that raises blood pressure.
+the urine portion of the test tells how much salt is in the bloodstream.
+a high concentration of salt in the blood also raises pressure.
+the test is based on the fact that if the salt concentration in the blood rises, tending to boost blood pressure, the activity of the renin normally drops to offset the effect of the salt.
+the new experiment was designed to test a theory put forth by dr.
+laragh and his colleagues that the activity of the renin in the blood foretells a possible heart attack.
+the theory has provoked sometimes furious controversy for almost 20 years.
+the cornell cardiologist has argued that in many people with high blood pressure the activity of the renin in the blood is much higher than is warranted by the amount of salt in the blood.
+such "high renin" people are at a high risk of a heart attack.
+on the other hand, in other patients with high blood pressure, the activity of the renin is much lower than is warranted by the degree of salt in the blood.
+these "low renin" people are at a low risk of heart attack, dr.
+laragh has maintained.
+in the experiment, blood and urine samples were obtained at new york city offices and factories from 1,717 workers found to have mild to moderate high blood pressure.
+the patients' high blood pressure was initially discovered in a screening program carried out by michael h.
+alderman and his colleagues at albert einstein college of medicine, who operate a work-site blood pressure control program in cooperation with local unions.
+in 1981, dr.
+laragh's group began testing the renin activity in blood and urine samples collected by dr.
+alderman's team.
+they kept track of the workers for more than eight years to see which had heart attacks.
+the results, published in this week's new england journal of medicine, lend strong support to dr.
+laragh's theory.
+only 12% of the patients had high renin "profiles".
+but the seven heart attacks in this small group constituted the highest incidence of heart attacks among the patients, 13 heart attacks per 1,000 person-years of observation.
+the incidence in the high renin patients was more than double the incidence in those with a normal renin profile -- 5.3 heart attacks per 1,000 person-years -- and more than triple that of the patients with a low renin profile, 3.3 per 1,000 person-years, drs.
+alderman, laragh and their respective colleagues reported.
+regardless of how the statisticians broke down the patients into various groups, those with high renin profiles almost invariably had the highest incidence of heart attacks.
+smokers had more heart attacks than nonsmokers, but the incidence of attacks in smokers with high renin profiles was more than six times that in smokers with low renin profiles.
+"but the real dynamite is in the patients who didn't have any of the usual risk factors," dr.
+laragh said in an interview.
+among patients who had normal blood cholesterol level and were free of diabetes, "those with high renin profiles were seven times more likely to have a myocardial infarction {heart attack} than those with normal or low renin profiles," the researchers wrote.
+there were no heart attacks among the 240 patients with low renin profiles who had no risk factors other than high blood pressure.
+to dr.
+laragh, this suggests that a high renin profile might signal a high risk of heart attack even for people without high blood pressure.
+"we think everybody should have this simple and accurate test," he said in the interview.
+"it's a new window into heart disease".
+in an accompanying editorial, victor j.
+dzau of stanford university medical school said the study shows that the renin profile test is "potentially useful" in identifying high blood pressure patients who are at risk of a heart attack.
+but, he wrote, "a larger, population-based study will be important in confirming the results of this paper".
+the experiment has implications for drug makers as well as patients.
+apparently by coincidence, abbott laboratories announced on tuesday that is developing a high blood pressure drug that works by inhibiting the activity of renin.
+other major drug makers are thought to also be working on renin inhibitors.
+the experiment hints these drugs might also protect patients from heart attacks.
+a big-selling class of high blood pressure drugs, including bristol-myers squibb corp.'s capoten and merck & co.'s vasotec, are known as ace inhibitors because they work by stopping renin in the blood from being converted to a second chemical called angiotensin.
+studies are under way to see if these ace inhibitors protect patients against heart attacks as well as lower their blood pressure.

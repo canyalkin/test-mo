@@ -1,0 +1,5 @@
+the discovery crew deployed the hubble space telescope (hst) on wednesday but stayed nearby in case there was trouble opening the aperture door.
+the door was opened friday morning, exposing the telescope's finely polished 95.5-inch eye to starlight for the first time.
+when the door opened, however, two of hst's four position- stabilizing gyroscopes stopped working.
+engineers got the gyroscopes back on line, but there were still problems with linking the high-speed dish antennas with a relay satellite so the planned release on tuesday of hst's first test image has been delayed.
+scientific data will follow in a month or two.

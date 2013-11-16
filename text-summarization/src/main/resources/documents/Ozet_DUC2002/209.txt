@@ -1,0 +1,6 @@
+supercomputers and satellites helped predict the path and landfall of hurricane hugo in time to allow evacuation of charleston, s.c., but hurricane tracking is not an exact science.
+the intensity of hugo was upgraded on the basis of air force reconnaissance just hours before it hit charleston.
+there are no reliable computer models for forecasting strength.
+to predict the path, supercomputers use satellite data to make constantly changing predictions.
+forecasters analyze the predictions, satellite data, the history of similar storms and the current path to make an educated guess about the landfall.
+the best information for predicting hurricanes still comes from flying airplanes into the hurricane.
