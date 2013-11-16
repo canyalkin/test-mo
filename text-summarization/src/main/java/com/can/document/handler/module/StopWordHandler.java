@@ -17,12 +17,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import com.can.summarizer.interfaces.IStopWord;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.Word;
 
 
-public class StopWordHandler {
+public class StopWordHandler implements IStopWord {
 	private static StopWordHandler INSTANCE=null;
 	private static final Logger LOGGER = Logger.getLogger(StopWordHandler.class);
 	private HashSet<String> stopWrods=new HashSet<String>(100);
@@ -64,7 +65,7 @@ public class StopWordHandler {
 		return INSTANCE;
 	}
 	
-	
+	@Override
 	public synchronized Document doStopWordElimination(Document aDocument){
 		
 		List<Sentence> sentenceList = aDocument.getSentenceList();

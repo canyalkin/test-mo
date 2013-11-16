@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.document.handler.module.DocumentReader;
@@ -32,8 +33,11 @@ public class BulkDocumentReader {
 	private ApplicationContext context;
 	HashMap <String,Document> documentMap=null;
 	
+	@Autowired
+	Environment environment;
+	
 
-	public Map<String,Document> doBulkRead(String path){
+	public Map<String,Document> doBulkRead(String path,boolean isRef){
 		documentMap=new HashMap<String,Document>(1000);
 		File file=new File(path);
 		
@@ -46,8 +50,14 @@ public class BulkDocumentReader {
 					
 					documentReader.setFile(curFile);
 					Document document=documentReader.createDocument();
-					document=stopWordHandler.doStopWordElimination(document);
-					document=wordStemmer.doStemming(document);
+					if(isRef){
+						if(isStopWordElimination()){
+							document=stopWordHandler.doStopWordElimination(document);
+						}
+						if(isStemming()){
+							document=wordStemmer.doStemming(document);
+						}
+					}
 					documentMap.put(curFile.getName(), document);
 				}
 			}
@@ -56,6 +66,28 @@ public class BulkDocumentReader {
 		}
 		return documentMap;
 		
+	}
+
+	private boolean isStemming() {
+		String stopWordElimination = (environment.getProperty("stopWordElimination"));
+		if(stopWordElimination==null)
+			stopWordElimination="true";
+		if(stopWordElimination.equalsIgnoreCase("true")){
+			return(true);
+		}else{
+			return (false);
+		}
+	}
+
+	private boolean isStopWordElimination() {
+		String stopWordElimination = (environment.getProperty("stopWordElimination"));
+		if(stopWordElimination==null)
+			stopWordElimination="true";
+		if(stopWordElimination.equalsIgnoreCase("true")){
+			return(true);
+		}else{
+			return(false);
+		}
 	}
 
 	/**

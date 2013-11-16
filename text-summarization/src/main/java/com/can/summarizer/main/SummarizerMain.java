@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.env.Environment;
 
+import com.can.document.handler.module.BulkDocumentHandler;
 import com.can.document.handler.module.StopWordHandler;
 import com.can.document.reader.BulkDocumentReader;
 import com.can.document.reader.SingleDocumentReader;
@@ -82,78 +83,25 @@ public class SummarizerMain {
 		/***
 		 * Bulk Read
 		 */
-		long freeMemory1=Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-		BulkDocumentReader systemDocuments = context.getBean(BulkDocumentReader.class);
-		long t1=System.currentTimeMillis();
-		systemDocuments.doBulkRead(env.getProperty("docFolder"));
-		long t2=System.currentTimeMillis();
-		long freeMemory2=Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
-		LOGGER.info("bulk read of system documents takes:"+(t2-t1)/1000+" seconds");
-		LOGGER.info("memory usage: "+(freeMemory2-freeMemory1)/(1024*1024.0)+" MB");
+		BulkDocumentReader systemDocuments = BulkDocumentHandler.doBulkRead(context, env);
 		
 		/**
 		 * Do bulk summarization, create system summaries and update system document map
 		 */
-		AbstractSummarizer summarizer=(AbstractSummarizer)context.getBean(AbstractSummarizer.class);
-		Map<String, Document> systemDocMap = systemDocuments.getDocumentMap();
-		Set<String> files = systemDocMap.keySet();
-		for (String curFile : files) {
-			LOGGER.info("*****cur file: "+curFile);
-			Document document=systemDocMap.get(curFile);
-			Document summary=summarizer.doSummary(document);
-			systemDocMap.put(curFile, summary);
-			
-		}
-		
+		BulkDocumentHandler.doBulkSummarization(context, systemDocuments);
 		
 		/***
 		 * Bulk Read for reference
 		 */
-		BulkDocumentReader referenceDocuments = context.getBean(BulkDocumentReader.class);
-		t1=System.currentTimeMillis();
-		referenceDocuments.doBulkRead(env.getProperty("humanSummary"));
-		t2=System.currentTimeMillis();
-		LOGGER.info("bulk read of reference documents  takes:"+(t2-t1)/1000+" seconds");
-		
+		BulkDocumentReader referenceDocuments = BulkDocumentHandler.doBulkReferenceRead(context,
+				env);
 		/**
 		 * Bulk evaluation
 		 */
-		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
-				systemDocuments, referenceDocuments, Integer.parseInt(env.getProperty("nGramNumber")), RougeNType.getFromValue(env.getProperty("nGramType")));
+		BulkDocumentHandler.doBulkEvaluation(env, systemDocuments, referenceDocuments);
 		
-		try {
-			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
-			Set<String> evaluatedFiles = results.keySet();
-			for (String string : evaluatedFiles) {
-				System.out.println(string+":"+results.get(string));
-			}
-			
-		} catch (MissingFileException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}catch (Exception e){
-			
-		}
-		
-		
-		//AbstractSummarizer summarizer=(AbstractSummarizer)context.getBean(AbstractSummarizer.class);
-		//Document summarizedDocument=summarizer.doSummary(document);
-		//System.out.println(summarizedDocument);
 		
 	}
-	private static void print(Document sumDoc) {
-		List<Sentence> sList = sumDoc.getSentenceList();
-		for (Sentence sentence : sList) {
-			System.out.println(sentence.getOriginalSentence());
-		}
-		
-	}
-	public static void createNGramForDocument(Document document,RougeNType rougeNType,int n) {
-		List<Sentence> sentenceList = document.getSentenceList();
-		for (Sentence sentence : sentenceList) {
-			LinkedList<String> nGramList = NGramCalculator.findNGram(n, sentence, rougeNType);
-			sentence.setNgramList(nGramList);
-		}
-	}
+	
 
 }
