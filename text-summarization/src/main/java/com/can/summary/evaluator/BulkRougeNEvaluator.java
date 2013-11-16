@@ -23,7 +23,7 @@ public class BulkRougeNEvaluator {
 	private int n=3;
 	private BulkDocumentReader systemSum, referenceSum;
 	private RougeNType rougeNType=RougeNType.charBased;
-	
+	Map<String,Double> documentMap;
 	public BulkRougeNEvaluator(BulkDocumentReader systemSum,BulkDocumentReader referenceSum,int n,RougeNType rougeNType) {
 		this.systemSum=systemSum;
 		this.referenceSum=referenceSum;
@@ -37,7 +37,7 @@ public class BulkRougeNEvaluator {
 		Map<String, Document> sysSumMap = systemSum.getDocumentMap();
 		Map<String, Document> refSumMap = referenceSum.getDocumentMap();
 		
-		Map<String,Double> result=new HashMap<String, Double>();
+		documentMap=new HashMap<String, Double>();
 		Set<String> fileSet = sysSumMap.keySet();
 		for (String file : fileSet) {
 			Document sysDocument =sysSumMap.get(file);
@@ -53,11 +53,26 @@ public class BulkRougeNEvaluator {
 			rougeNCalculator.setSystemSentences(sysDocument.getSentenceList());
 			
 			Double value = rougeNCalculator.calculateRougeN(n);
-			result.put(file, value);
+			documentMap.put(file, value);
 			
 		}
-		return result;
+		return documentMap;
 		
+	}
+	
+	public double calculateAverageValue(){
+		double avg=0.0;
+		LOGGER.info("Bulk Rouge N Evaluator: Calculate Average");
+		if(documentMap.size()!=0){
+			LOGGER.info("Document number: "+documentMap.size());
+			Set<String> evaluatedFiles = documentMap.keySet();
+			for (String string : evaluatedFiles) {
+				avg+=documentMap.get(string);
+			}
+			LOGGER.info("Document number sum: "+avg);
+			avg=avg/documentMap.size();
+		}
+		return avg;
 	}
 
 	private void createNGramForDocument(Document document) {
