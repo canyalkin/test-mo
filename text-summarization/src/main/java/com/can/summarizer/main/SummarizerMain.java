@@ -16,6 +16,7 @@ import com.can.summarizer.model.Document;
 import com.can.summarizer.model.RougeNType;
 import com.can.summary.calculations.NGramCalculator;
 import com.can.summary.module.AbstractSummarizer;
+import com.can.word.utils.PropertyHandler;
 
 public class SummarizerMain {
 
@@ -26,8 +27,7 @@ public class SummarizerMain {
 	public static void main(String[] args) {
 
 		ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
-		//DocumentReader documentReader=(DocumentReader)context.getBean(DocumentReader.class);
-		Environment env=context.getBean(Environment.class);
+		PropertyHandler propertyHandler=context.getBean(PropertyHandler.class);
 
 		/***
 		 * Single file read
@@ -38,15 +38,13 @@ public class SummarizerMain {
 		 * 
 		 */
 		SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
-		singleDocumentHandler.readDocument(env.getProperty("file"));
+		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
 		
+		Document refDocument=singleDocumentHandler.readRefDocument(propertyHandler.getRefDocumentName());
+		Double result=singleDocumentHandler.calculateRougeN(sysSum,refDocument,propertyHandler.getRougeNType(),
+				propertyHandler.getRougeNNumber());
 
-		Document refDocument=singleDocumentHandler.readRefDocument(env.getProperty("sum"));
-		Double result=singleDocumentHandler.calculateRougeN(sysSum,refDocument,RougeNType.wordBased,1);
-
-		
-		
 		System.out.println("Rouge -N result:"+result);
 		System.out.println(sysSum);
 		

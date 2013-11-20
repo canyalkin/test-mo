@@ -30,8 +30,8 @@ public class SummaryFitness extends FitnessFunction {
 		double CF=calculateCohesionFactor(chromosome);
 		double RF=calculateReadibilityFactor(chromosome);
 		if(0.5*CF+0.5*RF>1){
-			System.out.println("CF:"+CF);
-			System.out.println("RF:"+RF);
+			LOGGER.debug("CF:"+CF);
+			LOGGER.debug("RF:"+RF);
 			
 			printGene(chromosome.getGenes());
 		}
@@ -92,12 +92,12 @@ public class SummaryFitness extends FitnessFunction {
 	}
 	
 	private static void printGene(Gene[] genes) {
-		System.out.println("printGene....");
+		LOGGER.debug("printGene....");
 		for (int i=0;i<genes.length;i++) {
 			int[] value = (int[]) genes[i].getAllele();
-			System.out.println("Gene ("+i+"):"+value[0]);
+			LOGGER.debug("Gene ("+i+"):"+value[0]);
 		}
-		System.out.println("printGene.... ENDs");
+		LOGGER.debug("printGene.... ENDs");
 	}
 
 

@@ -11,6 +11,7 @@ import com.can.document.handler.module.StopWordHandler;
 import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.interfaces.SummaryStrategy;
 import com.can.summarizer.model.Document;
+import com.can.word.utils.PropertyHandler;
 
 @Component
 public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProcessor {
@@ -30,8 +31,9 @@ public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProc
 	@Autowired
 	IWordStemmer wordStemmer;
 	
+	
 	@Autowired
-	private Environment env;
+	private PropertyHandler propertyHandler;
 		
 	public AbstractSummarizer(String summarizerName) {
 		super();
@@ -42,22 +44,9 @@ public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProc
 	public AbstractSummarizer() {
 	}
 	
-
-	/*public Object postProcessAfterInitialization(Object bean, String beanName)
-			throws BeansException {
-		
-		return bean;
-	}*/
-
 	public void getStemmingFromProperty() {
-		String stemming=(env.getProperty("stemming"));
-		if(stemming==null)
-			stemming="true";
-		if(stemming.equalsIgnoreCase("true")){
-			setStemming(true);
-		}else{
-			setStemming(false);
-		}
+		setStemming(propertyHandler.isStemming());
+		
 	}
 
 	public void getStopWordEliminationFromProperty() {
@@ -66,34 +55,13 @@ public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProc
 	}
 
 	public void extractSummPropFromProperties() {
-		String summaryProportion=env.getProperty("summaryProportion");
-		if(summaryProportion==null){
-			this.setSummaryProportion(0.25);
-		}else {
-			this.setSummaryProportion(Double.parseDouble(summaryProportion));
-		}
+		setSummaryProportion(propertyHandler.getSummaryProportion());
+		
 	}
 
 	private void extractStopWordEliminationFromProperties() {
-		String stopWordElimination = (env.getProperty("stopWordElimination"));
-		if(stopWordElimination==null)
-			stopWordElimination="true";
-		if(stopWordElimination.equalsIgnoreCase("true")){
-			setStopWordElimination(true);
-		}else{
-			setStopWordElimination(false);
-		}
+		setStopWordElimination(propertyHandler.isStopWordElimination());
 	}
-	
-
-	/*public Object postProcessBeforeInitialization(Object bean, String beanName)
-			throws BeansException {
-		getStopWordEliminationFromProperty();
-		getStemmingFromProperty();
-		extractSummPropFromProperties();
-		return bean;
-	}*/
-
 	
 	public void doStopWordElimination(){
 		setDocumentToBeSummarized(stopWordHandler.doStopWordElimination(getDocumentToBeSummarized()));		
@@ -140,19 +108,6 @@ public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProc
 		this.documentToBeSummarized = documentToBeSummarized;
 	}
 
-	/**
-	 * @return the env
-	 */
-	public Environment getEnv() {
-		return env;
-	}
-
-	/**
-	 * @param env the env to set
-	 */
-	public void setEnv(Environment env) {
-		this.env = env;
-	}
 
 	/**
 	 * @return the numberOfSentences

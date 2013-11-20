@@ -17,6 +17,7 @@ import com.can.document.handler.module.DocumentReader;
 import com.can.document.handler.module.StopWordHandler;
 import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.model.Document;
+import com.can.word.utils.PropertyHandler;
 
 @Component
 @Scope("prototype")
@@ -36,7 +37,9 @@ public class BulkDocumentReader {
 	@Autowired
 	Environment environment;
 	
-
+	@Autowired
+	PropertyHandler propertyHandler;
+	
 	public Map<String,Document> doBulkRead(String path,boolean isRef){
 		documentMap=new HashMap<String,Document>(1000);
 		File file=new File(path);
@@ -51,10 +54,10 @@ public class BulkDocumentReader {
 					documentReader.setFile(curFile);
 					Document document=documentReader.createDocument();
 					if(isRef){
-						if(isStopWordElimination()){
+						if(propertyHandler.isStopWordElimination()){
 							document=stopWordHandler.doStopWordElimination(document);
 						}
-						if(isStemming()){
+						if(propertyHandler.isStemming()){
 							document=wordStemmer.doStemming(document);
 						}
 					}
@@ -68,27 +71,6 @@ public class BulkDocumentReader {
 		
 	}
 
-	private boolean isStemming() {
-		String stopWordElimination = (environment.getProperty("stopWordElimination"));
-		if(stopWordElimination==null)
-			stopWordElimination="true";
-		if(stopWordElimination.equalsIgnoreCase("true")){
-			return(true);
-		}else{
-			return (false);
-		}
-	}
-
-	private boolean isStopWordElimination() {
-		String stopWordElimination = (environment.getProperty("stopWordElimination"));
-		if(stopWordElimination==null)
-			stopWordElimination="true";
-		if(stopWordElimination.equalsIgnoreCase("true")){
-			return(true);
-		}else{
-			return(false);
-		}
-	}
 
 	/**
 	 * @return the documentMap

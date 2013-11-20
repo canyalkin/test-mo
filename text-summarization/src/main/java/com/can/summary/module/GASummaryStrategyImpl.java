@@ -30,6 +30,7 @@ import com.can.summary.GAFunctions.SummaryCrossover;
 import com.can.summary.GAFunctions.SummaryFitness;
 import com.can.summary.GAFunctions.SummaryMutation;
 import com.can.summary.calculations.FrequencyCalculator;
+import com.can.word.utils.PropertyHandler;
 
 @Component("GaStrategyBean")
 @Scope("singleton")
@@ -38,8 +39,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 	private static int GENERATION_NUMBER = 15;
 	private static double CROSSOVER_RATE=0.85;
 	private static int MUTATION_RATE=1000;
-	@Autowired
-	Environment environment;
+	
 	
 	private static int POPULATION_SIZE = 20;
 	private static final Logger LOGGER = Logger.getLogger(GASummaryStrategyImpl.class);
@@ -47,6 +47,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 	private HashMap<String, List<Double>> tfTable=null;
 	private HashMap<String, Double> isf=null;
 	
+	@Autowired
+	private PropertyHandler propertyHandler;
 	
 	public GASummaryStrategyImpl() {
 		super();
@@ -117,7 +119,6 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 			genotype.evolve();
 			double fitnesValue = genotype.getFittestChromosome().getFitnessValue();
 			LOGGER.debug("fitness value="+fitnesValue);
-			System.out.println("fitness value="+fitnesValue);
 		}
 	}
 
@@ -257,42 +258,25 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 
 
 	private void setMutationRate() {
-		try{
-			MUTATION_RATE=Integer.parseInt(environment.getProperty("mutation_rate"));
-		}catch (Exception e){
-			MUTATION_RATE=1000;
-			LOGGER.error(e.getMessage());
-		}
+		MUTATION_RATE=propertyHandler.getMutationRate();
 	}
 
 
 	private void setCrossoverRate() {
-		try{
-			CROSSOVER_RATE=Double.parseDouble(environment.getProperty("crossover_rate"));
-		}catch (Exception e){
-			CROSSOVER_RATE=0.85;
-			LOGGER.error(e.getMessage());
-		}
+		CROSSOVER_RATE=propertyHandler.getCrossoverRate();
+		
 	}
 
 
 	private void setGenerationNumber() {
-		try{
-			GENERATION_NUMBER=Integer.parseInt(environment.getProperty("generation_number"));
-		}catch (Exception e){
-			GENERATION_NUMBER=20;
-			LOGGER.error(e.getMessage());
-		}
+		GENERATION_NUMBER=propertyHandler.getGenerationNumber();
+		
 	}
 
 
 	private void setPopulationSize() {
-		try{
-			POPULATION_SIZE=Integer.parseInt(environment.getProperty("population_size"));
-		}catch (Exception e){
-			POPULATION_SIZE=20;
-			LOGGER.error(e.getMessage());
-		}
+		POPULATION_SIZE=propertyHandler.getPopulationNumber();
+		
 	}
 	
 

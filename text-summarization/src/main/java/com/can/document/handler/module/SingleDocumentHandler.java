@@ -33,6 +33,8 @@ public class SingleDocumentHandler {
 	@Qualifier("GaStrategyBean")
 	private AbstractSummarizer summarizer;
 	
+	@Autowired
+	private PropertyHandler propertyHandler;
 	private Document singleDoc;
 	private Document refDoc;
 
@@ -51,10 +53,10 @@ public class SingleDocumentHandler {
 	public Document readRefDocument(String file) {
 
 		refDoc = singleDocumentReader.readDocument(file);	
-		if(PropertyHandler.isStopWordElimination()){
+		if(propertyHandler.isStopWordElimination()){
 			refDoc=stopWordHandler.doStopWordElimination(refDoc);
 		}
-		if(PropertyHandler.isStemming()){
+		if(propertyHandler.isStemming()){
 			refDoc=wordStemmer.doStemming(refDoc);
 		}
 		return refDoc;
