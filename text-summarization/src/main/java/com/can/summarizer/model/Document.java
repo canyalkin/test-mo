@@ -49,7 +49,13 @@ public class Document {
 	 */
 	@Override
 	public String toString() {
-		return "Document [sentenceList=" + sentenceList + "]";
+		List<Sentence> sList = getSentenceList();
+		StringBuffer stringBuffer=new StringBuffer();
+		for (Sentence sentence : sList) {
+			stringBuffer.append((sentence.getOriginalSentence()));
+			stringBuffer.append("\n");
+		}
+		return stringBuffer.toString();
 	}
 	
 	

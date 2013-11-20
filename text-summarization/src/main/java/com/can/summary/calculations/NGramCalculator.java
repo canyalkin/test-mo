@@ -3,6 +3,7 @@ package com.can.summary.calculations;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.can.summarizer.model.Document;
 import com.can.summarizer.model.RougeNType;
 import com.can.summarizer.model.Sentence;
 
@@ -71,6 +72,14 @@ public class NGramCalculator {
 		}
 
 		return ngramOfSentece;
+	}
+
+	public static void createNGramForDocument(Document document,RougeNType rougeNType,int n) {
+		List<Sentence> sentenceList = document.getSentenceList();
+		for (Sentence sentence : sentenceList) {
+			LinkedList<String> nGramList = findNGram(n, sentence, rougeNType);
+			sentence.setNgramList(nGramList);
+		}
 	}
 
 }

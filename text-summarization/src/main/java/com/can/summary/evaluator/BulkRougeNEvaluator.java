@@ -46,8 +46,8 @@ public class BulkRougeNEvaluator {
 				LOGGER.error("sys Doc: "+sysDocument+" - ref doc: "+refDocument);
 				throw new MissingFileException(file);
 			}
-			createNGramForDocument(sysDocument);
-			createNGramForDocument(refDocument);
+			NGramCalculator.createNGramForDocument(sysDocument, rougeNType, n);
+			NGramCalculator.createNGramForDocument(refDocument, rougeNType, n);
 			
 			rougeNCalculator.setReferenceSentences(refDocument.getSentenceList());
 			rougeNCalculator.setSystemSentences(sysDocument.getSentenceList());
@@ -75,13 +75,5 @@ public class BulkRougeNEvaluator {
 		return avg;
 	}
 
-	private void createNGramForDocument(Document document) {
-		List<Sentence> sentenceList = document.getSentenceList();
-		for (Sentence sentence : sentenceList) {
-			LinkedList<String> nGramList = NGramCalculator.findNGram(n, sentence, rougeNType);
-			sentence.setNgramList(nGramList);
-		}
-	}
-	
 
 }

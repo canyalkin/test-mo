@@ -1,6 +1,5 @@
 package com.can.document.handler.module;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +16,6 @@ import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.RougeNType;
 import com.can.summarizer.model.Sentence;
-import com.can.summary.calculations.NGramCalculator;
 import com.can.summary.evaluator.BulkRougeNEvaluator;
 import com.can.summary.exceptions.MissingFileException;
 import com.can.summary.module.AbstractSummarizer;
@@ -72,20 +70,7 @@ public class BulkDocumentHandler {
 		LOGGER.info("memory usage: "+(freeMemory2-freeMemory1)/(1024*1024.0)+" MB");
 		return systemDocuments;
 	}
-	public static void print(Document sumDoc) {
-		List<Sentence> sList = sumDoc.getSentenceList();
-		for (Sentence sentence : sList) {
-			System.out.println(sentence.getOriginalSentence());
-		}
-		
-	}
-	public static void createNGramForDocument(Document document,RougeNType rougeNType,int n) {
-		List<Sentence> sentenceList = document.getSentenceList();
-		for (Sentence sentence : sentenceList) {
-			LinkedList<String> nGramList = NGramCalculator.findNGram(n, sentence, rougeNType);
-			sentence.setNgramList(nGramList);
-		}
-	}
+	
 	public static void doBulkEvaluation(Environment env,
 			BulkDocumentReader systemDocuments,
 			BulkDocumentReader referenceDocuments) {
