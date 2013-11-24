@@ -34,8 +34,6 @@ public class BulkDocumentReader {
 	private ApplicationContext context;
 	HashMap <String,Document> documentMap=null;
 	
-	@Autowired
-	Environment environment;
 	
 	@Autowired
 	PropertyHandler propertyHandler;

@@ -21,14 +21,16 @@ import com.can.summarizer.interfaces.IStopWord;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.Word;
+import com.can.word.utils.PropertyHandler;
 
 
 public class StopWordHandler implements IStopWord {
 	private static StopWordHandler INSTANCE=null;
 	private static final Logger LOGGER = Logger.getLogger(StopWordHandler.class);
 	private HashSet<String> stopWrods=new HashSet<String>(100);
+	
 	@Autowired
-	private Environment env;
+	PropertyHandler propertyHandler;
 	
 	private StopWordHandler(File stopWordFile) {
 		//File stopWordFile= new File(env.getProperty("stopWordsFile"));
@@ -69,7 +71,7 @@ public class StopWordHandler implements IStopWord {
 	public synchronized Document doStopWordElimination(Document aDocument){
 		
 		List<Sentence> sentenceList = aDocument.getSentenceList();
-		if(env.getProperty("title").equals("true")){
+		if(propertyHandler.hasTitle()){
 			LOGGER.info("-------------The Title-----------");
 			deleteStopWordsForTheGivenSentence(aDocument.getTitle());
 			LOGGER.info("-------------The Title ENDS!!!-----------");

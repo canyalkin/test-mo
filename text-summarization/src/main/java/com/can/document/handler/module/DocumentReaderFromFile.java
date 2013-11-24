@@ -11,19 +11,20 @@ import java.util.regex.PatternSyntaxException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
+import com.can.word.utils.PropertyHandler;
 
 @Component("docFromFile")
 @Scope("singleton")
 public class DocumentReaderFromFile extends DocumentReader {
 	private static final Logger LOGGER = Logger.getLogger(DocumentReaderFromFile.class);
-
+	
 	@Autowired
-	Environment environment;
+	PropertyHandler propertyHandler;
+	
 	public DocumentReaderFromFile() {
 	}
 	
@@ -43,7 +44,7 @@ public class DocumentReaderFromFile extends DocumentReader {
 				extractWordsAndSentences(line, wholeDocument);
 			}
 			document=new Document();
-			if(environment.getProperty("title").equals("true")){
+			if(propertyHandler.hasTitle()){
 				document.setTitle(wholeDocument.get(0));
 				wholeDocument.remove(0);
 			}

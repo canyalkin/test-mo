@@ -105,4 +105,16 @@ public class PropertyHandler {
 	public String getRefDocumentName(){
 		return environment.getProperty("sum");
 	}
+	
+	public boolean hasTitle(){
+		if(environment.getProperty("title").equals("true") || environment.getProperty("title").equals("yes")){
+			return true;
+		}
+		return false;
+	}
+	
+	public String getWordNetFolder(){
+		return environment.getProperty("wordNetFolder");
+	}
+	
 }

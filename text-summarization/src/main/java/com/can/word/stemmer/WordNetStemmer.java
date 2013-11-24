@@ -19,6 +19,7 @@ import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.Word;
+import com.can.word.utils.PropertyHandler;
 import com.can.word.utils.RegexWord;
 
 import edu.mit.jwi.Dictionary;
@@ -32,7 +33,8 @@ public class WordNetStemmer implements IWordStemmer,BeanPostProcessor {
 	private static final Logger LOGGER = Logger.getLogger(WordNetStemmer.class);
 	
 	@Autowired
-	Environment env;
+	PropertyHandler propertyHandler;
+	
 	private WordnetStemmer wordnetStemmer;
 	
 	public WordNetStemmer() {
@@ -55,7 +57,7 @@ public class WordNetStemmer implements IWordStemmer,BeanPostProcessor {
 	
 	public Document doStemming(Document document){
 		LOGGER.info("Stemming Starts...");
-		if(env.getProperty("title").equals("true")){
+		if(propertyHandler.hasTitle()){
 			LOGGER.info("-------------The Title-----------");
 			stemTheGivenSentence(document.getTitle());
 			LOGGER.info("-------------The Title ENDS!!!-----------");
@@ -91,7 +93,7 @@ public class WordNetStemmer implements IWordStemmer,BeanPostProcessor {
 	@Override
 	public Object postProcessAfterInitialization(Object bean, String beanName)
 			throws BeansException {
-		String wnhome = env.getProperty("wordNetFolder");
+		String wnhome = propertyHandler.getWordNetFolder();
 		String path = wnhome;
 		URL url;
 		try {
