@@ -1,21 +1,17 @@
 package com.can.document.handler.module;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.document.reader.BulkDocumentReader;
 import com.can.summarizer.interfaces.IStopWord;
 import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.model.Document;
-import com.can.summarizer.model.RougeNType;
-import com.can.summarizer.model.Sentence;
 import com.can.summary.evaluator.BulkRougeNEvaluator;
 import com.can.summary.exceptions.MissingFileException;
 import com.can.summary.module.AbstractSummarizer;

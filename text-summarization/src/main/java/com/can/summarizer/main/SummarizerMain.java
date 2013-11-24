@@ -3,19 +3,10 @@ package com.can.summarizer.main;
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.core.env.Environment;
 
 import com.can.document.handler.module.BulkDocumentHandler;
-import com.can.document.handler.module.SingleDocumentHandler;
-import com.can.document.reader.SingleDocumentReader;
-import com.can.success.calculations.RougeNCalculator;
+import com.can.document.reader.BulkDocumentReader;
 import com.can.summarizer.config.ApplicationConfiguration;
-import com.can.summarizer.interfaces.IStopWord;
-import com.can.summarizer.interfaces.IWordStemmer;
-import com.can.summarizer.model.Document;
-import com.can.summarizer.model.RougeNType;
-import com.can.summary.calculations.NGramCalculator;
-import com.can.summary.module.AbstractSummarizer;
 import com.can.word.utils.PropertyHandler;
 
 public class SummarizerMain {
@@ -37,7 +28,7 @@ public class SummarizerMain {
 		 * debug:10.061 sn
 		 * 
 		 */
-		SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
+		/*SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
 		
@@ -47,30 +38,30 @@ public class SummarizerMain {
 
 		System.out.println("Rouge -N result:"+result);
 		System.out.println(sysSum);
-		
-		
-	/*	
-		
-		*//***
-		 * Bulk Read
-		 *//*
-		BulkDocumentReader systemDocuments = BulkDocumentHandler.doBulkRead(context, env);
-		
-		*//**
-		 * Do bulk summarization, create system summaries and update system document map
-		 *//*
-		BulkDocumentHandler.doBulkSummarization(context, systemDocuments);
-		
-		*//***
-		 * Bulk Read for reference
-		 *//*
-		BulkDocumentReader referenceDocuments = BulkDocumentHandler.doBulkReferenceRead(context,
-				env);
-		*//**
-		 * Bulk evaluation
-		 *//*
-		BulkDocumentHandler.doBulkEvaluation(env, systemDocuments, referenceDocuments);
 		*/
+		
+		
+		BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
+		/***
+		 * Bulk Read
+		 */
+		BulkDocumentReader systemDocuments = bulkDocumentHandler.doBulkRead();
+		
+		/**
+		 * Do bulk summarization, create system summaries and update system document map
+		 */
+		
+		bulkDocumentHandler.doBulkSummarization(systemDocuments);
+		
+		/***
+		 * Bulk Read for reference
+		 */
+		BulkDocumentReader referenceDocuments = bulkDocumentHandler.doBulkReferenceRead();
+		/**
+		 * Bulk evaluation
+		 */
+		bulkDocumentHandler.doBulkEvaluation(systemDocuments, referenceDocuments);
+		
 		
 	}
 	

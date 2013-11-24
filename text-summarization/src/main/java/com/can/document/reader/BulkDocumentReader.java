@@ -41,9 +41,9 @@ public class BulkDocumentReader {
 	public Map<String,Document> doBulkRead(String path,boolean isRef){
 		documentMap=new HashMap<String,Document>(1000);
 		File file=new File(path);
-		
+		LOGGER.info("BulkRead started...");
 		if(file.isDirectory()){
-			LOGGER.debug(path+" is a directory.");
+			LOGGER.info(path+" is a directory.");
 			File[] filesInFolder = file.listFiles();
 			DocumentReader documentReader=(DocumentReader)context.getBean(DocumentReader.class);
 			for (File curFile : filesInFolder) {
@@ -65,6 +65,7 @@ public class BulkDocumentReader {
 		}else{
 			LOGGER.error("please supply directory and file structure");
 		}
+		LOGGER.info("BulkRead has finished...");
 		return documentMap;
 		
 	}
