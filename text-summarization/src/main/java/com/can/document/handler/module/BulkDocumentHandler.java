@@ -70,13 +70,22 @@ public class BulkDocumentHandler {
 			BulkDocumentReader referenceDocuments) {
 		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
 				systemDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
-		
+		double total=0.0;
+		double average=0.0;
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
 			for (String string : evaluatedFiles) {
 				LOGGER.info(string+":"+results.get(string));
+				total+=results.get(string);
 			}
+			LOGGER.info("values---start");
+			for (String string : evaluatedFiles) {
+				LOGGER.info(results.get(string));
+			}
+			LOGGER.info("values---end");
+			average=total/evaluatedFiles.size();
+			LOGGER.info("Average:"+average);
 			
 		} catch (MissingFileException e) {
 			// TODO Auto-generated catch block
