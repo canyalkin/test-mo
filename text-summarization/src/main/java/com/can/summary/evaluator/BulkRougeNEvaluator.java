@@ -20,13 +20,16 @@ import com.can.summary.exceptions.NotValidRougeNTypeException;
 
 public class BulkRougeNEvaluator {
 	private static final Logger LOGGER = Logger.getLogger(BulkRougeNEvaluator.class);
-	private int n=3;
-	private BulkDocumentReader systemSum, referenceSum;
-	private RougeNType rougeNType=RougeNType.charBased;
+	private int n=1;
+	
+	Map<String, Document> sysSumMap;
+	Map<String, Document> refSumMap;
+	
+	private RougeNType rougeNType=RougeNType.wordBased;
 	Map<String,Double> documentMap;
-	public BulkRougeNEvaluator(BulkDocumentReader systemSum,BulkDocumentReader referenceSum,int n,RougeNType rougeNType) {
-		this.systemSum=systemSum;
-		this.referenceSum=referenceSum;
+	public BulkRougeNEvaluator(Map<String, Document> systemSum,Map<String, Document> referenceSum,int n,RougeNType rougeNType) {
+		this.sysSumMap=systemSum;
+		this.refSumMap=referenceSum;
 		this.n=n;
 		this.rougeNType=rougeNType;
 	}
@@ -34,9 +37,7 @@ public class BulkRougeNEvaluator {
 	public Map<String,Double> calculateRougeN() throws MissingFileException{
 		
 		RougeNCalculator rougeNCalculator=new RougeNCalculator();
-		Map<String, Document> sysSumMap = systemSum.getDocumentMap();
-		Map<String, Document> refSumMap = referenceSum.getDocumentMap();
-		
+				
 		documentMap=new HashMap<String, Double>();
 		Set<String> fileSet = sysSumMap.keySet();
 		for (String file : fileSet) {

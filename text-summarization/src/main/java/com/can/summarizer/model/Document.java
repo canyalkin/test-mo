@@ -6,7 +6,7 @@ public class Document {
 	
 	Sentence title;
 	List<Sentence> sentenceList;
-
+	
 	public Document(List<Sentence> sentenceList) {
 		super();
 		this.sentenceList = sentenceList;

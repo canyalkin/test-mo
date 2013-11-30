@@ -87,7 +87,6 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		 */
 		Genotype genotype = createGAConfig(aDocument, graph);
 		doEvolution(genotype);
-		
 		Document summaryDocument = createSummaryDocument(aDocument, genotype);
 		/******************************************************/
 		long t2=System.currentTimeMillis();

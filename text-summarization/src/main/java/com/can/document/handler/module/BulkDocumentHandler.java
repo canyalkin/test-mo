@@ -1,5 +1,6 @@
 package com.can.document.handler.module;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,16 +45,18 @@ public class BulkDocumentHandler {
 		LOGGER.info("bulk read of reference documents  takes:"+(t2-t1)/1000+" seconds");
 		return referenceDocuments;
 	}
-	public void doBulkSummarization(BulkDocumentReader systemDocuments) {
+	public Map<String, Document> doBulkSummarization(BulkDocumentReader systemDocuments) {
 		AbstractSummarizer summarizer=(AbstractSummarizer)context.getBean(AbstractSummarizer.class);
 		Map<String, Document> systemDocMap = systemDocuments.getDocumentMap();
+		Map<String, Document> summaryMap=new HashMap<String, Document>(600);
 		Set<String> files = systemDocMap.keySet();
 		for (String curFile : files) {
 			LOGGER.info("*****cur file: "+curFile);
 			Document document=systemDocMap.get(curFile);
 			Document summary=summarizer.doSummary(document);
-			systemDocMap.put(curFile, summary);
+			summaryMap.put(curFile, summary);
 		}
+		return summaryMap;
 	}
 	public BulkDocumentReader doBulkRead() {
 		long freeMemory1=Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
@@ -66,17 +69,20 @@ public class BulkDocumentHandler {
 		LOGGER.info("memory usage: "+(freeMemory2-freeMemory1)/(1024*1024.0)+" MB");
 		return systemDocuments;
 	}
-	public void doBulkEvaluation(BulkDocumentReader systemDocuments,
-			BulkDocumentReader referenceDocuments) {
+	public void doBulkEvaluation(Map<String, Document> orginalDocuments,Map<String, Document> summaryDocuments,
+			Map<String, Document> referenceDocuments) {
 		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
-				systemDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
+				summaryDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
 		double total=0.0;
 		double average=0.0;
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
+			LOGGER.info("file:rouge-n:# of lines in original doc:# of lines in refernce doc:# of lines in summary doc");
 			for (String string : evaluatedFiles) {
-				LOGGER.info(string+":"+results.get(string));
+				
+				LOGGER.info(string+":"+results.get(string)+":"+orginalDocuments.get(string).getSentenceList().size()+
+						":"+referenceDocuments.get(string).getSentenceList().size() +":"+summaryDocuments.get(string).getSentenceList().size());
 				total+=results.get(string);
 			}
 			LOGGER.info("values---start");

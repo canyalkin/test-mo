@@ -1,5 +1,7 @@
 package com.can.summarizer.main;
 
+import java.util.Map;
+
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -53,7 +55,7 @@ public class SummarizerMain {
 		 * Do bulk summarization, create system summaries and update system document map
 		 */
 		
-		bulkDocumentHandler.doBulkSummarization(systemDocuments);
+		Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
 		
 		/***
 		 * Bulk Read for reference
@@ -62,7 +64,7 @@ public class SummarizerMain {
 		/**
 		 * Bulk evaluation
 		 */
-		bulkDocumentHandler.doBulkEvaluation(systemDocuments, referenceDocuments);
+		bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
 		
 		
 	}
