@@ -30,7 +30,7 @@ public class SummarizerMain {
 		 * debug:10.061 sn
 		 * 
 		 */
-		/*SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
+	/*	SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
 		

@@ -47,10 +47,10 @@ public class SummaryCrossover extends CrossoverOperator {
 		IChromosome firstChromosome = (IChromosome)a_candidateChromosomes.get(candidateSize-1);
 		IChromosome secondChromosome = (IChromosome)a_candidateChromosomes.get(candidateSize-2);
 		Gene[] genesForFirstChromosome = firstChromosome.getGenes();
-		GeneCorrector.updateGene(generator, genesForFirstChromosome,numberOfSentencesInSum,numberOfSentencesInDoc);
+		GeneHandler.updateGene(generator, genesForFirstChromosome,numberOfSentencesInSum,numberOfSentencesInDoc);
 		
 		Gene[] genesForSecondChromosome = secondChromosome.getGenes();
-		GeneCorrector.updateGene(generator, genesForSecondChromosome,numberOfSentencesInSum,numberOfSentencesInDoc);
+		GeneHandler.updateGene(generator, genesForSecondChromosome,numberOfSentencesInSum,numberOfSentencesInDoc);
 		
 	}
 

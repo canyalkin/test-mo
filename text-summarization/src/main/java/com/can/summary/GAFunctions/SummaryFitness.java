@@ -1,13 +1,11 @@
 package com.can.summary.GAFunctions;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jgap.FitnessFunction;
 import org.jgap.Gene;
 import org.jgap.IChromosome;
-import org.jgap.impl.FixedBinaryGene;
 
 import com.can.graph.module.Graph;
 
@@ -42,7 +40,7 @@ public class SummaryFitness extends FitnessFunction {
 		double value=0.0;
 		double Cs=0.0;
 		double M=0.0;
-		List<Integer> summaryIndex=getSummaryIndexes(chromosome);
+		List<Integer> summaryIndex=GeneHandler.getSummaryIndexes(chromosome);
 		for(int i=0;i<summaryIndex.size();i++){
 			int indexI=summaryIndex.get(i);
 			for(int j=i+1;j<summaryIndex.size();j++){
@@ -67,7 +65,7 @@ public class SummaryFitness extends FitnessFunction {
 	private double calculateReadibilityFactor(IChromosome chromosome){
 		double value=0.0;
 		double max=0.0;
-		List<Integer> indexList = getSummaryIndexes(chromosome);
+		List<Integer> indexList = GeneHandler.getSummaryIndexes(chromosome);
 		for(int i=0;i<indexList.size()-1;i++){
 			double weight=similarityGraph.getEdge(indexList.get(i+1), indexList.get(i)).getWeight();
 			value+=weight;
@@ -78,19 +76,6 @@ public class SummaryFitness extends FitnessFunction {
 		return value;
 	}
 
-	private List<Integer> getSummaryIndexes(IChromosome chromosome) {
-		List<Integer> indexList=new LinkedList<Integer>();
-		Gene[] genes = chromosome.getGenes();
-		for(int i=0;i<genes.length;i++){
-			FixedBinaryGene binaryGene = (FixedBinaryGene)genes[i];
-			int[] alleleValue=(int[])binaryGene.getAllele();
-			if(alleleValue[0]==1){
-				indexList.add(i);
-			}
-		}
-		return indexList;
-	}
-	
 	private static void printGene(Gene[] genes) {
 		LOGGER.debug("printGene....");
 		for (int i=0;i<genes.length;i++) {

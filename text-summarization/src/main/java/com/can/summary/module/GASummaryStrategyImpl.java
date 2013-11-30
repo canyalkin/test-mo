@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 import com.can.graph.module.Graph;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
-import com.can.summary.GAFunctions.GeneCorrector;
+import com.can.summary.GAFunctions.GeneHandler;
 import com.can.summary.GAFunctions.SummaryCrossover;
 import com.can.summary.GAFunctions.SummaryFitness;
 import com.can.summary.GAFunctions.SummaryMutation;
@@ -99,6 +99,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 	private Document createSummaryDocument(Document aDocument, Genotype genotype) {
 		Gene[] bestGenes=genotype.getFittestChromosome().getGenes();
 		Document summaryDocument=new Document();
+		LOGGER.info("summary indexes:"+GeneHandler.getSummaryIndexes(genotype.getFittestChromosome()));
 		List<Sentence> summSentences=new LinkedList<Sentence>();
 		for (int i = 0; i < bestGenes.length; i++) {
 			FixedBinaryGene fixedBinaryGene=(FixedBinaryGene)bestGenes[i];
@@ -106,7 +107,6 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 			if(allele[0]==1){
 				summSentences.add(aDocument.getSentenceList().get(i));
 			}
-			
 		}
 		summaryDocument.setSentenceList(summSentences);
 		return summaryDocument;
@@ -120,6 +120,9 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 			double fitnesValue = genotype.getFittestChromosome().getFitnessValue();
 			LOGGER.debug("fitness value="+fitnesValue);
 		}
+		LOGGER.info("best fitness value:"+genotype.getFittestChromosome().getFitnessValue());
+		String geneString=GeneHandler.showGene(genotype.getFittestChromosome().getGenes());
+		LOGGER.info("best gene as string:"+geneString);
 	}
 
 
@@ -166,7 +169,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		for (int i = 0; i < chromosomeList.size(); i++) {
 			IChromosome iChromosome=(IChromosome) chromosomeList.get(i);
 			Gene[] currGenes = iChromosome.getGenes();
-			GeneCorrector.updateGene(randomGenerator, currGenes, getDesiredNumberOfSentenceInSum(), getNumberOfSentences());
+			GeneHandler.updateGene(randomGenerator, currGenes, getDesiredNumberOfSentenceInSum(), getNumberOfSentences());
 		}
 		return genotype;
 	}
