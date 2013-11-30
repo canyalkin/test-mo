@@ -51,7 +51,7 @@ public class SingleDocumentHandler {
 	}
 
 	public Document readRefDocument(String file) {
-
+		LOGGER.debug("reference document reading");
 		refDoc = singleDocumentReader.readDocument(file);	
 		if(propertyHandler.isStopWordElimination()){
 			refDoc=stopWordHandler.doStopWordElimination(refDoc);

@@ -283,23 +283,54 @@ public class NGramTest {
 	}
 	
 	@Test
-	public void testRougeNCharOnWordNGram() {
+	public void testRougeNWordNGram() {
 		system=new LinkedList<Sentence>();
-		prepareCharBasedNGram(systemSentence,3);
+		prepareWordBasedNGram(systemSentence,3);
 		system.add(systemSentence);
-		prepareCharBasedNGram(systemSentence2,3);
+		prepareWordBasedNGram(systemSentence2,3);
 		system.add(systemSentence2);
 		
 		human=new LinkedList<Sentence>();
-		prepareCharBasedNGram(humanSentence,3);
+		prepareWordBasedNGram(humanSentence,3);
 		human.add(humanSentence);
-		prepareCharBasedNGram(humanSentence2,3);
+		prepareWordBasedNGram(humanSentence2,3);
 		human.add(humanSentence2);
 		
 		RougeNCalculator rougeNCalculator=new RougeNCalculator(human, system);
 		Double result = rougeNCalculator.calculateRougeN(3);
 		
 		assertEquals((Double)1.0, result);
+	}
+	
+	@Test
+	public void testRougeNWordNGram2() {
+		
+		String s="pulses may ease schizophrenic voices";
+		Sentence candidate = createSentence(s);//system (candidate)
+		
+		String s2="magnetic pulse series sent through brain may ease schizophrenic voices";
+		Sentence refSentence1 = createSentence(s2);//ref (human)
+		
+		String s3="yale finds magnetic stimulation some relief to schizophrenics imaginary voices";
+		Sentence refSentence2 = createSentence(s3);//ref (human)
+		
+		
+		system=new LinkedList<Sentence>();
+		prepareWordBasedNGram(candidate,1);
+		system.add(candidate);
+		
+		human=new LinkedList<Sentence>();
+		
+		prepareWordBasedNGram(refSentence1, 1);
+		human.add(refSentence1);
+		
+		prepareWordBasedNGram(refSentence2,1);
+		human.add(refSentence2);
+		
+		RougeNCalculator rougeNCalculator=new RougeNCalculator(human,system);
+		Double result = rougeNCalculator.calculateRougeN(1);
+		
+		assertEquals((Double)0.25, result);
 	}
 	
 	

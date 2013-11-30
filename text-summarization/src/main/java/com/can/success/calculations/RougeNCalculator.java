@@ -3,15 +3,18 @@ package com.can.success.calculations;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.can.summarizer.model.Sentence;
 
 public class RougeNCalculator  {
 
-	private List<Sentence> referenceSentences;
-	private List<Sentence> systemSentences;
+	private static final Logger LOGGER = Logger.getLogger(RougeNCalculator.class);
+	private List<Sentence> referenceSentences;//human sentences
+	private List<Sentence> systemSentences;// computer sentences
 	
-	public RougeNCalculator(List<Sentence> humanSentences,List<Sentence> systemSentences) {
-		this.referenceSentences=humanSentences;
+	public RougeNCalculator(List<Sentence> referenceSentences,List<Sentence> systemSentences) {
+		this.referenceSentences=referenceSentences;
 		this.systemSentences=systemSentences;
 	}
 	public RougeNCalculator() {
@@ -22,16 +25,14 @@ public class RougeNCalculator  {
 		int countMatch=0;
 		int totalRefNGram=0;
 		HashMap<String, Integer> occurenceList=new HashMap<String, Integer>();	
-		for(Sentence candidateSentence: systemSentences  ){
-			List<String> candidateNgramList = candidateSentence.getNgramList();
-			for (String candidateNgram : candidateNgramList) {
-				if(!occurenceList.containsKey(candidateNgram)){
-					int number=getNumberOfNgramsOccuringInCandidateDoc(candidateNgram,referenceSentences);
+		for(Sentence curRefSentence: referenceSentences  ){
+			List<String> refNgramList = curRefSentence.getNgramList();
+			for (String curRefNgram : refNgramList) {
+				//if(!occurenceList.containsKey(curRefNgram)){
+					int number=getNumberOfNgramsOccuringInCandidateDoc(curRefNgram,systemSentences);
 					countMatch+=number;
-					occurenceList.put(candidateNgram, number);
-				}
-
-				
+					occurenceList.put(curRefNgram, number);
+				//}
 			}
 		}
 		for (Sentence refSentence: referenceSentences) {
@@ -41,13 +42,13 @@ public class RougeNCalculator  {
 		return countMatch/(double)totalRefNGram;
 	}
 
-	private int getNumberOfNgramsOccuringInCandidateDoc( String candidateNgram,
-			List<Sentence> referenceSentences) {
+	private int getNumberOfNgramsOccuringInCandidateDoc( String curRefNgram,
+			List<Sentence> systemSentences) {
 		int cnt=0;
-		for (Sentence sentence : referenceSentences) {
+		for (Sentence sentence : systemSentences) {
 			List<String> nGrams = sentence.getNgramList();
 			for (String string : nGrams) {
-				if(candidateNgram.compareToIgnoreCase(string)==0){
+				if(curRefNgram.compareToIgnoreCase(string)==0){
 					cnt++;
 				}
 			}
