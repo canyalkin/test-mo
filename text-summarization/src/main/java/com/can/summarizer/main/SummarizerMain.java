@@ -30,7 +30,7 @@ public class SummarizerMain {
 		 * debug:10.061 sn
 		 * 
 		 */
-		SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
+		/*SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
 		
@@ -39,30 +39,30 @@ public class SummarizerMain {
 				propertyHandler.getRougeNNumber());
 
 		System.out.println("Rouge -N result:"+result);
-		System.out.println(sysSum);
+		System.out.println(sysSum);*/
 		
 		
 		
-		/*BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
-		*//***
+		BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
+		/***
 		 * Bulk Read
-		 *//*
+		 */
 		BulkDocumentReader systemDocuments = bulkDocumentHandler.doBulkRead();
 		
-		*//**
+		/**
 		 * Do bulk summarization, create system summaries and update system document map
-		 *//*
+		 */
 		
 		bulkDocumentHandler.doBulkSummarization(systemDocuments);
 		
-		*//***
+		/***
 		 * Bulk Read for reference
-		 *//*
+		 */
 		BulkDocumentReader referenceDocuments = bulkDocumentHandler.doBulkReferenceRead();
-		*//**
+		/**
 		 * Bulk evaluation
-		 *//*
-		bulkDocumentHandler.doBulkEvaluation(systemDocuments, referenceDocuments);*/
+		 */
+		bulkDocumentHandler.doBulkEvaluation(systemDocuments, referenceDocuments);
 		
 		
 	}

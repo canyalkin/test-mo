@@ -53,7 +53,6 @@ public class BulkDocumentHandler {
 			Document document=systemDocMap.get(curFile);
 			Document summary=summarizer.doSummary(document);
 			systemDocMap.put(curFile, summary);
-			
 		}
 	}
 	public BulkDocumentReader doBulkRead() {
@@ -76,7 +75,7 @@ public class BulkDocumentHandler {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
 			for (String string : evaluatedFiles) {
-				System.out.println(string+":"+results.get(string));
+				LOGGER.info(string+":"+results.get(string));
 			}
 			
 		} catch (MissingFileException e) {

@@ -334,4 +334,109 @@ public class NGramTest {
 	}
 	
 	
+	@Test
+	public void testRouge1WordNGram() {
+		
+		String s="pulses may ease schizophrenic voices";
+		Sentence candidate = createSentence(s);//system (candidate)
+		
+		String s2="magnetic pulse series sent through brain may ease schizophrenic voices";
+		Sentence refSentence1 = createSentence(s2);//ref (human)
+		
+		String s3="yale finds magnetic stimulation some relief to schizophrenics imaginary voices";
+		Sentence refSentence2 = createSentence(s3);//ref (human)
+		
+		
+		system=new LinkedList<Sentence>();
+		prepareWordBasedNGram(candidate,1);
+		system.add(candidate);
+		
+		human=new LinkedList<Sentence>();
+		
+		prepareWordBasedNGram(refSentence1, 1);
+		human.add(refSentence1);
+		
+		prepareWordBasedNGram(refSentence2,1);
+		human.add(refSentence2);
+		
+		RougeNCalculator rougeNCalculator=new RougeNCalculator(human,system);
+		Double result = rougeNCalculator.calculateRougeN(1);
+		
+		assertEquals((Double)0.2105, result);
+	}
+	
+	
+	@Test
+	public void testRouge1WordNGramRealTest() {
+		
+		String s="typhoon yunya packing 80 mph winds slammed eastern coast luzon island includes mount pinatubo early day";
+		Sentence candidate1 = createSentence(s);//system (candidate)
+		system=new LinkedList<Sentence>();
+		prepareWordBasedNGram(candidate1,1);
+		system.add(candidate1);
+		
+		Sentence candidate2 = createSentence("uickly weakened tropical storm 60 mph winds time centered about 70 miles east volcano");
+		prepareWordBasedNGram(candidate2,1);
+		system.add(candidate2);
+		
+		Sentence candidate3 = createSentence("u.s. military began flying home hundreds 28,000 americans crowded subic bay naval base bizarre tropical blizzard thick volcanic ash caused power failures across base friday during third day increasingly violent eruptions mount pinatubo");
+		prepareWordBasedNGram(candidate3,1);
+		system.add(candidate3);
+		
+		Sentence candidate4 = createSentence("friday eight thunderous explosions shot cloud ash steam nearly 19 miles high");
+		prepareWordBasedNGram(candidate4,1);
+		system.add(candidate4);
+		
+		Sentence candidate5 = createSentence("friday's eruptions hurled ash over clark 10 miles east volcano subic 25 miles southwest clark personnel temporarily housed");
+		prepareWordBasedNGram(candidate5,1);
+		system.add(candidate5);
+		
+		Sentence candidate6 = createSentence("gray ash fell  manila 60 miles south");
+		prepareWordBasedNGram(candidate6,1);
+		system.add(candidate6);
+		
+		Sentence candidate7 = createSentence("subic base spokesman robert coble said generators shut down from time time clean out volcanic ash plunging base darkness");
+		prepareWordBasedNGram(candidate7,1);
+		system.add(candidate7);
+		
+		
+		String ref1="five explosions shook mt";
+		Sentence refSentence1 = createSentence(ref1);//ref (human)
+		human=new LinkedList<Sentence>();
+		
+		prepareWordBasedNGram(refSentence1, 1);
+		human.add(refSentence1);
+		
+		String ref2="pinatubo friday spreading ash clark far away manila";
+		Sentence refSentence2 = createSentence(ref2);//ref (human)
+		prepareWordBasedNGram(refSentence2,1);
+		human.add(refSentence2);
+		
+		Sentence refSentence3 = createSentence("friday's blasts part same eruption largest pinatubo awoke sunday 600-year slumber");//ref (human)
+		prepareWordBasedNGram(refSentence3,1);
+		human.add(refSentence3);
+		
+		Sentence refSentence4 = createSentence("typhoon yunya packing 60 mph winds hit east coast luzon includes mt");//ref (human)
+		prepareWordBasedNGram(refSentence4,1);
+		human.add(refSentence4);
+		
+		Sentence refSentence5 = createSentence("pinatubo quickly weakened tropical storm");//ref (human)
+		prepareWordBasedNGram(refSentence5,1);
+		human.add(refSentence5);
+		
+		Sentence refSentence6 = createSentence("u.s. military began flying home 28,000 americans crowded subic bay naval base");//ref (human)
+		prepareWordBasedNGram(refSentence6,1);
+		human.add(refSentence6);
+		
+		Sentence refSentence7 = createSentence("philippine president aquino dismissed fabrication report warned volcanic damage case nuclear incident clark");//ref (human)
+		prepareWordBasedNGram(refSentence7,1);
+		human.add(refSentence7);
+		
+		
+		RougeNCalculator rougeNCalculator=new RougeNCalculator(human,system);
+		Double result = rougeNCalculator.calculateRougeN(1);
+		System.out.println(result);
+		assertEquals((Double)0.2105, result);
+	}
+	
 }

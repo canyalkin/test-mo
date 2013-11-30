@@ -28,11 +28,11 @@ public class RougeNCalculator  {
 		for(Sentence curRefSentence: referenceSentences  ){
 			List<String> refNgramList = curRefSentence.getNgramList();
 			for (String curRefNgram : refNgramList) {
-				//if(!occurenceList.containsKey(curRefNgram)){
+				if(!occurenceList.containsKey(curRefNgram)){
 					int number=getNumberOfNgramsOccuringInCandidateDoc(curRefNgram,systemSentences);
 					countMatch+=number;
 					occurenceList.put(curRefNgram, number);
-				//}
+				}
 			}
 		}
 		for (Sentence refSentence: referenceSentences) {
