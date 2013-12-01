@@ -53,8 +53,11 @@ public class SummaryFitness extends FitnessFunction {
 		}
 		
 		double Ns=sentenceNumInSum*(sentenceNumInSum-1)/2.0;
-		Cs=Cs/Ns;
-		if(Cs!=0){
+		if(Ns!=0.0){
+			Cs=Cs/Ns;
+		}
+		
+		if(Cs!=0.0 && M != 0.0){
 			value=Math.log10(9.0*Cs+1.0)/Math.log10(9.0*M+1.0);
 		}else{
 			value=0.0;
@@ -69,10 +72,7 @@ public class SummaryFitness extends FitnessFunction {
 		for(int i=0;i<indexList.size()-1;i++){
 			double weight=similarityGraph.getEdge(indexList.get(i+1), indexList.get(i)).getWeight();
 			value+=weight;
-			
 		}
-		
-	
 		return value;
 	}
 

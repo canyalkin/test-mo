@@ -1,7 +1,9 @@
 package com.can.success.calculations;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -27,10 +29,10 @@ public class RougeNCalculator  {
 		
 		HashMap<String,Integer> nGramOccForRef=calculateNGramOcc(referenceSentences);
 		HashMap<String,Integer> nGramOccForSystem=calculateNGramOcc(systemSentences);
-		for(Sentence curRefSentence: referenceSentences  ){
-			List<String> refNgramList = curRefSentence.getNgramList();
-			for (String curRefNgram : refNgramList) {
-				int number=0;
+		Set<String> refNGramKeys = nGramOccForRef.keySet();
+		for (String curRefNgram : refNGramKeys) {
+			int number=0;
+			if(nGramOccForSystem.containsKey(curRefNgram)){
 				if( getNumberOfOcc(nGramOccForSystem,curRefNgram) <= getNumberOfOcc(nGramOccForRef,curRefNgram)){
 					number=getNumberOfOcc(nGramOccForSystem,curRefNgram);
 				}else{
@@ -42,8 +44,10 @@ public class RougeNCalculator  {
 		for (Sentence refSentence: referenceSentences) {
 			totalRefNGram+=refSentence.getNgramList().size();
 		}
-		
-		return countMatch/(double)totalRefNGram;
+		if(totalRefNGram!=0.0){
+			return countMatch/(double)totalRefNGram;
+		}
+		return 0.0;
 	}
 
 	private Integer getNumberOfOcc(HashMap<String, Integer> nGramOccMap,

@@ -144,6 +144,9 @@ public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProc
 
 	public void setDesiredNumberOfSentenceInSum(int desiredNumberOfSentenceInSum) {
 		this.desiredNumberOfSentenceInSum = desiredNumberOfSentenceInSum;
+		if(this.desiredNumberOfSentenceInSum<2){
+			this.desiredNumberOfSentenceInSum=2;
+		}
 	}
 
 	public double getSummaryProportion() {
