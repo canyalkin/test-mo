@@ -51,6 +51,7 @@ public class BulkDocumentReader {
 					
 					documentReader.setFile(curFile);
 					Document document=documentReader.createDocument();
+					LOGGER.info(curFile.getName()+":"+document.getSentenceList().size());
 					if(isRef){
 						if(propertyHandler.isStopWordElimination()){
 							document=stopWordHandler.doStopWordElimination(document);
