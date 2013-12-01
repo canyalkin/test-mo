@@ -4,6 +4,6 @@ import com.can.summarizer.model.Document;
 
 public interface DocumentCreator {
 	
-	public Document createDocument();
+	public Document createDocument(boolean isRef);
 
 }

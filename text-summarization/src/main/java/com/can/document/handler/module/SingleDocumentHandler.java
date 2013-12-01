@@ -39,7 +39,7 @@ public class SingleDocumentHandler {
 	private Document refDoc;
 
 	public void readDocument(String file) {
-		singleDoc = singleDocumentReader.readDocument(file);
+		singleDoc = singleDocumentReader.readDocument(file,false);
 	}
 
 	public Document summarize() {
@@ -52,7 +52,7 @@ public class SingleDocumentHandler {
 
 	public Document readRefDocument(String file) {
 		LOGGER.debug("reference document reading");
-		refDoc = singleDocumentReader.readDocument(file);	
+		refDoc = singleDocumentReader.readDocument(file,true);	
 		if(propertyHandler.isStopWordElimination()){
 			refDoc=stopWordHandler.doStopWordElimination(refDoc);
 		}

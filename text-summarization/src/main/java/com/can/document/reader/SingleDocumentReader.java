@@ -20,13 +20,13 @@ public class SingleDocumentReader {
 	@Autowired
 	private ApplicationContext context;
 	
-	public Document readDocument(String fileName){
+	public Document readDocument(String fileName, boolean isRef){
 		this.fileName=fileName;
 		File curFile=new File(fileName);
 		if(curFile.isFile()){
 			DocumentReader documentReader=(DocumentReader)context.getBean(DocumentReader.class);
 			documentReader.setFile(curFile);
-			doc=(documentReader.createDocument());
+			doc=(documentReader.createDocument(isRef));
 		}
 		return doc;
 		

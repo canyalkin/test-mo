@@ -29,7 +29,7 @@ public class DocumentReaderFromFile extends DocumentReader {
 	}
 	
 
-	public Document createDocument() {
+	public Document createDocument(boolean isRef) {
 		Document document=null;
 		FileReader fileReader = null;
 		BufferedReader bufferedReader = null;
@@ -44,7 +44,8 @@ public class DocumentReaderFromFile extends DocumentReader {
 				extractWordsAndSentences(line, wholeDocument);
 			}
 			document=new Document();
-			if(propertyHandler.hasTitle()){
+			document.setRef(isRef);
+			if(propertyHandler.hasTitle() && !document.isRef()){
 				document.setTitle(wholeDocument.get(0));
 				wholeDocument.remove(0);
 			}

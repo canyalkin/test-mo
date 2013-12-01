@@ -6,6 +6,7 @@ public class Document {
 	
 	Sentence title;
 	List<Sentence> sentenceList;
+	boolean isRef=false;
 	
 	public Document(List<Sentence> sentenceList) {
 		super();
@@ -42,6 +43,20 @@ public class Document {
 	 */
 	public void setTitle(Sentence title) {
 		this.title = title;
+	}
+
+	/**
+	 * @return the isRef
+	 */
+	public boolean isRef() {
+		return isRef;
+	}
+
+	/**
+	 * @param isRef the isRef to set
+	 */
+	public void setRef(boolean isRef) {
+		this.isRef = isRef;
 	}
 
 	/* (non-Javadoc)

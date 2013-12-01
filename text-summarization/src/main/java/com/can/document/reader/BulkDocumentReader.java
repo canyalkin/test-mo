@@ -50,7 +50,7 @@ public class BulkDocumentReader {
 				if(curFile.isFile()){
 					
 					documentReader.setFile(curFile);
-					Document document=documentReader.createDocument();
+					Document document=documentReader.createDocument(isRef);
 					LOGGER.info(curFile.getName()+":"+document.getSentenceList().size());
 					if(isRef){
 						if(propertyHandler.isStopWordElimination()){
