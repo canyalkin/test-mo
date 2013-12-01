@@ -24,15 +24,19 @@ public class RougeNCalculator  {
 	public Double calculateRougeN(int n)  {
 		int countMatch=0;
 		int totalRefNGram=0;
-		HashMap<String, Integer> occurenceList=new HashMap<String, Integer>();	
+		
+		HashMap<String,Integer> nGramOccForRef=calculateNGramOcc(referenceSentences);
+		HashMap<String,Integer> nGramOccForSystem=calculateNGramOcc(systemSentences);
 		for(Sentence curRefSentence: referenceSentences  ){
 			List<String> refNgramList = curRefSentence.getNgramList();
 			for (String curRefNgram : refNgramList) {
-				if(!occurenceList.containsKey(curRefNgram)){
-					int number=getNumberOfNgramsOccuringInCandidateDoc(curRefNgram,systemSentences);
-					countMatch+=number;
-					occurenceList.put(curRefNgram, number);
+				int number=0;
+				if( getNumberOfOcc(nGramOccForSystem,curRefNgram) <= getNumberOfOcc(nGramOccForRef,curRefNgram)){
+					number=getNumberOfOcc(nGramOccForSystem,curRefNgram);
+				}else{
+					number=getNumberOfOcc(nGramOccForRef,curRefNgram);
 				}
+				countMatch+=number;
 			}
 		}
 		for (Sentence refSentence: referenceSentences) {
@@ -42,19 +46,34 @@ public class RougeNCalculator  {
 		return countMatch/(double)totalRefNGram;
 	}
 
-	private int getNumberOfNgramsOccuringInCandidateDoc( String curRefNgram,
-			List<Sentence> systemSentences) {
-		int cnt=0;
-		for (Sentence sentence : systemSentences) {
-			List<String> nGrams = sentence.getNgramList();
-			for (String string : nGrams) {
-				if(curRefNgram.compareToIgnoreCase(string)==0){
-					cnt++;
+	private Integer getNumberOfOcc(HashMap<String, Integer> nGramOccMap,
+			String curRefNgram) {
+		int val=0;
+		
+		if(nGramOccMap.get(curRefNgram)!=null){
+			val=nGramOccMap.get(curRefNgram);
+		}
+		
+		return val;
+	}
+	private HashMap<String, Integer> calculateNGramOcc(
+			List<Sentence> referenceSentences) {
+		HashMap<String,Integer> occMap=new HashMap<String, Integer>();
+		
+		for (Sentence sentence : referenceSentences) {
+			List<String> nGramList = sentence.getNgramList();
+			for (String curNGram : nGramList) {
+				if(occMap.containsKey(curNGram)){
+					Integer value=occMap.get(curNGram);
+					value++;
+					occMap.put(curNGram, value);
+				}else{
+					occMap.put(curNGram, 1);
 				}
 			}
-			
 		}
-		return cnt;
+		
+		return occMap;
 	}
 	
 	/**

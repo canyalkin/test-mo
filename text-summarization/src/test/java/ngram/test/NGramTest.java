@@ -362,7 +362,7 @@ public class NGramTest {
 		RougeNCalculator rougeNCalculator=new RougeNCalculator(human,system);
 		Double result = rougeNCalculator.calculateRougeN(1);
 		
-		assertEquals((Double)0.2105, result);
+		assertEquals((Double)0.25, result);
 	}
 	
 	
