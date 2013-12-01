@@ -59,6 +59,7 @@ public class BulkDocumentReader {
 							document=wordStemmer.doStemming(document);
 						}
 					}
+					LOGGER.info(curFile.getName()+":"+document.getSentenceList().size());
 					documentMap.put(curFile.getName(), document);
 				}
 			}
