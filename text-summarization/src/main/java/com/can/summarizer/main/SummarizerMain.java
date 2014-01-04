@@ -12,6 +12,7 @@ import com.can.document.handler.module.BulkDocumentHandler;
 import com.can.document.handler.module.SingleDocumentHandler;
 import com.can.document.reader.BulkDocumentReader;
 import com.can.summarizer.config.ApplicationConfiguration;
+import com.can.summarizer.interfaces.IOutput;
 import com.can.summarizer.model.Document;
 import com.can.word.utils.PropertyHandler;
 import com.can.word.utils.SummaryUtils;
@@ -26,6 +27,7 @@ public class SummarizerMain {
 
 		ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
 		PropertyHandler propertyHandler=context.getBean(PropertyHandler.class);
+		IOutput output=(IOutput) context.getBean("FileBean");
 
 		/***
 		 * Single file read
@@ -35,23 +37,25 @@ public class SummarizerMain {
 		 * debug:10.061 sn
 		 * 
 		 */
-		/*SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
+		/*StringBuffer stringBuffer=new StringBuffer();
+		SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
 		Document refDocument=singleDocumentHandler.readRefDocument(propertyHandler.getRefDocumentName());
 		Double result=singleDocumentHandler.calculateRougeN(sysSum,refDocument,propertyHandler.getRougeNType(),
 				propertyHandler.getRougeNNumber());
-		System.out.println("orig word number:"+singleDocumentHandler.getOriginalDocumentWordNumber());
-		System.out.println("ref word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(refDocument));
-		System.out.println("summary word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(sysSum));
+		stringBuffer.append("orig word number:"+singleDocumentHandler.getOriginalDocumentWordNumber()+"\n");
+		stringBuffer.append("ref word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(refDocument)+"\n");
+		stringBuffer.append("summary word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(sysSum)+"\n");
 		DecimalFormat formatter = new DecimalFormat();
 		formatter.setMaximumFractionDigits(5);
 		//formatter.setMinimumFractionDigits(4);
 		DecimalFormatSymbols dfs = formatter.getDecimalFormatSymbols();
 		dfs.setDecimalSeparator(',');
 		formatter.setDecimalFormatSymbols(dfs);
-		System.out.println("Rouge -N result:"+formatter.format(result));
-		System.out.println(sysSum);*/
+		stringBuffer.append("Rouge -N result:"+formatter.format(result)+"\n");
+		stringBuffer.append(sysSum+"\n");
+		output.write(stringBuffer.toString());*/
 		
 		
 		
@@ -75,7 +79,8 @@ public class SummarizerMain {
 		/**
 		 * Bulk evaluation
 		 */
-		bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
+		String report=bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
+		output.write(report);
 		
 		
 	}

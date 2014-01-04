@@ -127,4 +127,8 @@ public class PropertyHandler {
 		return wordNumber;	
 	}
 	
+	public String getOutputFile(){
+		return environment.getProperty("outputFile");
+	}
+	
 }

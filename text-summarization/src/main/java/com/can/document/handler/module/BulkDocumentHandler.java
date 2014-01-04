@@ -52,7 +52,7 @@ public class BulkDocumentHandler {
 		return referenceDocuments;
 	}
 	public Map<String, Document> doBulkSummarization(BulkDocumentReader systemDocuments) {
-		AbstractSummarizer summarizer=(AbstractSummarizer)context.getBean(AbstractSummarizer.class);
+		AbstractSummarizer summarizer=(AbstractSummarizer)context.getBean("GaStrategyBean");
 		Map<String, Document> systemDocMap = systemDocuments.getDocumentMap();
 		Map<String, Document> summaryMap=new HashMap<String, Document>(600);
 		Set<String> files = systemDocMap.keySet();
@@ -75,16 +75,17 @@ public class BulkDocumentHandler {
 		LOGGER.info("memory usage: "+(freeMemory2-freeMemory1)/(1024*1024.0)+" MB");
 		return systemDocuments;
 	}
-	public void doBulkEvaluation(Map<String, Document> orginalDocuments,Map<String, Document> summaryDocuments,
+	public String doBulkEvaluation(Map<String, Document> orginalDocuments,Map<String, Document> summaryDocuments,
 			Map<String, Document> referenceDocuments) {
 		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
 				summaryDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
+		StringBuffer stringBuffer=new StringBuffer();
 		double total=0.0;
 		double average=0.0;
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
-			LOGGER.info("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc");
+			stringBuffer.append("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc"+"\n");
 			DecimalFormat formatter = new DecimalFormat();
 			formatter.setMaximumFractionDigits(5);
 			DecimalFormatSymbols dfs = formatter.getDecimalFormatSymbols();
@@ -92,18 +93,14 @@ public class BulkDocumentHandler {
 			formatter.setDecimalFormatSymbols(dfs);
 			for (String string : evaluatedFiles) {
 				
-				LOGGER.info(string+":"+formatter.format(results.get(string))+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
+				stringBuffer.append(string+":"+formatter.format(results.get(string))+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
 						":"+SummaryUtils.calculateOriginalSentenceWordNumber(referenceDocuments.get(string)) +":"
-						+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(string)));
+						+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(string))+"\n");
 				total+=results.get(string);
 			}
-			LOGGER.info("values---start");
-			for (String string : evaluatedFiles) {
-				LOGGER.info(results.get(string));
-			}
-			LOGGER.info("values---end");
+			
 			average=total/evaluatedFiles.size();
-			LOGGER.info("Average:"+average);
+			stringBuffer.append("Average:"+average+"\n");
 			
 		} catch (MissingFileException e) {
 			// TODO Auto-generated catch block
@@ -111,6 +108,7 @@ public class BulkDocumentHandler {
 		}catch (Exception e){
 			
 		}
+		return stringBuffer.toString();
 	}
 	public int calculateWordCount(List<Sentence> sentenceList){
 		int count=0;

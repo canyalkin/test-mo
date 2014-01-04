@@ -87,36 +87,16 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		 */
 		Genotype genotype = createGAConfig(aDocument, graph);
 		doEvolution(genotype);
-		Document summaryDocument = createSummaryDocument(aDocument, genotype);
+		
+		List<Integer> indexes = GeneHandler.getSummaryIndexes(genotype.getFittestChromosome());
+		LOGGER.info("summary indexes:"+indexes);
+		Document summaryDocument = createSummaryDocument(aDocument, indexes);
+		//Document summaryDocument = createSummaryDocument(aDocument, genotype);
 		/******************************************************/
 		long t2=System.currentTimeMillis();
 		LOGGER.info("summarization takes "+(t2-t1)/1000.0+" seconds.");
 		return summaryDocument;
 	}
-
-
-	private Document createSummaryDocument(Document aDocument, Genotype genotype) {
-		Gene[] bestGenes=genotype.getFittestChromosome().getGenes();
-		Document summaryDocument=new Document();
-		LOGGER.info("summary indexes:"+GeneHandler.getSummaryIndexes(genotype.getFittestChromosome()));
-		List<Sentence> summSentences=new LinkedList<Sentence>();
-		int wordCount=0;
-		for (int i = 0; i < bestGenes.length; i++) {//while(i < bestGenes.length && wordCount<propertyHandler.getMaxWordNumber())
-			FixedBinaryGene fixedBinaryGene=(FixedBinaryGene)bestGenes[i];
-			int[] allele=(int [])fixedBinaryGene.getAllele();
-			if(allele[0]==1){
-				if(wordCount<propertyHandler.getMaxWordNumber()){
-					summSentences.add(aDocument.getSentenceList().get(i));
-					wordCount+=aDocument.getSentenceList().get(i).getOriginalSentencesWordNumber();
-				}else{
-					break;
-				}
-			}
-		}
-		summaryDocument.setSentenceList(summSentences);
-		return summaryDocument;
-	}
-
 
 	private void doEvolution(Genotype genotype) {
 		LOGGER.debug("GAConfig created...");

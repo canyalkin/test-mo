@@ -1,5 +1,8 @@
 package com.can.summary.module;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import com.can.document.handler.module.StopWordHandler;
 import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.interfaces.SummaryStrategy;
 import com.can.summarizer.model.Document;
+import com.can.summarizer.model.Sentence;
 import com.can.word.utils.PropertyHandler;
 
 @Component
@@ -42,6 +46,21 @@ public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProc
 	}
 
 	public AbstractSummarizer() {
+	}
+	
+	public Document createSummaryDocument(Document document, List<Integer> indexes){
+		Document summaryDocument=new Document();
+		
+		List<Sentence> sumSentence=new ArrayList<Sentence>(30);
+		int wordCount=0;
+		int i=0;
+		while (i < indexes.size() && wordCount < propertyHandler.getMaxWordNumber()) {
+				sumSentence.add(document.getSentenceList().get(indexes.get(i)));
+				wordCount+=document.getSentenceList().get(indexes.get(i)).getOriginalSentencesWordNumber();
+				i++;
+		}
+		summaryDocument.setSentenceList(sumSentence);
+		return summaryDocument;
 	}
 	
 	public void getStemmingFromProperty() {
