@@ -1,5 +1,8 @@
 package com.can.document.handler.module;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,9 +85,14 @@ public class BulkDocumentHandler {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
 			LOGGER.info("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc");
+			DecimalFormat formatter = new DecimalFormat();
+			formatter.setMaximumFractionDigits(5);
+			DecimalFormatSymbols dfs = formatter.getDecimalFormatSymbols();
+			dfs.setDecimalSeparator(',');
+			formatter.setDecimalFormatSymbols(dfs);
 			for (String string : evaluatedFiles) {
 				
-				LOGGER.info(string+":"+results.get(string)+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
+				LOGGER.info(string+":"+formatter.format(results.get(string))+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
 						":"+SummaryUtils.calculateOriginalSentenceWordNumber(referenceDocuments.get(string)) +":"
 						+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(string)));
 				total+=results.get(string);
