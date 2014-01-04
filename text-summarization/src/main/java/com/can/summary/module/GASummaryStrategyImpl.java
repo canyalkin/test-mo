@@ -107,7 +107,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 			if(allele[0]==1){
 				if(wordCount<propertyHandler.getMaxWordNumber()){
 					summSentences.add(aDocument.getSentenceList().get(i));
-					wordCount+=aDocument.getSentenceList().get(i).getWords().size();
+					wordCount+=aDocument.getSentenceList().get(i).getOriginalSentencesWordNumber();
 				}else{
 					break;
 				}

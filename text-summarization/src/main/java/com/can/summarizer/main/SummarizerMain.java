@@ -12,6 +12,7 @@ import com.can.document.reader.BulkDocumentReader;
 import com.can.summarizer.config.ApplicationConfiguration;
 import com.can.summarizer.model.Document;
 import com.can.word.utils.PropertyHandler;
+import com.can.word.utils.SummaryUtils;
 
 public class SummarizerMain {
 
@@ -35,17 +36,19 @@ public class SummarizerMain {
 		/*SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
-		
 		Document refDocument=singleDocumentHandler.readRefDocument(propertyHandler.getRefDocumentName());
 		Double result=singleDocumentHandler.calculateRougeN(sysSum,refDocument,propertyHandler.getRougeNType(),
 				propertyHandler.getRougeNNumber());
-
+		System.out.println("orig word number:"+singleDocumentHandler.getOriginalDocumentWordNumber());
+		System.out.println("ref word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(refDocument));
+		System.out.println("summary word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(sysSum));
 		System.out.println("Rouge -N result:"+result);
 		System.out.println(sysSum);*/
 		
 		
 		
 		BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
+		
 		/***
 		 * Bulk Read
 		 */
@@ -54,13 +57,13 @@ public class SummarizerMain {
 		/**
 		 * Do bulk summarization, create system summaries and update system document map
 		 */
-		
 		Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
 		
 		/***
 		 * Bulk Read for reference
 		 */
 		BulkDocumentReader referenceDocuments = bulkDocumentHandler.doBulkReferenceRead();
+		
 		/**
 		 * Bulk evaluation
 		 */

@@ -19,6 +19,7 @@ import com.can.summary.evaluator.BulkRougeNEvaluator;
 import com.can.summary.exceptions.MissingFileException;
 import com.can.summary.module.AbstractSummarizer;
 import com.can.word.utils.PropertyHandler;
+import com.can.word.utils.SummaryUtils;
 
 @Component
 public class BulkDocumentHandler {
@@ -83,8 +84,9 @@ public class BulkDocumentHandler {
 			LOGGER.info("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc");
 			for (String string : evaluatedFiles) {
 				
-				LOGGER.info(string+":"+results.get(string)+":"+calculateWordCount(orginalDocuments.get(string).getSentenceList())+
-						":"+calculateWordCount(referenceDocuments.get(string).getSentenceList()) +":"+calculateWordCount(summaryDocuments.get(string).getSentenceList()));
+				LOGGER.info(string+":"+results.get(string)+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
+						":"+SummaryUtils.calculateOriginalSentenceWordNumber(referenceDocuments.get(string)) +":"
+						+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(string)));
 				total+=results.get(string);
 			}
 			LOGGER.info("values---start");

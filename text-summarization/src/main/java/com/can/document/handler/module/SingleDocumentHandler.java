@@ -14,6 +14,7 @@ import com.can.summarizer.model.RougeNType;
 import com.can.summary.calculations.NGramCalculator;
 import com.can.summary.module.AbstractSummarizer;
 import com.can.word.utils.PropertyHandler;
+import com.can.word.utils.SummaryUtils;
 
 @Component
 public class SingleDocumentHandler {
@@ -71,6 +72,10 @@ public class SingleDocumentHandler {
 		RougeNCalculator rougeNCalculator=new RougeNCalculator(refDocument.getSentenceList(), sysSum.getSentenceList());
 		
 		return rougeNCalculator.calculateRougeN(n);
+	}
+	
+	public int getOriginalDocumentWordNumber(){
+		return SummaryUtils.calculateOriginalSentenceWordNumber(singleDoc);
 	}
 	
 	

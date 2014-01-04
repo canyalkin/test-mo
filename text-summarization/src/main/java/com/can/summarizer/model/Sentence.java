@@ -2,12 +2,13 @@ package com.can.summarizer.model;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import com.can.summary.calculations.NGramCalculator;
+import java.util.StringTokenizer;
 
 public class Sentence {
 	
 	String originalSentence;
+	int originalSentencesWordNumber=0;
+
 	String sentence;
 	
 	String sentenceFromWords=null;
@@ -30,6 +31,7 @@ public class Sentence {
 	 */
 	public void setOriginalSentence(String originalSentence) {
 		this.originalSentence = originalSentence;
+		originalSentencesWordNumber=new StringTokenizer(this.originalSentence).countTokens();
 	}
 	/**
 	 * @return the sentence
@@ -96,7 +98,18 @@ public class Sentence {
 		this.ngramList = ngramList;
 	}
 	
-	
+	/**
+	 * @return the originalSentencesWordNumber
+	 */
+	public int getOriginalSentencesWordNumber() {
+		return originalSentencesWordNumber;
+	}
+	/**
+	 * @param originalSentencesWordNumber the originalSentencesWordNumber to set
+	 */
+	public void setOriginalSentencesWordNumber(int originalSentencesWordNumber) {
+		this.originalSentencesWordNumber = originalSentencesWordNumber;
+	}
 	
 
 }
