@@ -100,11 +100,17 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		Document summaryDocument=new Document();
 		LOGGER.info("summary indexes:"+GeneHandler.getSummaryIndexes(genotype.getFittestChromosome()));
 		List<Sentence> summSentences=new LinkedList<Sentence>();
-		for (int i = 0; i < bestGenes.length; i++) {
+		int wordCount=0;
+		for (int i = 0; i < bestGenes.length; i++) {//while(i < bestGenes.length && wordCount<propertyHandler.getMaxWordNumber())
 			FixedBinaryGene fixedBinaryGene=(FixedBinaryGene)bestGenes[i];
 			int[] allele=(int [])fixedBinaryGene.getAllele();
 			if(allele[0]==1){
-				summSentences.add(aDocument.getSentenceList().get(i));
+				if(wordCount<propertyHandler.getMaxWordNumber()){
+					summSentences.add(aDocument.getSentenceList().get(i));
+					wordCount+=aDocument.getSentenceList().get(i).getWords().size();
+				}else{
+					break;
+				}
 			}
 		}
 		summaryDocument.setSentenceList(summSentences);

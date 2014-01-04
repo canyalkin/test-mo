@@ -117,4 +117,14 @@ public class PropertyHandler {
 		return environment.getProperty("wordNetFolder");
 	}
 	
+	public int getMaxWordNumber(){
+		int wordNumber=100;
+		try {
+			wordNumber=Integer.parseInt(environment.getProperty("maxWordNumber"));
+		} catch (Exception e) {
+			wordNumber=100;
+		}
+		return wordNumber;	
+	}
+	
 }

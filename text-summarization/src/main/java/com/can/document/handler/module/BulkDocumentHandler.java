@@ -1,6 +1,7 @@
 package com.can.document.handler.module;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import com.can.document.reader.BulkDocumentReader;
 import com.can.summarizer.interfaces.IStopWord;
 import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.model.Document;
+import com.can.summarizer.model.Sentence;
 import com.can.summary.evaluator.BulkRougeNEvaluator;
 import com.can.summary.exceptions.MissingFileException;
 import com.can.summary.module.AbstractSummarizer;
@@ -78,11 +80,11 @@ public class BulkDocumentHandler {
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
-			LOGGER.info("file:rouge-n:# of lines in original doc:# of lines in refernce doc:# of lines in summary doc");
+			LOGGER.info("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc");
 			for (String string : evaluatedFiles) {
 				
-				LOGGER.info(string+":"+results.get(string)+":"+orginalDocuments.get(string).getSentenceList().size()+
-						":"+referenceDocuments.get(string).getSentenceList().size() +":"+summaryDocuments.get(string).getSentenceList().size());
+				LOGGER.info(string+":"+results.get(string)+":"+calculateWordCount(orginalDocuments.get(string).getSentenceList())+
+						":"+calculateWordCount(referenceDocuments.get(string).getSentenceList()) +":"+calculateWordCount(summaryDocuments.get(string).getSentenceList()));
 				total+=results.get(string);
 			}
 			LOGGER.info("values---start");
@@ -99,5 +101,12 @@ public class BulkDocumentHandler {
 		}catch (Exception e){
 			
 		}
+	}
+	public int calculateWordCount(List<Sentence> sentenceList){
+		int count=0;
+		for (Sentence sentence : sentenceList) {
+			count+=sentence.getWords().size();
+		}
+		return count;
 	}
 }
