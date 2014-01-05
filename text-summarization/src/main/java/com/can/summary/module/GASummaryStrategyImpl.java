@@ -80,6 +80,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		createStructuralProperties(aDocument);//frequency table ,tf, isf
 		Graph graph=new Graph(getNumberOfSentences());
 		graph=createGraph(graph, aDocument);
+		graph.findMaximumLength(getDesiredNumberOfSentenceInSum());
 		LOGGER.debug("Graph created...");
 		LOGGER.debug(graph);
 		/****
@@ -103,7 +104,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		for(int i=0;i<GENERATION_NUMBER;i++){
 			genotype.evolve();
 			double fitnesValue = genotype.getFittestChromosome().getFitnessValue();
-			LOGGER.debug("fitness value="+fitnesValue);
+			LOGGER.info("fitness value="+fitnesValue);
 		}
 		LOGGER.info("best fitness value:"+genotype.getFittestChromosome().getFitnessValue());
 		String geneString=GeneHandler.showGene(genotype.getFittestChromosome().getGenes());

@@ -30,7 +30,6 @@ public class SummaryFitness extends FitnessFunction {
 		if(0.5*CF+0.5*RF>1){
 			LOGGER.debug("CF:"+CF);
 			LOGGER.debug("RF:"+RF);
-			
 			printGene(chromosome.getGenes());
 		}
 		return 0.5*CF+0.5*RF;
@@ -67,22 +66,26 @@ public class SummaryFitness extends FitnessFunction {
 	
 	private double calculateReadibilityFactor(IChromosome chromosome){
 		double value=0.0;
-		double max=0.0;
 		List<Integer> indexList = GeneHandler.getSummaryIndexes(chromosome);
 		for(int i=0;i<indexList.size()-1;i++){
 			double weight=similarityGraph.getEdge(indexList.get(i+1), indexList.get(i)).getWeight();
 			value+=weight;
 		}
+		
+		if(similarityGraph.getMaxLength()!=0){
+			value=value/similarityGraph.getMaxLength();
+		}
+		
 		return value;
 	}
 
 	private static void printGene(Gene[] genes) {
-		LOGGER.debug("printGene....");
+		LOGGER.error("printGene....");
 		for (int i=0;i<genes.length;i++) {
 			int[] value = (int[]) genes[i].getAllele();
-			LOGGER.debug("Gene ("+i+"):"+value[0]);
+			LOGGER.error("Gene ("+i+"):"+value[0]);
 		}
-		LOGGER.debug("printGene.... ENDs");
+		LOGGER.error("printGene.... ENDs");
 	}
 
 

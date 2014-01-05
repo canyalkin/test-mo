@@ -16,9 +16,9 @@ public class GeneHandler {
 	
 	public static void updateGene(RandomGenerator generator,
 			Gene[] genes,int numberOfSentencesInSum,int numberOfSentencesInDoc) {
-		LOGGER.debug("updateGene Starts...");
+		LOGGER.trace("updateGene Starts...");
 		int curSentencesInSum = calculateNumberOfSentencesInSumm(genes);
-		LOGGER.debug("curSentencesInSum="+curSentencesInSum);
+		LOGGER.trace("curSentencesInSum="+curSentencesInSum);
 		if(curSentencesInSum<numberOfSentencesInSum){
 			int numberOfChanges=numberOfSentencesInSum-curSentencesInSum;
 			numberOfChanges = addMissingSentences(generator, genes,numberOfChanges,numberOfSentencesInDoc);
@@ -27,65 +27,65 @@ public class GeneHandler {
 			numberOfChanges = removeUnnecessarySentences(generator, genes,numberOfChanges,numberOfSentencesInDoc);
 		}
 		curSentencesInSum=calculateNumberOfSentencesInSumm(genes);
-		LOGGER.debug("curSentencesInSum="+curSentencesInSum);
-		LOGGER.debug("updaGene Finished............");
+		LOGGER.trace("curSentencesInSum="+curSentencesInSum);
+		LOGGER.trace("updaGene Finished............");
 	}
 
 	private static int removeUnnecessarySentences(RandomGenerator generator,
 			Gene[] genes, int numberOfChanges, int numberOfSentencesInDoc) {
-		LOGGER.debug("removeUnnecessarySentences,numberOfChanges="+numberOfChanges);
+		LOGGER.trace("removeUnnecessarySentences,numberOfChanges="+numberOfChanges);
 		while(numberOfChanges!=0){
 			int randomIndex = generator.nextInt(numberOfSentencesInDoc);
 			int[] value = (int[]) genes[randomIndex].getAllele();
-			LOGGER.debug("value="+value[0]);
+			LOGGER.trace("value="+value[0]);
 			if(value[0]==1){
-				LOGGER.debug("flip");
+				LOGGER.trace("flip");
 				FixedBinaryGene binaryGene = (FixedBinaryGene)genes[randomIndex];
 				binaryGene.flip(0);
 				numberOfChanges--;
 			}
 		}
-		LOGGER.debug("numberOfChanges="+numberOfChanges);
-		LOGGER.debug("removeUnnecessarySentences-finished");
+		LOGGER.trace("numberOfChanges="+numberOfChanges);
+		LOGGER.trace("removeUnnecessarySentences-finished");
 		return numberOfChanges;
 	}
 
 	private static int addMissingSentences(RandomGenerator generator, Gene[] genes,
 			int numberOfChanges, int numberOfSentencesInDoc) {
-		LOGGER.debug("addMissingSentences,numberOfChanges="+numberOfChanges);
+		LOGGER.trace("addMissingSentences,numberOfChanges="+numberOfChanges);
 		while(numberOfChanges!=0){
 			int randomIndex = generator.nextInt(numberOfSentencesInDoc);
 			int[] value = (int[]) genes[randomIndex].getAllele();
-			LOGGER.debug("value="+value[0]);
+			LOGGER.trace("value="+value[0]);
 			if(value[0]==0){
-				LOGGER.debug("flip");
+				LOGGER.trace("flip");
 				FixedBinaryGene binaryGene = (FixedBinaryGene)genes[randomIndex];
 				binaryGene.flip(0);
 				numberOfChanges--;
 			}
 		}
-		LOGGER.debug("numberOfChanges="+numberOfChanges);
-		LOGGER.debug("addMissingSentences-finished");
+		LOGGER.trace("numberOfChanges="+numberOfChanges);
+		LOGGER.trace("addMissingSentences-finished");
 		return numberOfChanges;
 	}
 
 	private static int calculateNumberOfSentencesInSumm(Gene[] genes) {
 		int curSentencesInSum=0;
-		LOGGER.debug("calculateNumberOfSentencesInSumm....");
+		LOGGER.trace("calculateNumberOfSentencesInSumm....");
 		for (int i=0;i<genes.length;i++) {
 			int[] value = (int[]) genes[i].getAllele();
-			LOGGER.debug("Gene ("+i+"):"+value[0]);
+			LOGGER.trace("Gene ("+i+"):"+value[0]);
 			if(value[0]==1){
 				curSentencesInSum++;
 			}
 		}
-		LOGGER.debug("calculateNumberOfSentencesInSumm.... ENDs");
+		LOGGER.trace("calculateNumberOfSentencesInSumm.... ENDs");
 		return curSentencesInSum;
 	}
 	
 	public static String showGene(Gene[] gene){
 		StringBuffer stringBuffer=new StringBuffer();
-		LOGGER.debug("showGene....");
+		LOGGER.trace("showGene....");
 		for (int i=0;i<gene.length;i++) {
 			int[] value = (int[]) gene[i].getAllele();
 			if(i==gene.length-1){
@@ -93,9 +93,9 @@ public class GeneHandler {
 			}else{
 				stringBuffer.append(value[0]+"-");
 			}
-			LOGGER.debug("Gene ("+i+"):"+value[0]);
+			LOGGER.trace("Gene ("+i+"):"+value[0]);
 		}
-		LOGGER.debug("showGene.... ENDs");
+		LOGGER.trace("showGene.... ENDs");
 		return stringBuffer.toString();
 		
 	}

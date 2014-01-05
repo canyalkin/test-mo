@@ -37,7 +37,7 @@ public class SummarizerMain {
 		 * debug:10.061 sn
 		 * 
 		 */
-		/*StringBuffer stringBuffer=new StringBuffer();
+		StringBuffer stringBuffer=new StringBuffer();
 		SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document sysSum=singleDocumentHandler.summarize();
@@ -55,32 +55,32 @@ public class SummarizerMain {
 		formatter.setDecimalFormatSymbols(dfs);
 		stringBuffer.append("Rouge -N result:"+formatter.format(result)+"\n");
 		stringBuffer.append(sysSum+"\n");
-		output.write(stringBuffer.toString());*/
+		output.write(stringBuffer.toString());
 		
 		
 		
-		BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
+		/*BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
 		
-		/***
+		*//***
 		 * Bulk Read
-		 */
+		 *//*
 		BulkDocumentReader systemDocuments = bulkDocumentHandler.doBulkRead();
 		
-		/**
+		*//**
 		 * Do bulk summarization, create system summaries and update system document map
-		 */
+		 *//*
 		Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
 		
-		/***
+		*//***
 		 * Bulk Read for reference
-		 */
+		 *//*
 		BulkDocumentReader referenceDocuments = bulkDocumentHandler.doBulkReferenceRead();
 		
-		/**
+		*//**
 		 * Bulk evaluation
-		 */
+		 *//*
 		String report=bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
-		output.write(report);
+		output.write(report);*/
 		
 		
 	}
