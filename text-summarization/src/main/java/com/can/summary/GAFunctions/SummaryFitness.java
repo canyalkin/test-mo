@@ -80,12 +80,12 @@ public class SummaryFitness extends FitnessFunction {
 	}
 
 	private static void printGene(Gene[] genes) {
-		LOGGER.error("printGene....");
+		LOGGER.trace("printGene....");
 		for (int i=0;i<genes.length;i++) {
 			int[] value = (int[]) genes[i].getAllele();
-			LOGGER.error("Gene ("+i+"):"+value[0]);
+			LOGGER.trace("Gene ("+i+"):"+value[0]);
 		}
-		LOGGER.error("printGene.... ENDs");
+		LOGGER.trace("printGene.... ENDs");
 	}
 
 
