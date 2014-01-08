@@ -27,12 +27,20 @@ public class SummaryFitness extends FitnessFunction {
 	protected double evaluate(IChromosome chromosome) {
 		double CF=calculateCohesionFactor(chromosome);
 		double RF=calculateReadibilityFactor(chromosome);
+		double returnValue=0.0;
 		if(0.5*CF+0.5*RF>1){
 			LOGGER.debug("CF:"+CF);
 			LOGGER.debug("RF:"+RF);
-			printGene(chromosome.getGenes());
+			if(LOGGER.isTraceEnabled()){
+				printGene(chromosome.getGenes());
+			}
 		}
-		return 0.5*CF+0.5*RF;
+		returnValue=0.5*CF+0.5*RF;
+		if(returnValue==Double.NaN){
+			LOGGER.error("fitness : NaN value !!!!!!!!");
+			returnValue=0.0;
+		}
+		return returnValue;
 	}
 	
 	private double calculateCohesionFactor(IChromosome chromosome){
@@ -61,6 +69,10 @@ public class SummaryFitness extends FitnessFunction {
 		}else{
 			value=0.0;
 		}
+		if(value==Double.NaN){
+			LOGGER.error("calculateCohesionFactor : NaN value !!!!!!!!");
+			value=0.0;
+		}
 		return value;
 	}
 	
@@ -75,7 +87,10 @@ public class SummaryFitness extends FitnessFunction {
 		if(similarityGraph.getMaxLength()!=0){
 			value=value/similarityGraph.getMaxLength();
 		}
-		
+		if(value==Double.NaN){
+			LOGGER.error("calculateReadibilityFactor : NaN value !!!!!!!!");
+			value=0.0;
+		}
 		return value;
 	}
 

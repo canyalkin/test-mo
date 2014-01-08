@@ -67,16 +67,16 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		
 		long t1=System.currentTimeMillis();
 		LOGGER.debug("summarization starts...");
-		setNumberOfSentences(aDocument.getSentenceList().size());
 		setDocumentToBeSummarized(aDocument);
-		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
-		LOGGER.debug("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
 		if(isStopWordElimination()){
 			doStopWordElimination();
 		}
 		if(isStemming()){
 			doStemming();
 		}
+		setNumberOfSentences(aDocument.getSentenceList().size());
+		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
+		LOGGER.debug("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
 		createStructuralProperties(aDocument);//frequency table ,tf, isf
 		Graph graph=new Graph(getNumberOfSentences());
 		graph=createGraph(graph, aDocument);

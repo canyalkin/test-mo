@@ -76,9 +76,17 @@ public class StopWordHandler implements IStopWord {
 			deleteStopWordsForTheGivenSentence(aDocument.getTitle());
 			LOGGER.info("-------------The Title ENDS!!!-----------");
 		}
-		for (Sentence sentence : sentenceList) {
+		Iterator<Sentence> sentenceListIterator = sentenceList.iterator();
+		while(sentenceListIterator.hasNext()){
+			Sentence sentence=sentenceListIterator.next();
 			deleteStopWordsForTheGivenSentence(sentence);
+			if(sentence.getWords().size()==0){
+				sentenceListIterator.remove();
+			}
 		}
+		/*for (Sentence sentence : sentenceList) {
+			deleteStopWordsForTheGivenSentence(sentence);
+		}*/
 		
 		return aDocument;
 	}
