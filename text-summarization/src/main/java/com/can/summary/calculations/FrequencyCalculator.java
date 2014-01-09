@@ -30,7 +30,7 @@ public final class FrequencyCalculator {
 			List<Sentence> sentencesList = aDocument.getSentenceList();
 			int sentenceIndex=0;
 			for (Sentence sentence : sentencesList) {
-				double freq=calculateIndexTermForSentence(indexTerm,sentence);
+				double freq=calculateIndexTermFreqForSentence(indexTerm,sentence);
 				maxFreq=maxIndexTermFrequencies.get(sentenceIndex);
 				if(maxFreq!=0.0){
 					freqListForAnIndexTerm.add(freq/maxFreq);
@@ -61,7 +61,7 @@ public final class FrequencyCalculator {
 		Set<String> indexTerms = freqTable.keySet();
 		double max=0.0;
 		for (String string : indexTerms) {
-			double val=calculateIndexTermForSentence(string, sentence);
+			double val=calculateIndexTermFreqForSentence(string, sentence);
 			if(val>max){
 				max=val;
 			}
@@ -69,7 +69,7 @@ public final class FrequencyCalculator {
 		return max;
 	}
 
-	private static double calculateIndexTermForSentence(String indexTerm,
+	private static double calculateIndexTermFreqForSentence(String indexTerm,
 			Sentence sentence) {
 		List<Word> wordList = sentence.getWords();
 		double number=0.0;

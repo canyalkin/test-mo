@@ -74,8 +74,8 @@ public class Graph {
 		}
 		
 		for(int j=1;j<vertexNumber;j++){
-			for(int i=1;i<vertexNumber;i++){
-				for(int k=0;k<i-1;k++){
+			for(int i=0;i<vertexNumber;i++){
+				for(int k=0;k<i;k++){
 					if(A[i][j]< A[k][j-1]+vertex[i][k].getWeight()){
 						A[i][j] = A[k][j-1]+vertex[i][k].getWeight();
 					}
