@@ -45,7 +45,7 @@ public class DocumentReaderFromFile extends DocumentReader {
 			}
 			document=new Document();
 			document.setRef(isRef);
-			if(propertyHandler.hasTitle() && !document.isRef()){
+			if(propertyHandler.isTitle() && !document.isRef()){
 				document.setTitle(wholeDocument.get(0));
 				wholeDocument.remove(0);
 			}

@@ -9,7 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
+import com.can.analysis.AnalysisHandler;
+import com.can.analysis.AnalysisProperty;
 import com.can.document.handler.module.StopWordHandler;
+import com.can.word.utils.PropertyHandler;
 
 @Configuration
 @ComponentScan(basePackages="com.can")
@@ -32,9 +35,20 @@ public class ApplicationConfiguration {
 		return StopWordHandler.getInstance(stopWordFile);
 	}
 	
+	@Bean(initMethod="init")
+	public PropertyHandler getPropertyHandler(){
+		return PropertyHandler.getInstance();
+	}
 	
+	@Bean (initMethod="init")
+	public AnalysisProperty getAnalysisProperty(){
+		return AnalysisProperty.getInstance();
+	}
 	
-	
+	@Bean (initMethod="reset")
+	public AnalysisHandler getAnalysisHandler(){
+		return AnalysisHandler.getInstance();
+	}
 	
 	
 }

@@ -2,7 +2,6 @@ package com.can.document.handler.module;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +13,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.can.document.reader.BulkDocumentReader;
-import com.can.summarizer.interfaces.IStopWord;
-import com.can.summarizer.interfaces.IWordStemmer;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summary.evaluator.BulkRougeNEvaluator;
 import com.can.summary.exceptions.MissingFileException;
 import com.can.summary.module.AbstractSummarizer;
+import com.can.summary.module.GASummaryStrategyImpl;
 import com.can.word.utils.PropertyHandler;
 import com.can.word.utils.SummaryUtils;
 
@@ -28,18 +26,14 @@ import com.can.word.utils.SummaryUtils;
 public class BulkDocumentHandler {
 	
 	private static final Logger LOGGER = Logger.getLogger(BulkDocumentHandler.class);
-	
-	@Autowired 
-	private IStopWord stopWordHandler;
-	
-	@Autowired
-	private IWordStemmer wordStemmer;
-		
+
 	@Autowired
 	private PropertyHandler propertyHandler;
 	
 	@Autowired
 	ApplicationContext context;
+	
+	Map<String,Double>fitnessValues;
 	
 	public BulkDocumentReader doBulkReferenceRead() {
 		long t1;
@@ -56,11 +50,13 @@ public class BulkDocumentHandler {
 		Map<String, Document> systemDocMap = systemDocuments.getDocumentMap();
 		Map<String, Document> summaryMap=new HashMap<String, Document>(600);
 		Set<String> files = systemDocMap.keySet();
+		fitnessValues=new HashMap<String, Double>(1000);
 		for (String curFile : files) {
 			LOGGER.info("*****cur file: "+curFile);
 			Document document=systemDocMap.get(curFile);
 			Document summary=summarizer.doSummary(document);
 			summaryMap.put(curFile, summary);
+			fitnessValues.put(curFile,((GASummaryStrategyImpl)summarizer).getFitnessValue());
 		}
 		return summaryMap;
 	}
@@ -99,13 +95,16 @@ public class BulkDocumentHandler {
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
-			stringBuffer.append("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc"+"\n");
+			
+			stringBuffer.append("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc:fitness value"+"\n");
 			
 			for (String string : evaluatedFiles) {
 				
-				stringBuffer.append(string+":"+formatter.format(results.get(string))+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
-						":"+SummaryUtils.calculateOriginalSentenceWordNumber(referenceDocuments.get(string)) +":"
-						+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(string))+"\n");
+				stringBuffer.append(string+":"+formatter.format(results.get(string))+":"
+				+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+":"
+						+SummaryUtils.calculateOriginalSentenceWordNumber(referenceDocuments.get(string)) +":"
+						+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(string))+":"
+						+formatter.format(fitnessValues.get(string))+"\n");
 				total+=results.get(string);
 			}
 			

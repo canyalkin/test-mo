@@ -18,7 +18,7 @@ import com.can.summarizer.model.Sentence;
 import com.can.word.utils.PropertyHandler;
 
 @Component
-public abstract class AbstractSummarizer implements SummaryStrategy,BeanPostProcessor {
+public abstract class AbstractSummarizer implements SummaryStrategy {
 	private static final Logger LOGGER = Logger.getLogger(AbstractSummarizer.class);
 	private String summarizerName;
 	private Document documentToBeSummarized;

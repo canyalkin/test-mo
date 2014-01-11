@@ -34,14 +34,15 @@ import com.can.word.utils.PropertyHandler;
 
 @Component("GaStrategyBean")
 @Scope("singleton")
-public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPostProcessor {
+public class GASummaryStrategyImpl extends AbstractSummarizer {
 	
-	private static int GENERATION_NUMBER = 15;
-	private static double CROSSOVER_RATE=0.85;
-	private static int MUTATION_RATE=1000;
+	private int generationNumber = 15;
+	private double crossoverRate = 0.85;
+	private int mutationRate = 1000;
+	private int populationSize= 20 ;
+	private double fitnessValue;
 	
 	
-	private static int POPULATION_SIZE = 20;
 	private static final Logger LOGGER = Logger.getLogger(GASummaryStrategyImpl.class);
 	private HashMap<String, Integer> freqTable=null;
 	private HashMap<String, List<Double>> tfTable=null;
@@ -54,17 +55,10 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		super();
 	}
 
-	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName)
-			throws BeansException {
+	public Document doSummary(Document aDocument) {
 		getStopWordEliminationFromProperty();
 		getStemmingFromProperty();
 		extractSummPropFromProperties();
-		return bean;
-	}
-
-	public Document doSummary(Document aDocument) {
-		
 		long t1=System.currentTimeMillis();
 		LOGGER.debug("summarization starts...");
 		setDocumentToBeSummarized(aDocument);
@@ -87,6 +81,10 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		 * GA Configuration
 		 */
 		Genotype genotype = createGAConfig(aDocument, graph);
+		LOGGER.debug("generation number:"+generationNumber);
+		LOGGER.debug("population number:"+populationSize);
+		LOGGER.debug("crossover rate:"+crossoverRate);
+		LOGGER.debug("mutation rate:"+mutationRate);
 		doEvolution(genotype);
 		
 		List<Integer> indexes = GeneHandler.getSummaryIndexes(genotype.getFittestChromosome());
@@ -101,7 +99,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 
 	private void doEvolution(Genotype genotype) {
 		LOGGER.debug("GAConfig created...");
-		for(int i=0;i<GENERATION_NUMBER;i++){
+		generationNumber=propertyHandler.getGenerationNumber();
+		for(int i=0;i<generationNumber;i++){
 			genotype.evolve();
 			double fitnesValue = genotype.getFittestChromosome().getFitnessValue();
 			LOGGER.info("fitness value="+fitnesValue);
@@ -109,6 +108,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		LOGGER.info("best fitness value:"+genotype.getFittestChromosome().getFitnessValue());
 		String geneString=GeneHandler.showGene(genotype.getFittestChromosome().getGenes());
 		LOGGER.info("best gene as string:"+geneString);
+		setFitnessValue(genotype.getFittestChromosome().getFitnessValue());
 	}
 
 
@@ -138,8 +138,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 			genotype = generatePopulation(configuration);
 			//genotype.evolve();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOGGER.error(e);
 		}
 		
 		return genotype;
@@ -169,7 +168,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		}
 		Chromosome sampleChromosome = new Chromosome(configuration, sampleGenes );
 		configuration.setSampleChromosome( sampleChromosome );
-		configuration.setPopulationSize( POPULATION_SIZE );
+		configuration.setPopulationSize( (populationSize=propertyHandler.getPopulationNumber()) );
 	}
 
 
@@ -177,8 +176,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 			throws InvalidConfigurationException {
 		SummaryFitness myFitnessFunction = new SummaryFitness(graph,getDesiredNumberOfSentenceInSum());
 		configuration.getGeneticOperators().clear();
-		configuration.addGeneticOperator(new SummaryCrossover(getNumberOfSentences(), getDesiredNumberOfSentenceInSum(),configuration,CROSSOVER_RATE));
-		configuration.addGeneticOperator(new SummaryMutation(configuration,MUTATION_RATE));
+		configuration.addGeneticOperator(new SummaryCrossover(getNumberOfSentences(), getDesiredNumberOfSentenceInSum(),configuration,(crossoverRate=propertyHandler.getCrossoverRate())));
+		configuration.addGeneticOperator(new SummaryMutation(configuration,(mutationRate=propertyHandler.getMutationRate())));
 		configuration.setFitnessFunction(myFitnessFunction);
 	}
 
@@ -232,46 +231,11 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements BeanPos
 		return tfValue*isfValue;
 	}
 
-
-	
-	
-	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName)
-			throws BeansException {
-		setCrossoverRate();
-		setMutationRate();
-		setPopulationSize();
-		setGenerationNumber();
-		return bean;
+	public double getFitnessValue() {
+		return fitnessValue;
 	}
 
-
-	private void setMutationRate() {
-		MUTATION_RATE=propertyHandler.getMutationRate();
+	public void setFitnessValue(double fitnessValue) {
+		this.fitnessValue = fitnessValue;
 	}
-
-
-	private void setCrossoverRate() {
-		CROSSOVER_RATE=propertyHandler.getCrossoverRate();
-		
-	}
-
-
-	private void setGenerationNumber() {
-		GENERATION_NUMBER=propertyHandler.getGenerationNumber();
-		
-	}
-
-
-	private void setPopulationSize() {
-		POPULATION_SIZE=propertyHandler.getPopulationNumber();
-		
-	}
-	
-
-	
-
-	
-
-
 }

@@ -26,9 +26,16 @@ public class FileOutputHandler implements IOutput {
 
 	@Override
 	public void write(String string) {
+		
+		write("output.txt",string);
+
+	}
+
+	@Override
+	public void write(String fileName, String string) {
 		BufferedWriter bufferedWriter=null;
 		try {
-			bufferedWriter=new BufferedWriter(new FileWriter(new File(propertyHandler.getOutputFile())));
+			bufferedWriter=new BufferedWriter(new FileWriter(new File(propertyHandler.getOutputFolder()+fileName)));
 			bufferedWriter.write(string);
 			bufferedWriter.newLine();
 			bufferedWriter.flush();
@@ -44,8 +51,6 @@ public class FileOutputHandler implements IOutput {
 				bufferedWriter=null;
 			}
 		}
-		
-
 	}
 
 }

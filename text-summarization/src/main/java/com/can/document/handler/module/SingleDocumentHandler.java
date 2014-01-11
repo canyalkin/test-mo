@@ -13,6 +13,7 @@ import com.can.summarizer.model.Document;
 import com.can.summarizer.model.RougeNType;
 import com.can.summary.calculations.NGramCalculator;
 import com.can.summary.module.AbstractSummarizer;
+import com.can.summary.module.GASummaryStrategyImpl;
 import com.can.word.utils.PropertyHandler;
 import com.can.word.utils.SummaryUtils;
 
@@ -61,6 +62,22 @@ public class SingleDocumentHandler {
 			refDoc=wordStemmer.doStemming(refDoc);
 		}
 		return refDoc;
+	}
+	
+	public double getLastFitnessValue(){
+		double val=0.0;
+		try{
+			val=((GASummaryStrategyImpl)summarizer).getFitnessValue();
+		}catch(ClassCastException castException){
+			LOGGER.error(castException);
+			val=0.0;
+		}catch(Exception e){
+			LOGGER.error(e);
+			val=0.0;
+		}
+		return val;
+		
+		
 	}
 
 	public Double calculateRougeN(Document sysSum, Document refDocument,
