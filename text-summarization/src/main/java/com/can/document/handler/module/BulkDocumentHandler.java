@@ -77,16 +77,22 @@ public class BulkDocumentHandler {
 	}
 	public String doBulkEvaluation(Map<String, Document> orginalDocuments,Map<String, Document> summaryDocuments,
 			Map<String, Document> referenceDocuments) {
+		DecimalFormat formatter = new DecimalFormat();
+		formatter.setMaximumFractionDigits(5);
+		DecimalFormatSymbols dfs = formatter.getDecimalFormatSymbols();
+		dfs.setDecimalSeparator(',');
+		formatter.setDecimalFormatSymbols(dfs);
+		
 		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
 				summaryDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
 		StringBuffer stringBuffer=new StringBuffer();
 		stringBuffer.append("rouge n type:"+propertyHandler.getRougeNType()+"\n");
 		stringBuffer.append("rouge n number:"+propertyHandler.getRougeNNumber()+"\n");
-		stringBuffer.append("summary proportion:"+propertyHandler.getSummaryProportion()+"\n");
+		stringBuffer.append("summary proportion:"+formatter.format(propertyHandler.getSummaryProportion())+"\n");
 		stringBuffer.append("max Word number:"+propertyHandler.getMaxWordNumber()+"\n");
 		stringBuffer.append("population size:"+propertyHandler.getPopulationNumber()+"\n");
 		stringBuffer.append("genration number:"+propertyHandler.getGenerationNumber()+"\n");
-		stringBuffer.append("Crossover Rate:"+propertyHandler.getCrossoverRate()+"\n");
+		stringBuffer.append("Crossover Rate:"+formatter.format(propertyHandler.getCrossoverRate())+"\n");
 		stringBuffer.append("Mutation Rate:"+propertyHandler.getMutationRate()+"\n");
 		double total=0.0;
 		double average=0.0;
@@ -94,11 +100,7 @@ public class BulkDocumentHandler {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			Set<String> evaluatedFiles = results.keySet();
 			stringBuffer.append("file:rouge-n:# of words in original doc:# of words in refernce doc:# of words in summary doc"+"\n");
-			DecimalFormat formatter = new DecimalFormat();
-			formatter.setMaximumFractionDigits(5);
-			DecimalFormatSymbols dfs = formatter.getDecimalFormatSymbols();
-			dfs.setDecimalSeparator(',');
-			formatter.setDecimalFormatSymbols(dfs);
+			
 			for (String string : evaluatedFiles) {
 				
 				stringBuffer.append(string+":"+formatter.format(results.get(string))+":"+SummaryUtils.calculateOriginalSentenceWordNumber((orginalDocuments.get(string)))+
@@ -108,7 +110,7 @@ public class BulkDocumentHandler {
 			}
 			
 			average=total/evaluatedFiles.size();
-			stringBuffer.append("Average:"+average+"\n");
+			stringBuffer.append("Average:"+formatter.format(average)+"\n");
 			
 		} catch (MissingFileException e) {
 			// TODO Auto-generated catch block
