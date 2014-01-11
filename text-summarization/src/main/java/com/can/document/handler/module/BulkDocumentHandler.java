@@ -80,6 +80,14 @@ public class BulkDocumentHandler {
 		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
 				summaryDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
 		StringBuffer stringBuffer=new StringBuffer();
+		stringBuffer.append("rouge n type:"+propertyHandler.getRougeNType()+"\n");
+		stringBuffer.append("rouge n number:"+propertyHandler.getRougeNNumber()+"\n");
+		stringBuffer.append("summary proportion:"+propertyHandler.getSummaryProportion()+"\n");
+		stringBuffer.append("max Word number:"+propertyHandler.getMaxWordNumber()+"\n");
+		stringBuffer.append("population size:"+propertyHandler.getPopulationNumber()+"\n");
+		stringBuffer.append("genration number:"+propertyHandler.getGenerationNumber()+"\n");
+		stringBuffer.append("Crossover Rate:"+propertyHandler.getCrossoverRate()+"\n");
+		stringBuffer.append("Mutation Rate:"+propertyHandler.getMutationRate()+"\n");
 		double total=0.0;
 		double average=0.0;
 		try {
