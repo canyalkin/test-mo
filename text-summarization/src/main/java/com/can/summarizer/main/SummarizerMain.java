@@ -96,12 +96,16 @@ public class SummarizerMain {
 			/**
 			 * Do bulk summarization, create system summaries and update system document map
 			 */
+			long summaryt1=System.currentTimeMillis();
 			Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
-			
+			long summaryt2=System.currentTimeMillis();
 			/**
 			 * Bulk evaluation
 			 */
+			long evaluation1=System.currentTimeMillis();
 			String report=bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
+			long evaluation2=System.currentTimeMillis();
+			report = "all summaries take:"+(summaryt2-summaryt1)+"\n"+"all evaluations take:"+(evaluation2-evaluation1)+"\n"+report;
 			output.write("output"+(i+1)+".txt",report);
 			i++;
 		}
