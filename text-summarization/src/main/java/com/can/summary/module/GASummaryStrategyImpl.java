@@ -219,7 +219,10 @@ public class GASummaryStrategyImpl extends AbstractSummarizer {
 			denominatorLeft+=wI*wI;
 			denominatorRight+=wJ*wJ;
 		}
-		
+		if(denominatorLeft==0 || denominatorRight == 0){
+			LOGGER.error("error on calculating similarity: denominatorLeft==0 || denominatorRight == 0");
+			return 0.0;
+		}
 		return nominator/(Math.sqrt(denominatorLeft) * (Math.sqrt(denominatorRight)) );
 	}
 

@@ -65,21 +65,17 @@ public class Sentence {
 		return "Sentence [originalSentence=" + originalSentence + "]";
 	}
 	public List<String> getWordsAsStringList() {
-		if(wordListAsString==null){
-			wordListAsString=new LinkedList<String>();
-			for(int i=0;i<words.size();i++){
-				wordListAsString.add(words.get(i).getWord());
-			}
+		wordListAsString=new LinkedList<String>();
+		for(int i=0;i<words.size();i++){
+			wordListAsString.add(words.get(i).getWord());
 		}
 		return wordListAsString;
 	}
 	
 	public String getWordsAsString() {
 		StringBuffer buffer=new StringBuffer();
-		if(sentenceFromWords==null){
-			for(int i=0;i<words.size();i++){
-				buffer.append(words.get(i).getWord());
-			}
+		for(int i=0;i<words.size();i++){
+			buffer.append(words.get(i).getWord());
 		}
 		sentenceFromWords=buffer.toString();
 		return sentenceFromWords;

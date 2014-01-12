@@ -52,6 +52,7 @@ public class SummarizerMain {
 		Document refDocument=singleDocumentHandler.readRefDocument(propertyHandler.getRefDocumentName());
 		int i=0;
 		while(analysisHandler.setNextValues()){
+			//ilk ozetlemeden sonra stemming ve stopword kapa
 			long t1=System.currentTimeMillis();
 			Document sysSum=singleDocumentHandler.summarize();
 			long t2=System.currentTimeMillis();
