@@ -6,19 +6,20 @@ import java.util.StringTokenizer;
 
 public class Sentence {
 	
-	String originalSentence;
-	int originalSentencesWordNumber=0;
+	private final String originalSentence;
+	private final int originalSentencesWordNumber;
 
-	String sentence;
+	private String sentence;
 	
-	String sentenceFromWords=null;
-	List<Word> words;
-	List<String> wordListAsString=null;
-	List<String> ngramList=null;
+	private String sentenceFromWords=null;
+	private List<Word> words;
+	private List<String> wordListAsString=null;
+	private List<String> ngramList=null;
 	
 	public Sentence(String originalSentence) {
 		super();
 		this.originalSentence = originalSentence;
+		originalSentencesWordNumber=new StringTokenizer(this.originalSentence).countTokens();
 	}
 	/**
 	 * @return the originalSentence
@@ -29,10 +30,7 @@ public class Sentence {
 	/**
 	 * @param originalSentence the originalSentence to set
 	 */
-	public void setOriginalSentence(String originalSentence) {
-		this.originalSentence = originalSentence;
-		originalSentencesWordNumber=new StringTokenizer(this.originalSentence).countTokens();
-	}
+	
 	/**
 	 * @return the sentence
 	 */
@@ -100,12 +98,5 @@ public class Sentence {
 	public int getOriginalSentencesWordNumber() {
 		return originalSentencesWordNumber;
 	}
-	/**
-	 * @param originalSentencesWordNumber the originalSentencesWordNumber to set
-	 */
-	public void setOriginalSentencesWordNumber(int originalSentencesWordNumber) {
-		this.originalSentencesWordNumber = originalSentencesWordNumber;
-	}
-	
 
 }

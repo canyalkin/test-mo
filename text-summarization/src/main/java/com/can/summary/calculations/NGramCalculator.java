@@ -10,6 +10,8 @@ import com.can.summarizer.model.Sentence;
 
 public class NGramCalculator {
 
+	private NGramCalculator() {
+	}
 	
 	public static LinkedList<String> findNGram(int n,Sentence sentence,RougeNType rougeNType){
 		

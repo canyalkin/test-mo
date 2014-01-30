@@ -43,8 +43,7 @@ public class DocumentReaderFromFile extends DocumentReader {
 			while( (line=bufferedReader.readLine())!=null ){
 				extractWordsAndSentences(line, wholeDocument);
 			}
-			document=new Document();
-			document.setRef(isRef);
+			document=new Document(isRef);
 			if(propertyHandler.isTitle() && !document.isRef()){
 				document.setTitle(wholeDocument.get(0));
 				wholeDocument.remove(0);

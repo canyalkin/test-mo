@@ -1,9 +1,14 @@
 package com.can.word.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
+import com.can.summarizer.interfaces.SummaryStrategy;
 import com.can.summarizer.model.RougeNType;
 
 
@@ -99,9 +104,34 @@ public class PropertyHandler {
 			this.stopWordElimination =(false);
 		}
 		
+		String clusterNumber = environment.getProperty("clusterNumber");
+		if(clusterNumber==null || clusterNumber.equals("")){
+			setClusterNumber(3);
+		}else{
+			try{
+				setClusterNumber(Integer.parseInt(clusterNumber));
+			}catch(NumberFormatException nfe){
+				setClusterNumber(3);
+			}
+		}
+		String strategies=environment.getProperty("summaryStrategy");
+		setSummaryStrategy(strategies);
+		
+	}
+	private void setSummaryStrategy(String strategies) {
+		List<SummaryStrategy> summaryStrategies=new ArrayList<SummaryStrategy>();
+		String[] strategyArray = strategies.split(",");
+		for (String strategy : strategyArray) {
+			summaryStrategies.add(applicationContext.getBean(strategy,SummaryStrategy.class));
+		}
+		setSummaryStrategy(summaryStrategies);
+		
 	}
 	@Autowired
 	private Environment environment;
+	
+	@Autowired 
+	private ApplicationContext applicationContext;
 		
 	private double crossoverRate=0.85;
 	private String documentFolder;
@@ -120,6 +150,10 @@ public class PropertyHandler {
 	private boolean title=true;
 	private boolean isStemming=true;
 	private boolean stopWordElimination=true;
+	
+	
+	private int clusterNumber;
+	private List<SummaryStrategy> summaryStrategy;
 	//stop word file burda yok
 	
 	public boolean isStemming() {
@@ -311,6 +345,18 @@ public class PropertyHandler {
 				+ ", wordNetFolder=" + wordNetFolder + ", title=" + title
 				+ ", isStemming=" + isStemming + ", stopWordElimination="
 				+ stopWordElimination + "]";
+	}
+	public int getClusterNumber() {
+		return clusterNumber;
+	}
+	public void setClusterNumber(int clusterNumber) {
+		this.clusterNumber = clusterNumber;
+	}
+	public List<SummaryStrategy> getSummaryStrategy() {
+		return summaryStrategy;
+	}
+	public void setSummaryStrategy(List<SummaryStrategy> summaryStrategy) {
+		this.summaryStrategy = summaryStrategy;
 	}
 	
 	

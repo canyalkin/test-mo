@@ -15,7 +15,9 @@ import com.can.summarizer.model.Word;
 public final class FrequencyCalculator {
 
 	private static final Logger LOGGER = Logger.getLogger(FrequencyCalculator.class);
-	
+
+	private FrequencyCalculator() {
+	}
 	public static HashMap<String,List<Double>> calculateTermFreq(HashMap<String,Integer> freqTable,Document aDocument){
 		
 		HashMap<String,List<Double>> wordSentenceHash=new HashMap<String, List<Double>>();

@@ -12,6 +12,7 @@ import com.can.analysis.AnalysisHandler;
 import com.can.document.handler.module.BulkDocumentHandler;
 import com.can.document.handler.module.SingleDocumentHandler;
 import com.can.document.reader.BulkDocumentReader;
+import com.can.reporter.SummaryReport;
 import com.can.summarizer.config.ApplicationConfiguration;
 import com.can.summarizer.interfaces.IOutput;
 import com.can.summarizer.model.Document;
@@ -39,45 +40,29 @@ public class SummarizerMain {
 		 * 
 		 */
 		
-		/*DecimalFormat formatter = new DecimalFormat();
-		formatter.setMaximumFractionDigits(5);
-		//formatter.setMinimumFractionDigits(4);
-		DecimalFormatSymbols dfs = formatter.getDecimalFormatSymbols();
-		dfs.setDecimalSeparator(',');
-		formatter.setDecimalFormatSymbols(dfs);
-		
-		StringBuffer stringBuffer=new StringBuffer();
-		SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
+		/*SingleDocumentHandler singleDocumentHandler=context.getBean(SingleDocumentHandler.class);
 		singleDocumentHandler.readDocument(propertyHandler.getDocumentName());
 		Document refDocument=singleDocumentHandler.readRefDocument(propertyHandler.getRefDocumentName());
+		
+		SummaryReport summaryReport;
 		int i=0;
 		while(analysisHandler.setNextValues()){
+			summaryReport=new SummaryReport();
 			//ilk ozetlemeden sonra stemming ve stopword kapa
 			long t1=System.currentTimeMillis();
 			Document sysSum=singleDocumentHandler.summarize();
 			long t2=System.currentTimeMillis();
 			Double result=singleDocumentHandler.calculateRougeN(sysSum,refDocument,propertyHandler.getRougeNType(),
 					propertyHandler.getRougeNNumber());
-			stringBuffer.append("summarization takes:"+(t2-t1)+"\n");
-			stringBuffer.append("fitness value:"+formatter.format(singleDocumentHandler.getLastFitnessValue())+"\n");
-			stringBuffer.append("generation number:"+propertyHandler.getGenerationNumber()+"\n");
-			stringBuffer.append("population size:"+propertyHandler.getPopulationNumber()+"\n");
-			stringBuffer.append("crossover rate:"+propertyHandler.getCrossoverRate()+"\n");
-			stringBuffer.append("mutation rate:"+propertyHandler.getMutationRate()+"\n");
-			stringBuffer.append("orig word number:"+singleDocumentHandler.getOriginalDocumentWordNumber()+"\n");
-			stringBuffer.append("ref word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(refDocument)+"\n");
-			stringBuffer.append("summary word number:"+SummaryUtils.calculateOriginalSentenceWordNumber(sysSum)+"\n");
-			
-			stringBuffer.append("Rouge -N result:"+formatter.format(result)+"\n");
-			stringBuffer.append(sysSum+"\n");
-			output.write("output"+i+".txt",stringBuffer.toString());
-			stringBuffer.setLength(0);
+			singleDocumentHandler.accept(summaryReport);
+			String report = summaryReport.createReport();
+			output.write("output"+i+".txt",report);
 			i++;
 		}*/
 		
 		
 		
-		
+		SummaryReport summaryReport;
 		BulkDocumentHandler bulkDocumentHandler=context.getBean(BulkDocumentHandler.class);
 		
 		/***
@@ -93,19 +78,17 @@ public class SummarizerMain {
 		
 		int i=0;
 		while(analysisHandler.setNextValues()){
+			summaryReport=new SummaryReport();
 			/**
 			 * Do bulk summarization, create system summaries and update system document map
 			 */
-			long summaryt1=System.currentTimeMillis();
 			Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
-			long summaryt2=System.currentTimeMillis();
 			/**
 			 * Bulk evaluation
 			 */
-			long evaluation1=System.currentTimeMillis();
-			String report=bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
-			long evaluation2=System.currentTimeMillis();
-			report = "all summaries take:"+(summaryt2-summaryt1)+"\n"+"all evaluations take:"+(evaluation2-evaluation1)+"\n"+report;
+			bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
+			bulkDocumentHandler.accept(summaryReport);
+			String report=summaryReport.createReport();
 			output.write("output"+(i+1)+".txt",report);
 			i++;
 		}

@@ -4,17 +4,12 @@ import java.util.List;
 
 public class Document {
 	
-	Sentence title;
-	List<Sentence> sentenceList;
-	boolean isRef=false;
+	private Sentence title;
+	private List<Sentence> sentenceList;
+	private boolean isRef=false;
 	
-	public Document(List<Sentence> sentenceList) {
-		super();
-		this.sentenceList = sentenceList;
-	}
-
-	public Document() {
-		// TODO Auto-generated constructor stub
+	public Document(boolean isRef) {
+		
 	}
 	
 	/**
@@ -50,13 +45,6 @@ public class Document {
 	 */
 	public boolean isRef() {
 		return isRef;
-	}
-
-	/**
-	 * @param isRef the isRef to set
-	 */
-	public void setRef(boolean isRef) {
-		this.isRef = isRef;
 	}
 
 	/* (non-Javadoc)

@@ -43,8 +43,7 @@ public abstract class DocumentReader implements DocumentCreator {
 		Word word;
 		List<Word> wordList=new LinkedList<Word>(); 
 		
-		Sentence s=new Sentence(line);
-		s.setOriginalSentence(new String(line));
+		Sentence s=new Sentence(new String(line));
 		line=line.toLowerCase(Locale.ENGLISH);
 		String[] words = line.split(" ");
 		

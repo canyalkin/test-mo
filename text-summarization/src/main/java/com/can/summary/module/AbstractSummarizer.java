@@ -49,18 +49,52 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 	}
 	
 	public Document createSummaryDocument(Document document, List<Integer> indexes){
-		Document summaryDocument=new Document();
+		Document summaryDocument=new Document(false);
 		
+		summaryDocument.setTitle(document.getTitle());
 		List<Sentence> sumSentence=new ArrayList<Sentence>(30);
 		int wordCount=0;
 		int i=0;
-		while (i < indexes.size() && wordCount < propertyHandler.getMaxWordNumber()) {
+		while (i < indexes.size() /*&& wordCount < propertyHandler.getMaxWordNumber()*/) {
 				sumSentence.add(document.getSentenceList().get(indexes.get(i)));
-				wordCount+=document.getSentenceList().get(indexes.get(i)).getOriginalSentencesWordNumber();
+				//wordCount+=document.getSentenceList().get(indexes.get(i)).getOriginalSentencesWordNumber();
 				i++;
 		}
 		summaryDocument.setSentenceList(sumSentence);
 		return summaryDocument;
+	}
+	
+	public Document finalizeSummaryWithPropertyWordNumber(Document document){
+		Document summaryDocument=new Document(false);
+		summaryDocument.setTitle(document.getTitle());
+		List<Sentence> sumSentence=new ArrayList<Sentence>(30);
+		int wordCount=0;
+		int i=0;
+		while ( wordCount < propertyHandler.getMaxWordNumber() && i<document.getSentenceList().size()) {
+				sumSentence.add(document.getSentenceList().get(i));
+				wordCount+=document.getSentenceList().get(i).getOriginalSentencesWordNumber();
+				i++;
+		}
+		summaryDocument.setSentenceList(sumSentence);
+		
+		return summaryDocument;
+	}
+	@Override
+	public Document doSummary(Document aDocument) {
+		getStopWordEliminationFromProperty();
+		getStemmingFromProperty();
+		extractSummPropFromProperties();
+		LOGGER.debug("summarization starts...");
+		setDocumentToBeSummarized(aDocument);
+		if(isStopWordElimination()){
+			doStopWordElimination();
+		}
+		if(isStemming()){
+			doStemming();
+		}
+		setNumberOfSentences(aDocument.getSentenceList().size());
+		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
+		return null;
 	}
 	
 	public void getStemmingFromProperty() {

@@ -1,11 +1,9 @@
 package com.can.summarizer.model;
 
 public class Word {
-		String word;
-	WordType wordType=WordType.none;
 	
-	public Word() {
-	}
+	private String word;
+	private WordType wordType=WordType.none;
 	
 	public Word(String word) {
 		super();
@@ -15,9 +13,14 @@ public class Word {
 	public String getWord() {
 		return word;
 	}
+	
+	/**
+	 * @param word the word to set
+	 */
 	public void setWord(String word) {
 		this.word = word;
 	}
+	
 	public WordType getWordType() {
 		return wordType;
 	}

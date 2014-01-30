@@ -23,6 +23,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.graph.module.Graph;
+import com.can.summarizer.interfaces.IVisitor;
+import com.can.summarizer.interfaces.Visitable;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summary.GAFunctions.GeneHandler;
@@ -34,7 +36,7 @@ import com.can.word.utils.PropertyHandler;
 
 @Component("GaStrategyBean")
 @Scope("singleton")
-public class GASummaryStrategyImpl extends AbstractSummarizer {
+public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitable {
 	
 	private int generationNumber = 15;
 	private double crossoverRate = 0.85;
@@ -56,20 +58,9 @@ public class GASummaryStrategyImpl extends AbstractSummarizer {
 	}
 
 	public Document doSummary(Document aDocument) {
-		getStopWordEliminationFromProperty();
-		getStemmingFromProperty();
-		extractSummPropFromProperties();
+		
+		super.doSummary(aDocument);
 		long t1=System.currentTimeMillis();
-		LOGGER.debug("summarization starts...");
-		setDocumentToBeSummarized(aDocument);
-		if(isStopWordElimination()){
-			doStopWordElimination();
-		}
-		if(isStemming()){
-			doStemming();
-		}
-		setNumberOfSentences(aDocument.getSentenceList().size());
-		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
 		LOGGER.debug("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
 		createStructuralProperties(aDocument);//frequency table ,tf, isf
 		Graph graph=new Graph(getNumberOfSentences());
@@ -90,7 +81,6 @@ public class GASummaryStrategyImpl extends AbstractSummarizer {
 		List<Integer> indexes = GeneHandler.getSummaryIndexes(genotype.getFittestChromosome());
 		LOGGER.info("summary indexes:"+indexes);
 		Document summaryDocument = createSummaryDocument(aDocument, indexes);
-		//Document summaryDocument = createSummaryDocument(aDocument, genotype);
 		/******************************************************/
 		long t2=System.currentTimeMillis();
 		LOGGER.info("summarization takes "+(t2-t1)/1000.0+" seconds.");
@@ -238,7 +228,41 @@ public class GASummaryStrategyImpl extends AbstractSummarizer {
 		return fitnessValue;
 	}
 
-	public void setFitnessValue(double fitnessValue) {
+	private void setFitnessValue(double fitnessValue) {
 		this.fitnessValue = fitnessValue;
+	}
+	/**
+	 * @return the generationNumber
+	 */
+	public int getGenerationNumber() {
+		return generationNumber;
+	}
+
+	/**
+	 * @return the crossoverRate
+	 */
+	public double getCrossoverRate() {
+		return crossoverRate;
+	}
+
+	/**
+	 * @return the mutationRate
+	 */
+	public int getMutationRate() {
+		return mutationRate;
+	}
+
+	/**
+	 * @return the populationSize
+	 */
+	public int getPopulationSize() {
+		return populationSize;
+	}
+
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+		
 	}
 }

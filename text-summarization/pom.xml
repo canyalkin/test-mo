@@ -8,7 +8,8 @@
 	<description>Text Summarization</description>
 
 	<properties>
-		<spring.version>3.2.3.RELEASE</spring.version>
+		<spring.version>4.0.0.RELEASE</spring.version>
+		<cluster.version>0.0.1-SNAPSHOT</cluster.version>
 	</properties>
 
 	<dependencies>
@@ -59,5 +60,10 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>com.cany.clustering</groupId>
+			<artifactId>HACClustering</artifactId>
+			<version>${cluster.version}</version>
+		</dependency>
 	</dependencies>
 </project>
