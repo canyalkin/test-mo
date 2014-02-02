@@ -1,10 +1,11 @@
 package com.can.analysis;
 
 public class AnalysisValue{
-	int generationNumber;
-	int populationSize;
-	double crossoverRate;
-	int mutationRate;
+	private int generationNumber;
+	private int populationSize;
+	private double crossoverRate;
+	private int mutationRate;
+	private int clusterNumber;
 	/**
 	 * @return the generationNumber
 	 */
@@ -52,6 +53,12 @@ public class AnalysisValue{
 	 */
 	public void setMutationrate(int mutationrate) {
 		this.mutationRate = mutationrate;
+	}
+	public int getClusterNumber() {
+		return clusterNumber;
+	}
+	public void setClusterNumber(int clusterNumber) {
+		this.clusterNumber = clusterNumber;
 	}
 	
 	

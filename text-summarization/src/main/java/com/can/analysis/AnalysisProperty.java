@@ -49,17 +49,32 @@ public class AnalysisProperty {
 			mutation.add(Integer.parseInt(array[i]));
 		}
 		
+		list = environment.getProperty("analysis_cluster", "");
+		array = list.split(",");
+		for (int i = 0; i < array.length; i++) {
+			clusterNumber.add(Integer.parseInt(array[i]));
+		}
 		
+		
+	}
+
+
+	/**
+	 * @return the clusterNumber
+	 */
+	public List<Integer> getClusterNumber() {
+		return clusterNumber;
 	}
 
 
 	@Autowired
 	private Environment environment;
 	
-	private List<Integer> generation_number=new ArrayList<Integer>(10);
-	private List<Integer> population=new ArrayList<Integer>(10);
-	private List<Double> crossover=new ArrayList<Double>(10);
-	private List<Integer> mutation=new ArrayList<Integer>(10);
+	private List<Integer> generation_number=new ArrayList<Integer>(20);
+	private List<Integer> population=new ArrayList<Integer>(20);
+	private List<Double> crossover=new ArrayList<Double>(20);
+	private List<Integer> mutation=new ArrayList<Integer>(20);
+	private List<Integer> clusterNumber=new ArrayList<Integer>(20);
 	/**
 	 * @return the environment
 	 */
@@ -140,7 +155,5 @@ public class AnalysisProperty {
 				+ population + ", crossover=" + crossover + ", mutation="
 				+ mutation + "]";
 	}
-	
-	
 	
 }

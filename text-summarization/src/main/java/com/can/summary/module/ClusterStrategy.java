@@ -47,7 +47,12 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 		LOGGER.debug("Similarity Matrix created");
 		HAC hac=new HAC(getNumberOfSentences(), simMatrix, new SingleLink());
 		Dendrom dendrom=hac.createCluster();
-		List<Cluster> clusterList = dendrom.getClusterAccordingToClusterNumber(propertyHandler.getClusterNumber());
+		int clusterNumber=propertyHandler.getClusterNumber();
+		if( !(clusterNumber<getNumberOfSentences() && clusterNumber>1) ){
+			clusterNumber=getNumberOfSentences()/2;
+			LOGGER.info("actual cluster number:"+clusterNumber);
+		}
+		List<Cluster> clusterList = dendrom.getClusterAccordingToClusterNumber(clusterNumber);
 		LOGGER.debug(clusterList);
 		List<Integer> indexes=new ArrayList<Integer>();
 		

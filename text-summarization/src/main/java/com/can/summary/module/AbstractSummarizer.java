@@ -86,12 +86,13 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		extractSummPropFromProperties();
 		LOGGER.debug("summarization starts...");
 		setDocumentToBeSummarized(aDocument);
-		if(isStopWordElimination()){
-			doStopWordElimination();
-		}
 		if(isStemming()){
 			doStemming();
 		}
+		if(isStopWordElimination()){
+			doStopWordElimination();
+		}
+		
 		setNumberOfSentences(aDocument.getSentenceList().size());
 		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
 		return null;

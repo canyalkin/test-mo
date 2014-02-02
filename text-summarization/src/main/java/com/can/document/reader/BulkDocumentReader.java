@@ -53,11 +53,11 @@ public class BulkDocumentReader {
 					Document document=documentReader.createDocument(isRef);
 					LOGGER.info(curFile.getName()+":"+document.getSentenceList().size());
 					if(isRef){
-						if(propertyHandler.isStopWordElimination()){
-							document=stopWordHandler.doStopWordElimination(document);
-						}
 						if(propertyHandler.isStemming()){
 							document=wordStemmer.doStemming(document);
+						}
+						if(propertyHandler.isStopWordElimination()){
+							document=stopWordHandler.doStopWordElimination(document);
 						}
 					}
 					LOGGER.info(curFile.getName()+":"+document.getSentenceList().size());

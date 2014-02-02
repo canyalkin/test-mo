@@ -56,6 +56,7 @@ public class BulkDocumentHandler implements Visitable{
 	private double xoverRate;
 	private double mutationRate;
 	private double summaryTime;
+	private double clusterNumber;
 
 	private double evaluationTime;
 
@@ -128,6 +129,7 @@ public class BulkDocumentHandler implements Visitable{
 		generationNumber=propertyHandler.getGenerationNumber();
 		xoverRate=propertyHandler.getCrossoverRate();
 		mutationRate=propertyHandler.getMutationRate();
+		clusterNumber=propertyHandler.getClusterNumber();
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			updateRougeNResults(results,orginalDocuments,referenceDocuments,summaryDocuments);
@@ -160,7 +162,9 @@ public class BulkDocumentHandler implements Visitable{
 				analysisData.setRefWordNumber(SummaryUtils.calculateOriginalSentenceWordNumber(referenceDocuments.get(curFile)));
 				analysisData.setSummWordNumber(SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(curFile)));
 				analysisData.setRougeNValue(results.get(curFile));
-				analysisData.setFitnessValue(fitnessValues.get(curFile));
+				if(fitnessValues!=null){
+					analysisData.setFitnessValue(fitnessValues.get(curFile));
+				}
 				bulkDataAnalysis.put(curFile, analysisData);
 			}
 		}
@@ -239,7 +243,9 @@ public class BulkDocumentHandler implements Visitable{
 		
 	}
 	public void clearData() {
-		fitnessValues.clear();
+		if(fitnessValues!=null){
+			fitnessValues.clear();
+		}
 		bulkDataAnalysis.clear();
 		
 	}
@@ -250,6 +256,7 @@ public class BulkDocumentHandler implements Visitable{
 	public double getEvaluationTime() {
 		return evaluationTime;
 	}
-
-	
+	public double getClusterNumber() {
+		return clusterNumber;
+	}
 }

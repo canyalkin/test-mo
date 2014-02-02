@@ -36,18 +36,22 @@ public class AnalysisHandler {
 		List<Integer> populationList = analysisProperty.getPopulation();
 		List<Double> crossoverList = analysisProperty.getCrossover();
 		List<Integer> mutationList = analysisProperty.getMutation();
+		List<Integer> clusterList = analysisProperty.getClusterNumber();
 		
 		AnalysisValue analysisValue;
 		for(int i=0;i<generationList.size();i++){
 			for(int j=0;j<populationList.size();j++){
 				for(int k=0; k<crossoverList.size();k++){
 					for(int l=0;l<mutationList.size();l++){
-						analysisValue=new AnalysisValue();
-						analysisValue.setGenerationNumber(generationList.get(i));
-						analysisValue.setPopulationSize(populationList.get(j));
-						analysisValue.setCrossoverRate(crossoverList.get(k));
-						analysisValue.setMutationrate(mutationList.get(l));
-						analyseValues.add(analysisValue);
+						for(int m=0;m<clusterList.size();m++){
+							analysisValue=new AnalysisValue();
+							analysisValue.setGenerationNumber(generationList.get(i));
+							analysisValue.setPopulationSize(populationList.get(j));
+							analysisValue.setCrossoverRate(crossoverList.get(k));
+							analysisValue.setMutationrate(mutationList.get(l));
+							analysisValue.setClusterNumber(clusterList.get(m));
+							analyseValues.add(analysisValue);
+						}
 					}
 				}
 			}
@@ -64,6 +68,7 @@ public class AnalysisHandler {
 			propertyHandler.setPopulationNumber(analyseValues.get(currIndex).getPopulationSize());
 			propertyHandler.setCrossoverRate(analyseValues.get(currIndex).getCrossoverRate());
 			propertyHandler.setMutationRate(analyseValues.get(currIndex).getMutationrate());
+			propertyHandler.setClusterNumber(analyseValues.get(currIndex).getClusterNumber());
 			currIndex++;
 			return true;
 		}else{
@@ -80,7 +85,9 @@ public class AnalysisHandler {
 				+ ", currIndex=" + currIndex + "]";
 	}
 	
-	
+	public boolean isAnalysisMode(){
+		return propertyHandler.isAnalysisMode(); 
+	}
 	
 
 }

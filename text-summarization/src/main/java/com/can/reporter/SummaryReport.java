@@ -68,7 +68,7 @@ public class SummaryReport implements IVisitor {
 		stringBuffer.append("genration number:"+bulkDocumentHandler.getGenerationNumber()+"\n");
 		stringBuffer.append("Crossover Rate:"+formatter.format(bulkDocumentHandler.getXoverRate())+"\n");
 		stringBuffer.append("Mutation Rate:"+formatter.format(bulkDocumentHandler.getMutationRate())+"\n");
-		
+		stringBuffer.append("Cluster Numebr:"+(bulkDocumentHandler.getClusterNumber())+"\n");
 		Map<String, AnalysisData> analysisData = bulkDocumentHandler.getBulkDataAnalysis();
 		Set<String> keySet = analysisData.keySet();
 		stringBuffer.append("file:rouge-n:# of words in original doc:# of words in reference doc:# of words in summary doc:fitness value"+"\n");

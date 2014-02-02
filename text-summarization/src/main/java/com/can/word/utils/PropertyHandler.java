@@ -117,6 +117,13 @@ public class PropertyHandler {
 		String strategies=environment.getProperty("summaryStrategy");
 		setSummaryStrategy(strategies);
 		
+		String analysisMode=environment.getProperty("analyse_mode");
+		if(analysisMode.equals("true")){
+			this.analysisMode=true;
+		}else{
+			this.analysisMode=false;
+		}
+		
 	}
 	private void setSummaryStrategy(String strategies) {
 		List<SummaryStrategy> summaryStrategies=new ArrayList<SummaryStrategy>();
@@ -150,6 +157,7 @@ public class PropertyHandler {
 	private boolean title=true;
 	private boolean isStemming=true;
 	private boolean stopWordElimination=true;
+	private boolean analysisMode=false;
 	
 	
 	private int clusterNumber;
@@ -357,6 +365,12 @@ public class PropertyHandler {
 	}
 	public void setSummaryStrategy(List<SummaryStrategy> summaryStrategy) {
 		this.summaryStrategy = summaryStrategy;
+	}
+	public boolean isAnalysisMode() {
+		return analysisMode;
+	}
+	public void setAnalysisMode(boolean analysisMode) {
+		this.analysisMode = analysisMode;
 	}
 	
 	

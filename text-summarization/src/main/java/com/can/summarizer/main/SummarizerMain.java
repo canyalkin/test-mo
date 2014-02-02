@@ -77,7 +77,7 @@ public class SummarizerMain {
 		
 		
 		int i=0;
-		while(analysisHandler.setNextValues()){
+		while(analysisHandler.setNextValues() && analysisHandler.isAnalysisMode()){
 			summaryReport=new SummaryReport();
 			/**
 			 * Do bulk summarization, create system summaries and update system document map
@@ -91,6 +91,8 @@ public class SummarizerMain {
 			String report=summaryReport.createReport();
 			output.write("output"+(i+1)+".txt",report);
 			i++;
+			propertyHandler.setStemming(false);
+			propertyHandler.setStopWordElimination(false);
 		}
 		
 		
