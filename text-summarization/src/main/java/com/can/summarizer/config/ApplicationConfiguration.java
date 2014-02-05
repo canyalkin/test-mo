@@ -14,7 +14,12 @@ import org.springframework.core.env.Environment;
 
 import com.can.analysis.AnalysisHandler;
 import com.can.analysis.AnalysisProperty;
+import com.can.cluster.handling.MaxDiffStrategy;
+import com.can.cluster.handling.SimpleClusterChooseStrategy;
+import com.can.cluster.handling.SimpleSentenceChooser;
 import com.can.document.handler.module.StopWordHandler;
+import com.can.summarizer.interfaces.ClusterChooseSentenceStrategy;
+import com.can.summarizer.interfaces.ClusterChooseStrategy;
 import com.can.summarizer.interfaces.ICalculateSimilarity;
 import com.can.summary.module.AbstractSummarizer;
 import com.can.summary.module.ClusterStrategy;
@@ -83,6 +88,23 @@ public class ApplicationConfiguration {
 			}
 		}
 		return proportionList;
+	}
+	
+	@Bean
+	public ClusterChooseStrategy getClusterChooseStrategy(){
+		String propList = environment.getProperty("clusterChooseStrategy");
+		if(propList.equals("maxdiff")){
+			return new MaxDiffStrategy();
+			
+		}else{
+			return new SimpleClusterChooseStrategy();
+		}
+	}
+	
+	@Bean
+	public ClusterChooseSentenceStrategy getClusterChooseSentenceStrategy(){
+		String propList = environment.getProperty("clusterSentenceChoose");
+		return new SimpleSentenceChooser();
 	}
 	
 	

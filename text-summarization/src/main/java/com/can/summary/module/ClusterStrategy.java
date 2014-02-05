@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.can.summarizer.interfaces.ClusterChooseSentenceStrategy;
+import com.can.summarizer.interfaces.ClusterChooseStrategy;
 import com.can.summarizer.interfaces.ICalculateSimilarity;
 import com.can.summarizer.interfaces.IVisitor;
 import com.can.summarizer.interfaces.Visitable;
@@ -38,6 +40,12 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 	@Resource(name="clusterProportion")
 	private List<Double> mergeProportion;
 	
+	@Autowired
+	ClusterChooseStrategy clusterChooseStrategy;
+	
+	@Autowired
+	ClusterChooseSentenceStrategy chooseSentenceStrategy;
+	
 	@Override
 	public Document doSummary(Document aDocument) {
 		LOGGER.info("Cluster strategy starts");
@@ -47,39 +55,13 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 		LOGGER.debug("Similarity Matrix created");
 		HAC hac=new HAC(getNumberOfSentences(), simMatrix, new SingleLink());
 		Dendrom dendrom=hac.createCluster();
+		LOGGER.debug(dendrom);
 		int clusterNumber=propertyHandler.getClusterNumber();
-		if( !(clusterNumber<getNumberOfSentences() && clusterNumber>1) ){
-			clusterNumber=getNumberOfSentences()/2;
-			LOGGER.info("actual cluster number:"+clusterNumber);
-		}
-		List<Cluster> clusterList = dendrom.getClusterAccordingToClusterNumber(clusterNumber);
-		LOGGER.debug(clusterList);
-		List<Integer> indexes=new ArrayList<Integer>();
-		
-		int index=0;
-		while(indexIsNotOutOfBoundsForAllClusters(clusterList,index)){
-			for(int i = 0 ;i<clusterList.size();i++){
-				Cluster cluster=clusterList.get(i);
-				if(index<cluster.clusterSize()){
-					indexes.add(cluster.getItem(index));
-				}
-			}
-			index++;
-		}
+		List<Cluster> clusterList = clusterChooseStrategy.chooseCluster(dendrom, getNumberOfSentences(),aDocument);
+		LOGGER.info("cluster number:"+clusterNumber);
+		List<Integer> indexes = chooseSentenceStrategy.createSentence(clusterList);
 		return createSummaryDocument(getDocumentToBeSummarized(), indexes);
 	}
-
-
-	private boolean indexIsNotOutOfBoundsForAllClusters(List<Cluster> clusterList, int index) {
-		boolean retVal=false;
-		for (Cluster cluster : clusterList) {
-			if(index<cluster.clusterSize()){
-				return true;
-			}
-		}
-		return retVal;
-	}
-
 
 	private double[][] createSentenceSimilarityMatrix() {
 		
