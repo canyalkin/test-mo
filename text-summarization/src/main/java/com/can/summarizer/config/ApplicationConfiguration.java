@@ -16,6 +16,7 @@ import com.can.analysis.AnalysisHandler;
 import com.can.analysis.AnalysisProperty;
 import com.can.cluster.handling.MaxDiffStrategy;
 import com.can.cluster.handling.MaxUniqueWordChooser;
+import com.can.cluster.handling.ProportionalClusterChooser;
 import com.can.cluster.handling.SimpleClusterChooseStrategy;
 import com.can.cluster.handling.SimpleSentenceChooser;
 import com.can.document.handler.module.StopWordHandler;
@@ -97,6 +98,8 @@ public class ApplicationConfiguration {
 		if(propList.equals("maxdiff")){
 			return new MaxDiffStrategy();
 			
+		}else if(propList.equals("proportional")){
+			return new ProportionalClusterChooser();
 		}else{
 			return new SimpleClusterChooseStrategy();
 		}
