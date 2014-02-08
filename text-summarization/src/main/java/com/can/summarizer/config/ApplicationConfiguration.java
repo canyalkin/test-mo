@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import com.can.analysis.AnalysisHandler;
 import com.can.analysis.AnalysisProperty;
 import com.can.cluster.handling.MaxDiffStrategy;
+import com.can.cluster.handling.MaxUniqueWordChooser;
 import com.can.cluster.handling.SimpleClusterChooseStrategy;
 import com.can.cluster.handling.SimpleSentenceChooser;
 import com.can.document.handler.module.StopWordHandler;
@@ -104,7 +105,14 @@ public class ApplicationConfiguration {
 	@Bean
 	public ClusterChooseSentenceStrategy getClusterChooseSentenceStrategy(){
 		String propList = environment.getProperty("clusterSentenceChoose");
-		return new SimpleSentenceChooser();
+		if(propList.equals("simple")){
+			return new SimpleSentenceChooser();
+		}else if(propList.equals("maxuniqueword")){
+			return new MaxUniqueWordChooser();
+		}else{
+			return new SimpleSentenceChooser();
+		}
+		
 	}
 	
 	

@@ -1,5 +1,6 @@
 package com.can.summarizer.model;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -60,7 +61,7 @@ public class Sentence {
 	 */
 	@Override
 	public String toString() {
-		return "Sentence [originalSentence=" + originalSentence + "]";
+		return "Sentence [unique word number"+ getUniqueWordNumber()+" originalSentence=" + originalSentence + "] ";
 	}
 	public List<String> getWordsAsStringList() {
 		wordListAsString=new LinkedList<String>();
@@ -98,5 +99,22 @@ public class Sentence {
 	public int getOriginalSentencesWordNumber() {
 		return originalSentencesWordNumber;
 	}
+	
+	public int getUniqueWordNumber(){
+		int count=0;
+		if(words==null)
+			return 0;
+		HashMap<String, Integer> wordSet=new HashMap<String, Integer>();
+		for(int i=0;i<words.size();i++){
+			String key=words.get(i).getWord();
+			if(!wordSet.containsKey(key)){
+				count++;
+				wordSet.put(key, 1);
+			}
+		}
+		wordSet=null;
+		return count;
+	}
+	
 
 }

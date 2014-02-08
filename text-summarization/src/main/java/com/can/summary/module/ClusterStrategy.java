@@ -1,6 +1,5 @@
 package com.can.summary.module;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -55,10 +54,9 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 		LOGGER.debug("Similarity Matrix created");
 		HAC hac=new HAC(getNumberOfSentences(), simMatrix, new SingleLink());
 		Dendrom dendrom=hac.createCluster();
-		LOGGER.info(dendrom);
-		int clusterNumber=propertyHandler.getClusterNumber();
+		LOGGER.debug(dendrom);
 		List<Cluster> clusterList = clusterChooseStrategy.chooseCluster(dendrom, getNumberOfSentences(),aDocument);
-		LOGGER.info("cluster number:"+clusterNumber);
+		LOGGER.info("cluster number:"+clusterList.size());
 		List<Integer> indexes = chooseSentenceStrategy.createSentence(clusterList,aDocument);
 		return createSummaryDocument(getDocumentToBeSummarized(), indexes);
 	}
