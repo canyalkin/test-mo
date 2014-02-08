@@ -4,12 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.can.summarizer.interfaces.ClusterChooseSentenceStrategy;
+import com.can.summarizer.model.Document;
 import com.clustering.HAC.Cluster;
 
 public class SimpleSentenceChooser implements ClusterChooseSentenceStrategy {
 
 	@Override
-	public List<Integer> createSentence(List<Cluster> clusterList) {
+	public List<Integer> createSentence(List<Cluster> clusterList,Document document) {
 		List<Integer> indexes=new ArrayList<Integer>();
 		int index=0;
 		while(indexIsNotOutOfBoundsForAllClusters(clusterList,index)){
