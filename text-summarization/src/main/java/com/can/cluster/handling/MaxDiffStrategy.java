@@ -15,7 +15,7 @@ public class MaxDiffStrategy implements ClusterChooseStrategy {
 	public List<Cluster> chooseCluster(Dendrom dendrom, int size,Document document) {
 
 		double diff=-1.0;
-		double maxDiff=0.40;
+		double maxDiff=0.20;
 		int maxDiffIndex=1;
 		for(int i=1;i<size-1;i++){
 			diff=dendrom.getLevelDistance(i+1)-dendrom.getLevelDistance(i);

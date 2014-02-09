@@ -14,8 +14,10 @@ public class Sentence {
 	
 	private String sentenceFromWords=null;
 	private List<Word> words;
+	private List<String> posTags;
 	private List<String> wordListAsString=null;
 	private List<String> ngramList=null;
+	private HashMap<String, Integer> hypernym=null;
 	
 	public Sentence(String originalSentence) {
 		super();
@@ -114,6 +116,19 @@ public class Sentence {
 		}
 		wordSet=null;
 		return count;
+	}
+	public List<String> getPosTags() {
+		return posTags;
+	}
+	public void setPosTags(List<String> posTags) {
+		this.posTags = posTags;
+	}
+	public void setHypernym(HashMap<String, Integer> hypernym) {
+		this.hypernym=hypernym;
+	}
+	
+	public HashMap<String, Integer> getHypernym() {
+		return this.hypernym;
 	}
 	
 
