@@ -123,4 +123,68 @@ public final class FrequencyCalculator {
 		return freqHashMap;
 		
 	}
+	
+	public static HashMap<String,Double> createIdfTable(HashMap<String, Integer> frequencyTable){
+		HashMap<String, Double> idfTable=new HashMap<String, Double>(frequencyTable.size());
+		
+		Set<String> uniqueTerms = frequencyTable.keySet();
+		
+		double totalWordNumber=calculateTotalWordNumber(frequencyTable);
+		
+		for (String term : uniqueTerms) {
+			double idfValue=calculateIdf(term,frequencyTable,totalWordNumber);
+			idfTable.put(term, idfValue);
+		}
+		return idfTable;
+	}
+	private static double calculateTotalWordNumber(
+			HashMap<String, Integer> frequencyTable) {
+		Set<String> uniqueTerms = frequencyTable.keySet();
+		Double totalCount=0.0;
+		for (String key : uniqueTerms) {
+			totalCount+=frequencyTable.get(key);
+		}
+		return totalCount;
+	}
+	private static double calculateIdf(String term,
+			HashMap<String, Integer> frequencyTable, double totalWordNumber) {
+		
+		Integer termCount = frequencyTable.get(term);
+		double retVal=Math.log(totalWordNumber / (double)termCount);
+		if(retVal==Double.NaN){
+			LOGGER.error("for term:"+term+" NaN");
+			retVal=0.0;
+		}
+		
+		return retVal;
+	}
+	
+	public static HashMap<String,Double> createTfIdfTable(HashMap<String,Integer> tf, HashMap<String,Double> idf){
+		HashMap<String,Double> tfIdf=new HashMap<String, Double>(tf.size());
+		if(tf.size()!=idf.size()){
+			LOGGER.error("unexpected tf & idf size different. tf:"+tf.size()+" idf:"+idf.size());
+			return tfIdf;
+		}
+		Set<String> keys = tf.keySet();
+		for (String key: keys) {
+			tfIdf.put(key, tf.get(key)*idf.get(key));
+		}
+		return tfIdf;
+	}
+	
+	public static void addWordsToList(List<String> wordList,Sentence sentence){
+		List<Word> words = sentence.getWords();
+		for (Word word : words) {
+			if(!wordList.contains(word.getWord())){
+				wordList.add(word.getWord());
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 }

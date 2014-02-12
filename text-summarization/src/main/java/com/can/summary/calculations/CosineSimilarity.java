@@ -43,10 +43,10 @@ public class CosineSimilarity {
 			Sentence sentence, Sentence sentence2) {
 		
 		HashMap<String, WordCounts> wordList = new HashMap<String, WordCounts>(
-				sentence.getWords().size() * 20);
-		wordList = createWordListForSimilarity(sentence, sentence2, wordList,
+				sentence.getWords().size() * 2);
+		wordList = createWordListForSimilarity(sentence, sentence2, wordList,//1. cümlede olup da 2. cümlede olmayan kelimeler
 				true);
-		wordList = createWordListForSimilarity(sentence2, sentence, wordList,
+		wordList = createWordListForSimilarity(sentence2, sentence, wordList,//2.cümlede olup da 1de olmayanlar için 
 				false);
 		return wordList;
 	}
@@ -83,6 +83,29 @@ public class CosineSimilarity {
 		}
 
 		return cnt;
+	}
+	
+	public static double calculate(List<Double> list1,List<Double> list2){
+		double value=0.0;
+		if(list1.size()!=list2.size()){
+			return 0.0;
+		}
+		double numerator=0.0;
+		double denominatorA=0.0;
+		double denominatorB=0.0;
+		for(int i=0;i<list1.size();i++){
+			numerator += list1.get(i)*list2.get(i);
+			denominatorA += Math.pow(list1.get(i),2);
+			denominatorB += Math.pow(list2.get(i),2);
+		}
+		if (denominatorA != 0.0 | denominatorB != 0.0) {
+            value = numerator / (denominatorA * denominatorB);
+        } else {
+            return 0.0;
+        }
+		return value;
+		
+		
 	}
 
 
