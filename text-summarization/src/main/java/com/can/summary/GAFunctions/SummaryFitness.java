@@ -8,6 +8,8 @@ import org.jgap.Gene;
 import org.jgap.IChromosome;
 
 import com.can.graph.module.Graph;
+import com.can.summarizer.model.Document;
+import com.can.summary.calculations.CosineSimilarity;
 
 public class SummaryFitness extends FitnessFunction {
 	private int sentenceNumInSum=0;
@@ -16,17 +18,20 @@ public class SummaryFitness extends FitnessFunction {
 	 */
 	private static final long serialVersionUID = -7571866515538817954L;
 	private static final Logger LOGGER = Logger.getLogger(SummaryFitness.class);
-	Graph similarityGraph;
+	private Graph similarityGraph;
+	private Document document;
 	
-	public SummaryFitness(Graph graph,int sentenceNumInSum) {
+	public SummaryFitness(Graph graph,int sentenceNumInSum,Document document) {
 		similarityGraph=graph;
 		this.sentenceNumInSum=sentenceNumInSum;
+		this.document=document;
 	}
 
 	@Override
 	protected double evaluate(IChromosome chromosome) {
 		double CF=calculateCohesionFactor(chromosome);
 		double RF=calculateReadibilityFactor(chromosome);
+		//double sentenceToTitleSim=calculateSentenceToTitleSim(chromosome);
 		double returnValue=0.0;
 		if(0.5*CF+0.5*RF>1){
 			LOGGER.debug("CF:"+CF);
@@ -35,14 +40,28 @@ public class SummaryFitness extends FitnessFunction {
 				printGene(chromosome.getGenes());
 			}
 		}
+		//returnValue=0.3*CF+0.2*RF+0.5*sentenceToTitleSim;
 		returnValue=0.5*CF+0.5*RF;
-		if(returnValue==Double.NaN){
+		if(Double.isNaN(returnValue)){
 			LOGGER.error("fitness : NaN value !!!!!!!!");
 			returnValue=0.0;
 		}
+		returnValue+=calculateSentenceToTitleSim(chromosome);
 		return returnValue;
 	}
 	
+	private double calculateSentenceToTitleSim(IChromosome chromosome) {
+		List<Integer> indexList = GeneHandler.getSummaryIndexes(chromosome);
+		if (document.getTitle()==null){
+			return 0.0;
+		}
+		double retVal=0.0;
+		for (Integer index : indexList) {
+			retVal+=CosineSimilarity.calculate(document.getTitle(), document.getSentenceList().get(index));
+		}
+		return retVal;
+	}
+
 	private double calculateCohesionFactor(IChromosome chromosome){
 		double value=0.0;
 		double Cs=0.0;
@@ -69,7 +88,8 @@ public class SummaryFitness extends FitnessFunction {
 		}else{
 			value=0.0;
 		}
-		if(value==Double.NaN){
+		
+		if(Double.isNaN(value)){
 			LOGGER.error("calculateCohesionFactor : NaN value !!!!!!!!");
 			value=0.0;
 		}
@@ -87,7 +107,7 @@ public class SummaryFitness extends FitnessFunction {
 		if(similarityGraph.getMaxLength()!=0){
 			value=value/similarityGraph.getMaxLength();
 		}
-		if(value==Double.NaN){
+		if(Double.isNaN(value)){
 			LOGGER.error("calculateReadibilityFactor : NaN value !!!!!!!!");
 			value=0.0;
 		}

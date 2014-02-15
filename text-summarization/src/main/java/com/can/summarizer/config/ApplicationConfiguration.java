@@ -18,7 +18,7 @@ import org.springframework.core.env.Environment;
 
 import com.can.analysis.AnalysisHandler;
 import com.can.analysis.AnalysisProperty;
-import com.can.cluster.handling.CosSimilarity;
+import com.can.cluster.handling.CosSimilarityForCluster;
 import com.can.cluster.handling.MaxDiffStrategy;
 import com.can.cluster.handling.MaxUniqueWordChooser;
 import com.can.cluster.handling.ProportionalClusterChooser;

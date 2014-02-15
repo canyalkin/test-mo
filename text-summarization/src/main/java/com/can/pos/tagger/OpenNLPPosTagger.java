@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 
 import opennlp.tools.cmdline.postag.POSTaggerConverterTool;
 import opennlp.tools.postag.POSModel;
@@ -13,6 +15,8 @@ import opennlp.tools.util.InvalidFormatException;
 import org.apache.log4j.Logger;
 
 import com.can.summarizer.interfaces.IPOSTagger;
+import com.can.summarizer.model.Document;
+import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.WordType;
 
 public class OpenNLPPosTagger implements IPOSTagger {
@@ -44,6 +48,18 @@ public class OpenNLPPosTagger implements IPOSTagger {
 		String[] posTags = tagger.tag(wordsOfSentence);
 		LOGGER.debug(posTags);
 		return posTags;
+	}
+
+	@Override
+	public void createPosTags(Document document) {
+		List<Sentence> sentenceList = document.getSentenceList();
+		for (Sentence sentence : sentenceList) {
+			List<String> wordAsStringList = sentence.getWordsAsStringList();
+			String[] stringArray = wordAsStringList.toArray(new String[wordAsStringList.size()]);
+			String[] posTags = getPOSTags(stringArray);
+			sentence.setPosTags(Arrays.asList(posTags));
+		}
+		
 	}
 
 }

@@ -181,10 +181,17 @@ public final class FrequencyCalculator {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
+	public static void addWordsToListWrtPos(List<String> wordList,Sentence sentence,String posTag){
+		List<Word> words = sentence.getWords();
+		int i=0;
+		for (Word word : words) {
+			if(!wordList.contains(word.getWord())){
+				if(sentence.getPosTags().get(i).startsWith(posTag)){
+					wordList.add(word.getWord());
+				}
+				
+			}
+			i++;
+		}
+	}
 }

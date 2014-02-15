@@ -1,5 +1,7 @@
 package com.can.summary.module;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,6 +25,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.graph.module.Graph;
+import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.interfaces.IVisitor;
 import com.can.summarizer.interfaces.Visitable;
 import com.can.summarizer.model.Document;
@@ -31,7 +34,9 @@ import com.can.summary.GAFunctions.GeneHandler;
 import com.can.summary.GAFunctions.SummaryCrossover;
 import com.can.summary.GAFunctions.SummaryFitness;
 import com.can.summary.GAFunctions.SummaryMutation;
+import com.can.summary.calculations.CosineSimilarity;
 import com.can.summary.calculations.FrequencyCalculator;
+import com.can.summary.calculations.SemanticSimilarity;
 import com.can.word.utils.PropertyHandler;
 
 @Component("GaStrategyBean")
@@ -50,6 +55,10 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	private HashMap<String, List<Double>> tfTable=null;
 	private HashMap<String, Double> isf=null;
 	
+	
+	@Autowired
+	private IPOSTagger tagger;
+	
 	@Autowired
 	private PropertyHandler propertyHandler;
 	
@@ -63,6 +72,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		long t1=System.currentTimeMillis();
 		LOGGER.debug("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
 		createStructuralProperties(aDocument);//frequency table ,tf, isf
+		tagger.createPosTags(getDocumentToBeSummarized());//semantic sim icin
 		Graph graph=new Graph(getNumberOfSentences());
 		graph=createGraph(graph, aDocument);
 		graph.findMaximumLength(getDesiredNumberOfSentenceInSum());
@@ -71,6 +81,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		/****
 		 * GA Configuration
 		 */
+		
 		Genotype genotype = createGAConfig(aDocument, graph);
 		LOGGER.debug("generation number:"+generationNumber);
 		LOGGER.debug("population number:"+populationSize);
@@ -164,7 +175,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 
 	private void setGeneticOperators(Graph graph, Configuration configuration)
 			throws InvalidConfigurationException {
-		SummaryFitness myFitnessFunction = new SummaryFitness(graph,getDesiredNumberOfSentenceInSum());
+		SummaryFitness myFitnessFunction = new SummaryFitness(graph,getDesiredNumberOfSentenceInSum(),getDocumentToBeSummarized());
 		configuration.getGeneticOperators().clear();
 		configuration.addGeneticOperator(new SummaryCrossover(getNumberOfSentences(), getDesiredNumberOfSentenceInSum(),configuration,(crossoverRate=propertyHandler.getCrossoverRate())));
 		configuration.addGeneticOperator(new SummaryMutation(configuration,(mutationRate=propertyHandler.getMutationRate())));
@@ -181,12 +192,14 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	private Graph createGraph(Graph graph,Document document) {
 		int senteceNumber=document.getSentenceList().size();
 		for(int i=0;i<senteceNumber;i++){
+			
 			for(int j=0;j<senteceNumber;j++){
 				if(i<j){
 					graph.setWeight(i, j, 0.0);
 				}else if(i==j){
 					graph.setWeight(i, j, 0.0);
 				}else{
+					
 					graph.setWeight(i, j, calculateSimilarityForSentences(i,j,document));
 				}
 			}
@@ -194,6 +207,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		return graph;
 	}
 
+
+	
 
 	private double calculateSimilarityForSentences(int i, int j,Document aDocument) {
 		
@@ -223,7 +238,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		Double isfValue = isf.get(key);
 		return tfValue*isfValue;
 	}
-
+	
 	public double getFitnessValue() {
 		return fitnessValue;
 	}

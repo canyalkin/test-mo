@@ -16,6 +16,7 @@ import com.can.reporter.SummaryReport;
 import com.can.summarizer.config.ApplicationConfiguration;
 import com.can.summarizer.interfaces.IOutput;
 import com.can.summarizer.model.Document;
+import com.can.summary.calculations.SemanticSimilarity;
 import com.can.word.utils.PropertyHandler;
 import com.can.word.utils.SummaryUtils;
 
@@ -31,6 +32,7 @@ public class SummarizerMain {
 		PropertyHandler propertyHandler=context.getBean(PropertyHandler.class);
 		IOutput output=(IOutput) context.getBean("FileBean");
 		AnalysisHandler analysisHandler=(AnalysisHandler)context.getBean(AnalysisHandler.class);
+	
 		/***
 		 * Single file read
 		 * log level

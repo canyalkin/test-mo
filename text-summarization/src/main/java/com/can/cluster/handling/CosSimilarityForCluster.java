@@ -1,27 +1,32 @@
 package com.can.cluster.handling;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import opennlp.tools.postag.POSTaggerME;
+
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.can.summarizer.interfaces.ICalculateSimilarity;
+import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
-import com.can.summarizer.model.Word;
 import com.can.summary.calculations.CosineSimilarity;
 import com.can.summary.calculations.FrequencyCalculator;
 
 @Component("CosSimilarity")
-public class CosSimilarity implements ICalculateSimilarity{
+public class CosSimilarityForCluster implements ICalculateSimilarity{
 
-	private static final Logger LOGGER = Logger.getLogger(CosSimilarity.class);
+	private static final Logger LOGGER = Logger.getLogger(CosSimilarityForCluster.class);
 	
 	private HashMap<String, Integer> ft = null ;
 	private HashMap<String, Double> idf = null;
 	private HashMap<String, Double> tfIdf = null;
+	
+	
 	
 	@Override
 	public double[][] calculateSimilarity(Document document) {
@@ -33,14 +38,7 @@ public class CosSimilarity implements ICalculateSimilarity{
 		for(int i = 0; i < numberOfSentence; i++){
 			for(int j = 0; j < numberOfSentence; j++){
 				if(i!=j){
-					List<String> wordsForVector=new ArrayList<String>();
-					FrequencyCalculator.addWordsToList(wordsForVector, document.getSentenceList().get(i));
-					FrequencyCalculator.addWordsToList(wordsForVector, document.getSentenceList().get(j));
-					List<Double> vector1 = new ArrayList<Double>();
-					List<Double> vector2 = new ArrayList<Double>();
-					fillVectors(wordsForVector,vector1,vector2,document.getSentenceList().get(i),document.getSentenceList().get(j));
-					//double sim=CosineSimilarity.calculateFeature(document.getSentenceList().get(i), document.getSentenceList().get(j));
-					double sim=CosineSimilarity.calculate(vector1, vector2);
+					double sim=CosineSimilarity.calculate(document.getSentenceList().get(i),document.getSentenceList().get(j),tfIdf);
 					if(sim==0){
 						sim=Double.MAX_VALUE;
 					}else{//single link küçük deðerleri yakýn olarak hesaplar ama cosinus de büyük deðerler yakýn demektir.
@@ -65,35 +63,5 @@ public class CosSimilarity implements ICalculateSimilarity{
 		}
 		return simMatrix;
 	}
-
-	private void fillVectors(List<String> wordsForVector,
-			List<Double> vector1, List<Double> vector2,
-			Sentence sentence, Sentence sentence2) {
-		for (String word : wordsForVector) {
-			if(sentence.getWordsAsStringList().contains(word)){
-				//vector1.add((double)count(word,sentence));
-				vector1.add(tfIdf.get(word));
-			}else{
-				vector1.add(0.0);
-			}
-			
-			if(sentence2.getWordsAsStringList().contains(word)){
-				//vector2.add((double)count(word,sentence2));
-				vector2.add(tfIdf.get(word));
-			}else{
-				vector2.add(0.0);
-			}
-		}
-	}
-	private double count(String word, Sentence sentence) {
-		int count=0;
-		List<Word> wordsOfSentence = sentence.getWords();
-		for (Word word2 : wordsOfSentence) {
-			if(word2.getWord().equals(word)){
-				count++;
-			}
-		}
-		return count;
-	}
-
+	
 }
