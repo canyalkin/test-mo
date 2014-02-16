@@ -40,12 +40,12 @@ public class WordNetStemmer implements IWordStemmer,BeanPostProcessor {
 	}
 	
 	public synchronized String stemTheWord(String word) {
-		LOGGER.debug("Stem word:"+word);
+		LOGGER.trace("Stem word:"+word);
 		List<String> wordList = wordnetStemmer.findStems(word, null);
 		for (String string : wordList) {
-			LOGGER.debug("word stemmer: "+string);
+			LOGGER.trace("word stemmer: "+string);
 		}
-		LOGGER.debug("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
+		LOGGER.trace("*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*");
 		
 		if(wordList.size()>0){
 			return wordList.get(0);

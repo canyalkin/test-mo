@@ -42,7 +42,7 @@ public class StopWordHandler implements IStopWord {
 			String[] stopWrodsAsArray=stopWordsInLine.split(",");
 			for (String string : stopWrodsAsArray) {
 				//string=string.replaceAll("[^\\w]","");
-				LOGGER.debug("StopWord:"+string);
+				LOGGER.trace("StopWord:"+string);
 				stopWrods.add(string);
 			}
 		} catch (FileNotFoundException e) {
@@ -106,11 +106,11 @@ public class StopWordHandler implements IStopWord {
 		while(wordListIterator.hasNext()){
 			Word currentWord = wordListIterator.next();
 			if(stopWrods.contains(currentWord.getWord())){
-				LOGGER.debug("StopWord detected:"+currentWord.getWord());
+				LOGGER.trace("StopWord detected:"+currentWord.getWord());
 				wordListIterator.remove();
 			}
 		}
-		LOGGER.debug("-----------------------------------------------------------");
+		LOGGER.trace("-----------------------------------------------------------");
 	}
 
 

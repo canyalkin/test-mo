@@ -199,7 +199,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 				}else if(i==j){
 					graph.setWeight(i, j, 0.0);
 				}else{
-					
+					//double semanticValue = SemanticSimilarity.calculate(document.getSentenceList().get(i), document.getSentenceList().get(j));
 					graph.setWeight(i, j, calculateSimilarityForSentences(i,j,document));
 				}
 			}

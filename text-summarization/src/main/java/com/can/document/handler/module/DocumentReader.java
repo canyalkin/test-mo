@@ -18,7 +18,7 @@ import com.can.word.stemmer.WordNetStemmer;
 import com.can.word.utils.RegexWord;
 
 public abstract class DocumentReader implements DocumentCreator {
-	private static final Logger LOGGER = Logger.getLogger(DocumentReaderFromFile.class);
+	private static final Logger LOGGER = Logger.getLogger(DocumentReader.class);
 	private File file;
 		
 	public DocumentReader() {
@@ -59,10 +59,10 @@ public abstract class DocumentReader implements DocumentCreator {
 				LOGGER.debug("***empty word");
 				continue;
 			}
-			LOGGER.debug("words:"+curWord);
+			LOGGER.trace("words:"+curWord);
 			word=new Word(curWord);
 			wordList.add(word);
-			LOGGER.debug("word added:>"+curWord+"<");
+			LOGGER.trace("word added:>"+curWord+"<");
 		}
 		if(wordList.size()>0){
 			s.setSentence(newLine.toString().trim());

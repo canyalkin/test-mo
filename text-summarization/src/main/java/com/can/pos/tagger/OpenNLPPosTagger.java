@@ -46,7 +46,11 @@ public class OpenNLPPosTagger implements IPOSTagger {
 	@Override
 	public String[] getPOSTags(String[] wordsOfSentence) {
 		String[] posTags = tagger.tag(wordsOfSentence);
-		LOGGER.debug(posTags);
+		if(LOGGER.isTraceEnabled()){
+			for (String pos : posTags) {
+				LOGGER.trace(pos);
+			}
+		}
 		return posTags;
 	}
 
