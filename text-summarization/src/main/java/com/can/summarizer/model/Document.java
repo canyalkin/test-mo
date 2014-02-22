@@ -7,6 +7,8 @@ public class Document {
 	private Sentence title;
 	private List<Sentence> sentenceList;
 	private boolean isRef=false;
+	private boolean hasPosTag=false;
+	private StructuralProperties structuralProperties=null; 
 	
 	public Document(boolean isRef) {
 		
@@ -45,6 +47,22 @@ public class Document {
 	 */
 	public boolean isRef() {
 		return isRef;
+	}
+
+	public boolean isHasPosTag() {
+		return hasPosTag;
+	}
+
+	public void setHasPosTag(boolean hasPosTag) {
+		this.hasPosTag = hasPosTag;
+	}
+
+	public StructuralProperties getStructuralProperties() {
+		return structuralProperties;
+	}
+
+	public void createStructuralProperties() {
+		this.structuralProperties = new StructuralProperties(this);
 	}
 
 	/* (non-Javadoc)

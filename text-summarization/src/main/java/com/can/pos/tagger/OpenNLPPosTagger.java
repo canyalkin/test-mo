@@ -63,7 +63,7 @@ public class OpenNLPPosTagger implements IPOSTagger {
 			String[] posTags = getPOSTags(stringArray);
 			sentence.setPosTags(Arrays.asList(posTags));
 		}
-		
+		document.setHasPosTag(true);
 	}
 
 }

@@ -14,7 +14,7 @@ public class Sentence {
 	
 	private String sentenceFromWords=null;
 	private List<Word> words;
-	private List<String> posTags;
+	private List<String> posTags=null;
 	private List<String> wordListAsString=null;
 	private List<String> ngramList=null;
 	private HashMap<String, Integer> hypernym=null;

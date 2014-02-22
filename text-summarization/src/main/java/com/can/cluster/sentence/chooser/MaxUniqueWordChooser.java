@@ -1,4 +1,4 @@
-package com.can.cluster.handling;
+package com.can.cluster.sentence.chooser;
 
 import java.util.ArrayList;
 import java.util.Collections;

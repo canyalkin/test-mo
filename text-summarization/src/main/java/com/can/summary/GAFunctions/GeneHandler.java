@@ -34,15 +34,18 @@ public class GeneHandler {
 	private static int removeUnnecessarySentences(RandomGenerator generator,
 			Gene[] genes, int numberOfChanges, int numberOfSentencesInDoc) {
 		LOGGER.trace("removeUnnecessarySentences,numberOfChanges="+numberOfChanges);
+		int randomIndex = generator.nextInt(numberOfSentencesInDoc);
 		while(numberOfChanges!=0){
-			int randomIndex = generator.nextInt(numberOfSentencesInDoc);
 			int[] value = (int[]) genes[randomIndex].getAllele();
 			LOGGER.trace("value="+value[0]);
 			if(value[0]==1){
-				LOGGER.trace("flip");
+				LOGGER.trace("flip index:"+randomIndex);
 				FixedBinaryGene binaryGene = (FixedBinaryGene)genes[randomIndex];
 				binaryGene.flip(0);
 				numberOfChanges--;
+			}else{
+				randomIndex++;
+				randomIndex=randomIndex%numberOfSentencesInDoc;
 			}
 		}
 		LOGGER.trace("numberOfChanges="+numberOfChanges);
@@ -53,15 +56,18 @@ public class GeneHandler {
 	private static int addMissingSentences(RandomGenerator generator, Gene[] genes,
 			int numberOfChanges, int numberOfSentencesInDoc) {
 		LOGGER.trace("addMissingSentences,numberOfChanges="+numberOfChanges);
+		int randomIndex = generator.nextInt(numberOfSentencesInDoc);
 		while(numberOfChanges!=0){
-			int randomIndex = generator.nextInt(numberOfSentencesInDoc);
 			int[] value = (int[]) genes[randomIndex].getAllele();
 			LOGGER.trace("value="+value[0]);
 			if(value[0]==0){
-				LOGGER.trace("flip");
+				LOGGER.trace("flip index:"+randomIndex);
 				FixedBinaryGene binaryGene = (FixedBinaryGene)genes[randomIndex];
 				binaryGene.flip(0);
 				numberOfChanges--;
+			}else{
+				randomIndex++;
+				randomIndex=randomIndex%numberOfSentencesInDoc;
 			}
 		}
 		LOGGER.trace("numberOfChanges="+numberOfChanges);

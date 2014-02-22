@@ -2,13 +2,11 @@ package com.can.summary.calculations;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.can.summarizer.model.Sentence;
-import com.can.summary.module.GASummaryStrategyImpl;
 
 import edu.cmu.lti.jawjaw.pobj.POS;
 import edu.cmu.lti.lexical_db.ILexicalDatabase;
@@ -29,6 +27,7 @@ public class SemanticSimilarity {
 		db = new NictWordNet();
 		rc= new WuPalmer(db);
 		WS4JConfiguration.getInstance().setMFS(true);
+		WS4JConfiguration.getInstance().setCache(true);
 	}
 	private SemanticSimilarity(){
 	}
@@ -87,6 +86,7 @@ public class SemanticSimilarity {
 		List<String> verbBase=new ArrayList<String>();
 		FrequencyCalculator.addWordsToListWrtPos(verbBase, sentence, "VB");
 		FrequencyCalculator.addWordsToListWrtPos(verbBase, sentence2, "VB");
+		
 		List<String> verbs1=new ArrayList<String>();
 		FrequencyCalculator.addWordsToListWrtPos(verbs1, sentence, "VB");
 		List<String> verbs2=new ArrayList<String>();
@@ -94,11 +94,12 @@ public class SemanticSimilarity {
 		List<Double>verbList1=new ArrayList<Double>();
 		List<Double>verbList2=new ArrayList<Double>();
 		fillArray(verbBase,verbs1,verbs2,verbList1,verbList2);
+		double cosValueVerb = CosineSimilarity.calculate(verbList1, verbList2);
 		
 		
 		
 		
-		return cosValueNoun;
+		return 0.5*cosValueNoun + 0.5*cosValueVerb;
 	}
 	
 	
@@ -128,6 +129,34 @@ public class SemanticSimilarity {
 			
 		}
 		
+	}
+	
+	public static List<Concept> getConcepts(String word){
+		
+		List<POS[]> posPairs = rc.getPOSPairs();
+		List<Concept> concepts=new ArrayList<Concept>();
+		for(POS[] posPair: posPairs) {
+			try{
+				List<Concept> synsets1 = (List<Concept>)db.getAllConcepts(word, posPair[0].toString());
+				concepts.addAll(synsets1);
+			}catch(Exception exception){
+				LOGGER.error(exception.getMessage());
+			}
+		}
+		return concepts;
+	}
+	
+	public static List<String> getHypernymConcepts(String word){
+		
+		List<POS[]> posPairs = rc.getPOSPairs();
+		List<String> synsets1=new ArrayList<String>();
+		try{
+			synsets1 = (List<String>)db.getHypernyms(word);
+		}catch(Exception exception){
+			LOGGER.error(exception.getMessage());
+		}
+
+		return synsets1;
 	}
 
 }

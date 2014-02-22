@@ -18,20 +18,23 @@ import org.springframework.core.env.Environment;
 
 import com.can.analysis.AnalysisHandler;
 import com.can.analysis.AnalysisProperty;
+import com.can.cluster.chooser.MaxDiffStrategy;
+import com.can.cluster.chooser.ProportionalClusterChooser;
+import com.can.cluster.chooser.SimpleClusterChooseStrategy;
 import com.can.cluster.handling.CosSimilarityForCluster;
-import com.can.cluster.handling.MaxDiffStrategy;
-import com.can.cluster.handling.MaxUniqueWordChooser;
-import com.can.cluster.handling.ProportionalClusterChooser;
-import com.can.cluster.handling.SimpleClusterChooseStrategy;
-import com.can.cluster.handling.SimpleSentenceChooser;
+import com.can.cluster.sentence.chooser.MaxUniqueWordChooser;
+import com.can.cluster.sentence.chooser.SimpleSentenceChooser;
 import com.can.document.handler.module.StopWordHandler;
 import com.can.pos.tagger.OpenNLPPosTagger;
 import com.can.summarizer.interfaces.ClusterChooseSentenceStrategy;
 import com.can.summarizer.interfaces.ClusterChooseStrategy;
 import com.can.summarizer.interfaces.ICalculateSimilarity;
 import com.can.summarizer.interfaces.IPOSTagger;
+import com.can.summarizer.interfaces.SentenceOrder;
 import com.can.summary.module.AbstractSummarizer;
 import com.can.summary.module.ClusterStrategy;
+import com.can.summary.sentence.order.MaxConceptOrder;
+import com.can.summary.sentence.order.TfIdfOrder;
 import com.can.word.utils.PropertyHandler;
 
 import edu.mit.jwi.Dictionary;
@@ -156,6 +159,17 @@ public class ApplicationConfiguration {
 		
 		return dict;
 		
+	}
+	
+	@Bean
+	public SentenceOrder getSentenceOrder(){
+		String propList = environment.getProperty("sentenceOrder");
+		if(propList.equals("TfIdfOrder")){
+			return new TfIdfOrder();
+		}else if(propList.equals("MaxConceptOrder")){
+			return new MaxConceptOrder();
+		}
+		return new TfIdfOrder();
 	}
 	
 	

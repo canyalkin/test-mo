@@ -1,10 +1,7 @@
 package com.can.summary.module;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -17,26 +14,22 @@ import org.jgap.InvalidConfigurationException;
 import org.jgap.RandomGenerator;
 import org.jgap.impl.DefaultConfiguration;
 import org.jgap.impl.FixedBinaryGene;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.graph.module.Graph;
 import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.interfaces.IVisitor;
+import com.can.summarizer.interfaces.SentenceOrder;
 import com.can.summarizer.interfaces.Visitable;
 import com.can.summarizer.model.Document;
-import com.can.summarizer.model.Sentence;
 import com.can.summary.GAFunctions.GeneHandler;
 import com.can.summary.GAFunctions.SummaryCrossover;
 import com.can.summary.GAFunctions.SummaryFitness;
 import com.can.summary.GAFunctions.SummaryMutation;
-import com.can.summary.calculations.CosineSimilarity;
-import com.can.summary.calculations.FrequencyCalculator;
-import com.can.summary.calculations.SemanticSimilarity;
+import com.can.summary.calculations.NormalisedGoogleDistance;
 import com.can.word.utils.PropertyHandler;
 
 @Component("GaStrategyBean")
@@ -55,12 +48,15 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	private HashMap<String, List<Double>> tfTable=null;
 	private HashMap<String, Double> isf=null;
 	
-	
 	@Autowired
 	private IPOSTagger tagger;
 	
 	@Autowired
 	private PropertyHandler propertyHandler;
+	
+	@Autowired
+	private SentenceOrder sentenceOrder;
+	
 	
 	public GASummaryStrategyImpl() {
 		super();
@@ -72,7 +68,6 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		long t1=System.currentTimeMillis();
 		LOGGER.debug("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
 		createStructuralProperties(aDocument);//frequency table ,tf, isf
-		tagger.createPosTags(getDocumentToBeSummarized());//semantic sim icin
 		Graph graph=new Graph(getNumberOfSentences());
 		graph=createGraph(graph, aDocument);
 		graph.findMaximumLength(getDesiredNumberOfSentenceInSum());
@@ -90,11 +85,13 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		doEvolution(genotype);
 		
 		List<Integer> indexes = GeneHandler.getSummaryIndexes(genotype.getFittestChromosome());
+		indexes=sentenceOrder.orderSentence(indexes, getDocumentToBeSummarized());
 		LOGGER.info("summary indexes:"+indexes);
 		Document summaryDocument = createSummaryDocument(aDocument, indexes);
 		/******************************************************/
 		long t2=System.currentTimeMillis();
 		LOGGER.info("summarization takes "+(t2-t1)/1000.0+" seconds.");
+		
 		return summaryDocument;
 	}
 
@@ -114,11 +111,13 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 
 
 	private void createStructuralProperties(Document aDocument) {
-		freqTable = FrequencyCalculator.createFrequencyTable(getDocumentToBeSummarized());
+		aDocument.createStructuralProperties();
+		freqTable = aDocument.getStructuralProperties().getFreqTable();
 		LOGGER.debug("freq table created..."+freqTable);
-		tfTable = FrequencyCalculator.calculateTermFreq(freqTable, aDocument);
+		tfTable = aDocument.getStructuralProperties().getTfTable();
 		LOGGER.debug("tf Table created..."+tfTable);
-		isf = FrequencyCalculator.calculateInverseSentenceFreqTable(freqTable, aDocument);
+		isf = aDocument.getStructuralProperties().getIsf();
+		//idfTable=FrequencyCalculator.calculateInverseSentenceFreqTable(freqTable, aDocument);
 		LOGGER.debug("isf created..."+isf);
 	}
 
@@ -200,7 +199,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 					graph.setWeight(i, j, 0.0);
 				}else{
 					//double semanticValue = SemanticSimilarity.calculate(document.getSentenceList().get(i), document.getSentenceList().get(j));
-					graph.setWeight(i, j, calculateSimilarityForSentences(i,j,document));
+					double ngd=NormalisedGoogleDistance.ngd(document.getSentenceList().get(i), document.getSentenceList().get(j), document);
+					graph.setWeight(i, j,ngd/**0.5 + 0.5*calculateSimilarityForSentences(i,j,document)*/);
 				}
 			}
 		}

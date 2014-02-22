@@ -121,7 +121,6 @@ public final class FrequencyCalculator {
 			}
 		}
 		return freqHashMap;
-		
 	}
 	
 	public static HashMap<String,Double> createIdfTable(HashMap<String, Integer> frequencyTable){
