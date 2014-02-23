@@ -13,7 +13,9 @@ public class NGDSimilarityForCluster implements ICalculateSimilarity{
 	private static final Logger LOGGER = Logger.getLogger(NGDSimilarityForCluster.class);
 	@Override
 	public double[][] calculateSimilarity(Document document) {
-		
+		if(document.getStructuralProperties()==null){
+			document.createStructuralProperties();
+		}
 		int numberOfSentence=document.getSentenceList().size();
 		double[][] simMatrix = createMatrix(numberOfSentence);
 		for(int i = 0; i < numberOfSentence; i++){

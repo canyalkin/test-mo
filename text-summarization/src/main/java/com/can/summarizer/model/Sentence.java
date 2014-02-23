@@ -131,5 +131,12 @@ public class Sentence {
 		return this.hypernym;
 	}
 	
+	public void clear(){
+		wordListAsString=null;
+		if(posTags!=null){
+			posTags=null;
+		}
+	}
+	
 
 }

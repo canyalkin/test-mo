@@ -84,11 +84,16 @@ public class SummarizerMain {
 			/**
 			 * Do bulk summarization, create system summaries and update system document map
 			 */
-			Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
-			/**
-			 * Bulk evaluation
-			 */
-			bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
+			int currRun=0;
+			while(currRun<propertyHandler.getRun()){
+				LOGGER.info("Run #:"+currRun);
+				Map<String, Document> summaryDocs = bulkDocumentHandler.doBulkSummarization(systemDocuments);
+				/**
+				 * Bulk evaluation
+				 */
+				bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
+				currRun++;
+			}
 			bulkDocumentHandler.accept(summaryReport);
 			String report=summaryReport.createReport();
 			output.write("output"+(i+1)+".txt",report);

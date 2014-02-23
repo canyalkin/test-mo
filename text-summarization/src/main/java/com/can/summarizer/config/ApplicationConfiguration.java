@@ -34,6 +34,7 @@ import com.can.summarizer.interfaces.SentenceOrder;
 import com.can.summary.module.AbstractSummarizer;
 import com.can.summary.module.ClusterStrategy;
 import com.can.summary.sentence.order.MaxConceptOrder;
+import com.can.summary.sentence.order.MaxWordNumberOrder;
 import com.can.summary.sentence.order.TfIdfOrder;
 import com.can.word.utils.PropertyHandler;
 
@@ -168,6 +169,8 @@ public class ApplicationConfiguration {
 			return new TfIdfOrder();
 		}else if(propList.equals("MaxConceptOrder")){
 			return new MaxConceptOrder();
+		}else if(propList.equals("MaxWordNumberOrder")){
+			return new MaxWordNumberOrder();
 		}
 		return new TfIdfOrder();
 	}

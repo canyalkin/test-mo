@@ -1,6 +1,7 @@
 package com.can.summary.calculations;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -146,17 +147,15 @@ public class SemanticSimilarity {
 		return concepts;
 	}
 	
-	public static List<String> getHypernymConcepts(String word){
+	public static Collection<String> getHypernymConcepts(String word){
 		
-		List<POS[]> posPairs = rc.getPOSPairs();
-		List<String> synsets1=new ArrayList<String>();
+		Collection<String> hypernyms=new ArrayList<String>();
 		try{
-			synsets1 = (List<String>)db.getHypernyms(word);
+			hypernyms = db.getHypernyms(word);
 		}catch(Exception exception){
 			LOGGER.error(exception.getMessage());
 		}
-
-		return synsets1;
+		return hypernyms;
 	}
 
 }

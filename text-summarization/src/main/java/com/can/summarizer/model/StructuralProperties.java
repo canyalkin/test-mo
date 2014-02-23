@@ -16,6 +16,10 @@ public class StructuralProperties {
 	private HashMap<String, Double> idfTable;
 	private HashMap<String, Double> idf;
 	private HashMap<String, Double> tfIdf;
+	private HashMap<String, Integer> numberOfSentenceContains;
+	private HashMap<String, Integer> containsWordsTogether;
+
+
 
 	public StructuralProperties(Document document){
 		
@@ -31,7 +35,8 @@ public class StructuralProperties {
 		LOGGER.debug("IDF created..."+idf);
 		tfIdf=FrequencyCalculator.createTfIdfTable(freqTable, idf);
 		LOGGER.debug("TF IDF created..."+tfIdf);
-		
+		numberOfSentenceContains=FrequencyCalculator.calculateNumberOfSentenceContains(freqTable,document);
+		containsWordsTogether=FrequencyCalculator.getWordsTogetherMap(freqTable, document);
 		
 	}
 
@@ -75,6 +80,19 @@ public class StructuralProperties {
 	 */
 	public HashMap<String, Double> getTfIdf() {
 		return tfIdf;
+	}
+	/**
+	 * @return the numberOfSentenceContains
+	 */
+	public HashMap<String, Integer> getNumberOfSentenceContains() {
+		return numberOfSentenceContains;
+	}
+
+	/**
+	 * @return the containsWordsTogether
+	 */
+	public HashMap<String, Integer> getContainsWordsTogether() {
+		return containsWordsTogether;
 	}
 
 }

@@ -193,4 +193,53 @@ public final class FrequencyCalculator {
 			i++;
 		}
 	}
+	
+	public static HashMap<String, Integer> getWordsTogetherMap(HashMap<String, Integer>freqTable,Document document){
+		HashMap<String, Integer> together=new HashMap<String, Integer>();
+		
+		Set<String> keys = freqTable.keySet();
+		String keyArray[]=new String[keys.size()];
+		keys.toArray(keyArray);
+		for(int i=0; i<keyArray.length; i++){
+			for(int j=i+1; j<keyArray.length;j++){
+				together.put(keyArray[i]+keyArray[j], getNumberOfSentenceContainingTogether(keyArray[i], keyArray[j], document));
+			}
+			
+		}
+		return together;
+	}
+	
+	private static int getNumberOfSentenceContainingTogether(String word,String word2, Document document) {
+		int n=0;
+		List<Sentence> sentenceList = document.getSentenceList();
+		for (Sentence sentence : sentenceList) {
+			List<String> words = sentence.getWordsAsStringList();
+			if(words.contains(word) && words.contains(word2)){
+				n++;
+			}
+		}
+		return n;
+	}
+	
+	public static HashMap<String, Integer> calculateNumberOfSentenceContains(
+			HashMap<String, Integer> freqTable, Document document) {
+		Set<String> keys = freqTable.keySet();
+		HashMap<String, Integer> contains=new HashMap<String, Integer>(freqTable.size());
+		for (String key : keys) {
+			contains.put(key, getNumberOfSentenceContaining(key, document));
+		}
+		return contains;
+	}
+	
+	private static int getNumberOfSentenceContaining(String word, Document document) {
+		int n=0;
+		List<Sentence> sentenceList = document.getSentenceList();
+		for (Sentence sentence : sentenceList) {
+			List<String> words = sentence.getWordsAsStringList();
+			if(words.contains(word)){
+				n++;
+			}
+		}
+		return n;
+	}
 }

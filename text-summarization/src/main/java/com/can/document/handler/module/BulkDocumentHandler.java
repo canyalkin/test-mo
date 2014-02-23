@@ -57,6 +57,7 @@ public class BulkDocumentHandler implements Visitable{
 	private double mutationRate;
 	private double summaryTime;
 	private double clusterNumber;
+	private int run;
 
 	private double evaluationTime;
 
@@ -130,6 +131,7 @@ public class BulkDocumentHandler implements Visitable{
 		xoverRate=propertyHandler.getCrossoverRate();
 		mutationRate=propertyHandler.getMutationRate();
 		clusterNumber=propertyHandler.getClusterNumber();
+		run=propertyHandler.getRun();
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			updateRougeNResults(results,orginalDocuments,referenceDocuments,summaryDocuments);
@@ -258,5 +260,11 @@ public class BulkDocumentHandler implements Visitable{
 	}
 	public double getClusterNumber() {
 		return clusterNumber;
+	}
+	public int getRun() {
+		return run;
+	}
+	public void setRun(int run) {
+		this.run = run;
 	}
 }

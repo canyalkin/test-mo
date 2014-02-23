@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.can.document.handler.module.StopWordHandler;
@@ -60,6 +57,7 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 				//wordCount+=document.getSentenceList().get(indexes.get(i)).getOriginalSentencesWordNumber();
 				i++;
 		}
+		document.clear();
 		summaryDocument.setSentenceList(sumSentence);
 		return summaryDocument;
 	}

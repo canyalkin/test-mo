@@ -78,6 +78,15 @@ public class Document {
 		}
 		return stringBuffer.toString();
 	}
+
+	public void clear() {
+		structuralProperties=null;
+		for (Sentence sentence : sentenceList) {
+			sentence.clear();
+		}
+		hasPosTag=false;
+		
+	}
 	
 	
 

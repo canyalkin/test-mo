@@ -124,6 +124,14 @@ public class PropertyHandler {
 			this.analysisMode=false;
 		}
 		
+		this.sentenceOrder=environment.getProperty("sentenceOrder");
+		//sentenceOrder
+		try{
+			this.run=Integer.parseInt(environment.getProperty("run"));
+		}catch(Exception exception){
+			this.run=1;
+		}
+		
 	}
 	private void setSummaryStrategy(String strategies) {
 		List<SummaryStrategy> summaryStrategies=new ArrayList<SummaryStrategy>();
@@ -158,7 +166,8 @@ public class PropertyHandler {
 	private boolean isStemming=true;
 	private boolean stopWordElimination=true;
 	private boolean analysisMode=false;
-	
+	private String  sentenceOrder;
+	private int run;
 	
 	private int clusterNumber;
 	private List<SummaryStrategy> summaryStrategy;
@@ -371,6 +380,18 @@ public class PropertyHandler {
 	}
 	public void setAnalysisMode(boolean analysisMode) {
 		this.analysisMode = analysisMode;
+	}
+	public String getSentenceOrder() {
+		return sentenceOrder;
+	}
+	public void setSentenceOrder(String sentenceOrder) {
+		this.sentenceOrder = sentenceOrder;
+	}
+	public int getRun() {
+		return run;
+	}
+	public void setRun(int run) {
+		this.run = run;
 	}
 	
 	

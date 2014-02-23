@@ -54,6 +54,7 @@ public class BulkRougeNEvaluator {
 			rougeNCalculator.setSystemSentences(sysDocument.getSentenceList());
 			
 			Double value = rougeNCalculator.calculateRougeN(n);
+			LOGGER.info(file+":"+value);
 			documentMap.put(file, value);
 			
 		}

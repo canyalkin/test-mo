@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.can.summarizer.interfaces.IPOSTagger;
+import com.can.summarizer.interfaces.ISynsetFinder;
 import com.can.summarizer.interfaces.SentenceOrder;
 import com.can.summarizer.model.Document;
 import com.can.summary.calculations.SemanticSimilarity;
@@ -16,6 +18,9 @@ public class MaxConceptOrder implements SentenceOrder {
 	
 	@Autowired
 	private IPOSTagger tagger;
+	
+	@Autowired
+	ISynsetFinder synsetFinder;
 	
 	public List<Integer> orderWrtMaxConcept(List<Integer> indexList, Document document ){
 		if(!document.isHasPosTag()){
@@ -30,7 +35,8 @@ public class MaxConceptOrder implements SentenceOrder {
 			for (String pos : posTags) {
 				if(pos.startsWith("NN")|| pos.startsWith("VB"))
 				{
-					conceptSize += SemanticSimilarity.getHypernymConcepts((document.getSentenceList().get(curIndex).getWords().get(i).getWord())).size();
+					//conceptSize += SemanticSimilarity.getConcepts((document.getSentenceList().get(curIndex).getWords().get(i).getWord())).size();
+					conceptSize +=synsetFinder.findHypernym((document.getSentenceList().get(curIndex).getWords().get(i).getWord()), pos).size();
 				}
 				i++;
 			}
@@ -38,7 +44,7 @@ public class MaxConceptOrder implements SentenceOrder {
 			item.add(sci);
 		}
 		Collections.sort(item);
-		//Collections.reverse(item);
+		Collections.reverse(item);
 		for (SentenceConceptItem sciItem : item) {
 			finalIndex.add(sciItem.index);
 		}

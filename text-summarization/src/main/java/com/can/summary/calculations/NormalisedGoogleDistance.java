@@ -26,6 +26,7 @@ public class NormalisedGoogleDistance {
 			}
 		}
 		
+		//ngd=ngd/(words1.size()*words2.size());
 		
 		return ngd;
 	}
@@ -35,9 +36,17 @@ public class NormalisedGoogleDistance {
 		if(word1.equals(word2)){
 			return 1.0;
 		}
-		int fWord1=getNumberOfSentenceContaining(word1,document);
-		int fWord2=getNumberOfSentenceContaining(word2,document);
-		int wordsTogether=getNumberOfSentenceContainingTogether(word1, word2, document);
+		
+		int fWord1=document.getStructuralProperties().getNumberOfSentenceContains().get(word1.getWord());
+		int fWord2=document.getStructuralProperties().getNumberOfSentenceContains().get(word2.getWord());
+		Integer value = document.getStructuralProperties().getContainsWordsTogether().get(word1.getWord()+word2.getWord());
+		if(value==null){
+			value=document.getStructuralProperties().getContainsWordsTogether().get(word2.getWord()+word1.getWord());
+			if (value==null){
+				value=0;
+			}
+		}
+		int wordsTogether=value;
 		int n=document.getSentenceList().size();
 		
 		if( !word1.equals(word2) && fWord1==fWord2 && fWord2==wordsTogether && fWord1>0){
@@ -68,29 +77,6 @@ public class NormalisedGoogleDistance {
 		return val;
 	}
 
-	private static int getNumberOfSentenceContaining(Word word, Document document) {
-		int n=0;
-		List<Sentence> sentenceList = document.getSentenceList();
-		for (Sentence sentence : sentenceList) {
-			List<String> words = sentence.getWordsAsStringList();
-			if(words.contains(word.getWord())){
-				n++;
-			}
-		}
-		return n;
-	}
-	
-	private static int getNumberOfSentenceContainingTogether(Word word,Word word2, Document document) {
-		int n=0;
-		List<Sentence> sentenceList = document.getSentenceList();
-		for (Sentence sentence : sentenceList) {
-			List<String> words = sentence.getWordsAsStringList();
-			if(words.contains(word.getWord()) && words.contains(word2)){
-				n++;
-			}
-		}
-		return n;
-	}
 	
 	
 

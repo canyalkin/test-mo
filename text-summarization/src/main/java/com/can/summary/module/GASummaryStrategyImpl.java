@@ -1,6 +1,5 @@
 package com.can.summary.module;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +14,6 @@ import org.jgap.RandomGenerator;
 import org.jgap.impl.DefaultConfiguration;
 import org.jgap.impl.FixedBinaryGene;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,9 +42,9 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	
 	
 	private static final Logger LOGGER = Logger.getLogger(GASummaryStrategyImpl.class);
-	private HashMap<String, Integer> freqTable=null;
-	private HashMap<String, List<Double>> tfTable=null;
-	private HashMap<String, Double> isf=null;
+	//private HashMap<String, Integer> freqTable=null;
+	//private HashMap<String, List<Double>> tfTable=null;
+	//private HashMap<String, Double> isf=null;
 	
 	@Autowired
 	private IPOSTagger tagger;
@@ -85,6 +83,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		doEvolution(genotype);
 		
 		List<Integer> indexes = GeneHandler.getSummaryIndexes(genotype.getFittestChromosome());
+		LOGGER.info("summary indexes:"+indexes);
 		indexes=sentenceOrder.orderSentence(indexes, getDocumentToBeSummarized());
 		LOGGER.info("summary indexes:"+indexes);
 		Document summaryDocument = createSummaryDocument(aDocument, indexes);
@@ -101,7 +100,9 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		for(int i=0;i<generationNumber;i++){
 			genotype.evolve();
 			double fitnesValue = genotype.getFittestChromosome().getFitnessValue();
-			LOGGER.info("fitness value="+fitnesValue);
+			if(i%5==0){
+				LOGGER.info("fitness value="+fitnesValue);
+			}
 		}
 		LOGGER.info("best fitness value:"+genotype.getFittestChromosome().getFitnessValue());
 		String geneString=GeneHandler.showGene(genotype.getFittestChromosome().getGenes());
@@ -112,13 +113,13 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 
 	private void createStructuralProperties(Document aDocument) {
 		aDocument.createStructuralProperties();
-		freqTable = aDocument.getStructuralProperties().getFreqTable();
-		LOGGER.debug("freq table created..."+freqTable);
-		tfTable = aDocument.getStructuralProperties().getTfTable();
-		LOGGER.debug("tf Table created..."+tfTable);
-		isf = aDocument.getStructuralProperties().getIsf();
+		//freqTable = aDocument.getStructuralProperties().getFreqTable();
+		//LOGGER.debug("freq table created..."+freqTable);
+		//tfTable = aDocument.getStructuralProperties().getTfTable();
+		//LOGGER.debug("tf Table created..."+tfTable);
+		//isf = aDocument.getStructuralProperties().getIsf();
 		//idfTable=FrequencyCalculator.calculateInverseSentenceFreqTable(freqTable, aDocument);
-		LOGGER.debug("isf created..."+isf);
+		//LOGGER.debug("isf created..."+isf);
 	}
 
 
@@ -200,7 +201,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 				}else{
 					//double semanticValue = SemanticSimilarity.calculate(document.getSentenceList().get(i), document.getSentenceList().get(j));
 					double ngd=NormalisedGoogleDistance.ngd(document.getSentenceList().get(i), document.getSentenceList().get(j), document);
-					graph.setWeight(i, j,ngd/**0.5 + 0.5*calculateSimilarityForSentences(i,j,document)*/);
+					//graph.setWeight(i, j, ngd*0.5 + 0.5*calculateSimilarityForSentences(i,j,document));
+					graph.setWeight(i, j, ngd);
 				}
 			}
 		}
@@ -212,7 +214,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 
 	private double calculateSimilarityForSentences(int i, int j,Document aDocument) {
 		
-		Iterator<String> keyIterator = freqTable.keySet().iterator();
+		Iterator<String> keyIterator = aDocument.getStructuralProperties().getFreqTable().keySet().iterator();
 		double nominator=0.0;
 		double denominatorLeft=0.0;
 		double denominatorRight=0.0;
@@ -233,9 +235,9 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 
 
 	private double calculateWeight(String key, int i) {
-		List<Double> termFreqListOfIndexTerm = tfTable.get(key);
+		List<Double> termFreqListOfIndexTerm = getDocumentToBeSummarized().getStructuralProperties().getTfTable().get(key);
 		Double tfValue = termFreqListOfIndexTerm.get(i);
-		Double isfValue = isf.get(key);
+		Double isfValue = getDocumentToBeSummarized().getStructuralProperties().getIsf().get(key);
 		return tfValue*isfValue;
 	}
 	

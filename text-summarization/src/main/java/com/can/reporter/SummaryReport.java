@@ -77,16 +77,16 @@ public class SummaryReport implements IVisitor {
 			AnalysisData curData = analysisData.get(key);
 			stringBuffer.append(
 					curData.getName()+":"
-					+formatter.format(curData.getRougeNValue())+":"
+					+formatter.format(curData.getRougeNValue()/bulkDocumentHandler.getRun())+":"
 					+curData.getOriginalWordNumber()+":"
 					+curData.getRefWordNumber()+":"
-					+curData.getSummWordNumber()+":"
-					+formatter.format(curData.getFitnessValue())+"\n");
+					+curData.getSummWordNumber()/bulkDocumentHandler.getRun()+":"
+					+formatter.format(curData.getFitnessValue()/bulkDocumentHandler.getRun())+"\n");
 					total+=curData.getRougeNValue();
 			
 		}
-		double average = total/keySet.size();
-		stringBuffer.append("Average:"+formatter.format(average)+"\n");
+		double average = total/(keySet.size()*bulkDocumentHandler.getRun());
+		stringBuffer.append("\nAverage:"+formatter.format(average)+"\n");
 		bulkDocumentHandler.clearData();
 		
 	}
