@@ -100,7 +100,7 @@ public class BulkDocumentHandler implements Visitable{
 			summarizer=(AbstractSummarizer) summaryStrategy;
 			Document summary=summarizer.finalizeSummaryWithPropertyWordNumber(document);
 			summaryMap.put(curFile, summary);
-			
+			System.gc();
 		}
 		long evaluation2=System.currentTimeMillis();
 		summaryTime=(evaluation2-evaluation1)/1000.0;
@@ -135,6 +135,7 @@ public class BulkDocumentHandler implements Visitable{
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
 			updateRougeNResults(results,orginalDocuments,referenceDocuments,summaryDocuments);
+			results=null;
 		} catch (MissingFileException e) {
 			LOGGER.error(e.getMessage());
 		}catch (Exception e){

@@ -93,6 +93,7 @@ public class SummarizerMain {
 				 */
 				bulkDocumentHandler.doBulkEvaluation(systemDocuments.getDocumentMap(),summaryDocs ,referenceDocuments.getDocumentMap());
 				currRun++;
+				System.gc();
 			}
 			bulkDocumentHandler.accept(summaryReport);
 			String report=summaryReport.createReport();
