@@ -95,4 +95,16 @@ public class StructuralProperties {
 		return containsWordsTogether;
 	}
 
+	public void clear() {
+		freqTable=null;
+		tfTable=null;
+		isf=null;
+		idfTable=null;
+		idf=null;
+		tfIdf=null;
+		numberOfSentenceContains=null;
+		containsWordsTogether=null;
+		
+	}
+
 }

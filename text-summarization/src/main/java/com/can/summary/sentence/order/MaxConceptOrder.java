@@ -44,7 +44,7 @@ public class MaxConceptOrder implements SentenceOrder {
 			item.add(sci);
 		}
 		Collections.sort(item);
-		Collections.reverse(item);
+		//Collections.reverse(item);
 		for (SentenceConceptItem sciItem : item) {
 			finalIndex.add(sciItem.index);
 		}
