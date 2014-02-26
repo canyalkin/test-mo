@@ -25,7 +25,7 @@ public class TfIdfOrder implements SentenceOrder {
 		}
 		
 		Collections.sort(sentenceTfIdfList);
-		//Collections.reverse(sentenceTfIdfList);
+		Collections.reverse(sentenceTfIdfList);
 		List<Integer> newIndexes=new ArrayList<Integer>();
 		
 		for (SentenceTfIdf sentenceTfIdf : sentenceTfIdfList) {

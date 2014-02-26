@@ -37,6 +37,7 @@ public class StructuralProperties {
 		LOGGER.debug("TF IDF created..."+tfIdf);
 		numberOfSentenceContains=FrequencyCalculator.calculateNumberOfSentenceContains(freqTable,document);
 		containsWordsTogether=FrequencyCalculator.getWordsTogetherMap(freqTable, document);
+		LOGGER.debug(this);
 		
 	}
 
@@ -106,5 +107,18 @@ public class StructuralProperties {
 		containsWordsTogether=null;
 		
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "StructuralProperties [freqTable=" + freqTable + ", tfTable="
+				+ tfTable + ", isf=" + isf + ", idfTable=" + idfTable
+				+ ", idf=" + idf + ", tfIdf=" + tfIdf
+				+ ", numberOfSentenceContains=" + numberOfSentenceContains
+				+ ", containsWordsTogether=" + containsWordsTogether + "]";
+	}
+	
 
 }

@@ -164,9 +164,10 @@ public final class FrequencyCalculator {
 			LOGGER.error("unexpected tf & idf size different. tf:"+tf.size()+" idf:"+idf.size());
 			return tfIdf;
 		}
+		double totalWordNumber = calculateTotalWordNumber(tf);
 		Set<String> keys = tf.keySet();
 		for (String key: keys) {
-			tfIdf.put(key, tf.get(key)*idf.get(key));
+			tfIdf.put(key, (tf.get(key)/totalWordNumber)*idf.get(key));
 		}
 		return tfIdf;
 	}
