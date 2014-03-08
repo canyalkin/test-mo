@@ -181,6 +181,19 @@ public final class FrequencyCalculator {
 		}
 	}
 	
+	public static void addWordsToListWrtPos(List<String> wordList,Sentence sentence,String posTag, int ms, Document document){
+		List<Word> words = sentence.getWords();
+		int i=0;
+		for (Word word : words) {
+			if(!wordList.contains(word.getWord())){
+				if(sentence.getPosTags().get(i).startsWith(posTag) && document.getStructuralProperties().getFreqTable().get(word.getWord())>=ms ){
+					wordList.add(word.getWord());
+				}
+			}
+			i++;
+		}
+	}
+	
 	public static void addWordsToListWrtPos(List<String> wordList,Sentence sentence,String posTag){
 		List<Word> words = sentence.getWords();
 		int i=0;
@@ -189,12 +202,10 @@ public final class FrequencyCalculator {
 				if(sentence.getPosTags().get(i).startsWith(posTag)){
 					wordList.add(word.getWord());
 				}
-				
 			}
 			i++;
 		}
 	}
-	
 	public static HashMap<String, Integer> getWordsTogetherMap(HashMap<String, Integer>freqTable,Document document){
 		HashMap<String, Integer> together=new HashMap<String, Integer>();
 		

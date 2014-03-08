@@ -2,11 +2,11 @@ package com.can.summary.calculations;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 
 import edu.cmu.lti.jawjaw.pobj.POS;
@@ -22,9 +22,7 @@ public class SemanticSimilarity {
 	private static final Logger LOGGER = Logger.getLogger(SemanticSimilarity.class);
 	private static ILexicalDatabase db;
 	private static RelatednessCalculator rc;
-	private static HashMap<String, Double> cache;
 	static{
-		cache=new HashMap<String, Double>(10000);
 		db = new NictWordNet();
 		rc= new WuPalmer(db);
 		WS4JConfiguration.getInstance().setMFS(true);
@@ -34,15 +32,6 @@ public class SemanticSimilarity {
 	}
 
 	public static double calculate(String word1,String word2){
-		
-		String key = word1+word2;
-		String key2=word2+word1;
-		if(cache.containsKey(key)){
-			return cache.get(key);
-		}else if(cache.containsKey(key2)){
-			return cache.get(key2);
-		}
-		
 		List<POS[]> posPairs = rc.getPOSPairs();
 		double maxScore = -1D;
 		for(POS[] posPair: posPairs) {
@@ -64,8 +53,6 @@ public class SemanticSimilarity {
 			maxScore = 0.0;
 		}
 		
-		cache.put(key, maxScore);
-		cache.put(key2, maxScore);
 		return maxScore;
 	}
 
@@ -156,6 +143,51 @@ public class SemanticSimilarity {
 			LOGGER.error(exception.getMessage());
 		}
 		return hypernyms;
+	}
+
+	public static double calculate(Sentence sentence1, Sentence sentence2,
+			Document document) {
+		
+		int ms=calculateMS(document.getSentenceList().size());
+		List<String> nounBase=new ArrayList<String>();
+		FrequencyCalculator.addWordsToListWrtPos(nounBase, sentence1, "NN",ms,document);
+		FrequencyCalculator.addWordsToListWrtPos(nounBase, sentence2, "NN",ms,document);
+		
+		List<String> nouns1=new ArrayList<String>();
+		FrequencyCalculator.addWordsToListWrtPos(nouns1, sentence1, "NN",ms,document);
+		List<String> nouns2=new ArrayList<String>();
+		FrequencyCalculator.addWordsToListWrtPos(nouns2, sentence2, "NN",ms,document);
+		List<Double>list1=new ArrayList<Double>();
+		List<Double>list2=new ArrayList<Double>();
+		fillArray(nounBase,nouns1,nouns2,list1,list2);
+		double cosValueNoun = CosineSimilarity.calculate(list1, list2);
+		
+		
+		List<String> verbBase=new ArrayList<String>();
+		FrequencyCalculator.addWordsToListWrtPos(verbBase, sentence1, "VB",ms,document);
+		FrequencyCalculator.addWordsToListWrtPos(verbBase, sentence2, "VB",ms,document);
+		
+		List<String> verbs1=new ArrayList<String>();
+		FrequencyCalculator.addWordsToListWrtPos(verbs1, sentence1, "VB",ms,document);
+		List<String> verbs2=new ArrayList<String>();
+		FrequencyCalculator.addWordsToListWrtPos(verbs2, sentence2, "VB",ms,document);
+		List<Double>verbList1=new ArrayList<Double>();
+		List<Double>verbList2=new ArrayList<Double>();
+		fillArray(verbBase,verbs1,verbs2,verbList1,verbList2);
+		double cosValueVerb = CosineSimilarity.calculate(verbList1, verbList2);
+		
+		return 0.5*cosValueNoun + 0.5*cosValueVerb;
+		
+	}
+	
+	private static int calculateMS(int size) {
+		if(size<25){
+			return (int) (7+(0.1*(25-size)));
+		}else if(size>40){
+			return (int) (7+(0.1*(size-40)));
+		}else{
+			return 7;
+		}
 	}
 
 }

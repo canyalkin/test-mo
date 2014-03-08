@@ -2,6 +2,8 @@ package com.can.document.handler.module;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +48,7 @@ public class BulkDocumentHandler implements Visitable{
 	private Map<String,Double>fitnessValues=null;
 	
 	private Map<String,AnalysisData> bulkDataAnalysis=null;
+	private List<Double> averageRougeN=new ArrayList<Double>(1000);
 	
 	private RougeNType rougeNType;
 	private int rougeNNumber;
@@ -88,18 +91,18 @@ public class BulkDocumentHandler implements Visitable{
 				if(summaryStrategy instanceof GASummaryStrategyImpl){
 					if(fitnessValues==null){
 						fitnessValues=new HashMap<String, Double>(1000);
+						LOGGER.info("fitnessValues MAP created...");
 					}
 					if(fitnessValues.containsKey(curFile)){
 						fitnessValues.put(curFile,((GASummaryStrategyImpl)summaryStrategy).getFitnessValue()+fitnessValues.get(curFile));
 					}else{
 						fitnessValues.put(curFile,((GASummaryStrategyImpl)summaryStrategy).getFitnessValue());
 					}
-					
 				}
 			}
-			summarizer=(AbstractSummarizer) summaryStrategy;
-			Document summary=summarizer.finalizeSummaryWithPropertyWordNumber(document);
-			summaryMap.put(curFile, summary);
+			//summarizer=(AbstractSummarizer) summaryStrategy;
+			//Document summary=summarizer.finalizeSummaryWithPropertyWordNumber(document);
+			summaryMap.put(curFile, document);
 			System.gc();
 		}
 		long evaluation2=System.currentTimeMillis();
@@ -134,6 +137,7 @@ public class BulkDocumentHandler implements Visitable{
 		run=propertyHandler.getRun();
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
+			averageRougeN.add(calculateAverageRougeN(results));
 			updateRougeNResults(results,orginalDocuments,referenceDocuments,summaryDocuments);
 			results=null;
 		} catch (MissingFileException e) {
@@ -143,6 +147,18 @@ public class BulkDocumentHandler implements Visitable{
 		}
 		long evaluation2=System.currentTimeMillis();
 		evaluationTime=((evaluation2-evaluation1)/1000.0);
+	}
+	private Double calculateAverageRougeN(Map<String, Double> results) {
+		Collection<Double> rougeValues = results.values();
+		if(rougeValues.size()<=0){
+			return 0.0;
+		}
+		double total=0.0;
+		for (Double double1 : rougeValues) {
+			total+=double1;
+		}
+		total=total/rougeValues.size();
+		return total;
 	}
 	private void updateRougeNResults(Map<String, Double> results, Map<String, Document> orginalDocuments,
 			Map<String, Document> referenceDocuments, Map<String, Document> summaryDocuments) {
@@ -267,5 +283,11 @@ public class BulkDocumentHandler implements Visitable{
 	}
 	public void setRun(int run) {
 		this.run = run;
+	}
+	public List<Double> getAverageRougeN() {
+		return averageRougeN;
+	}
+	public void setAverageRougeN(List<Double> averageRougeN) {
+		this.averageRougeN = averageRougeN;
 	}
 }

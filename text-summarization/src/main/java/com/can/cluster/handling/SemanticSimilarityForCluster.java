@@ -1,7 +1,6 @@
 package com.can.cluster.handling;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.HashMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 import com.can.summarizer.interfaces.ICalculateSimilarity;
 import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.model.Document;
-import com.can.summarizer.model.Sentence;
+import com.can.summary.calculations.FrequencyCalculator;
 import com.can.summary.calculations.SemanticSimilarity;
 
 @Component("SemanticSimilarity")
@@ -24,6 +23,12 @@ public class SemanticSimilarityForCluster implements ICalculateSimilarity {
 	@Override
 	public double[][] calculateSimilarity(Document document) {
 		tagger.createPosTags(document);
+		HashMap<String, Integer> freqTable;
+		if(document.getStructuralProperties()==null){
+			freqTable = FrequencyCalculator.createFrequencyTable(document);
+		}else{
+			freqTable=document.getStructuralProperties().getFreqTable();
+		}
 		int numberOfSentence=document.getSentenceList().size();
 		double[][] simMatrix = createMatrix(numberOfSentence);
 		for(int i = 0; i < numberOfSentence; i++){

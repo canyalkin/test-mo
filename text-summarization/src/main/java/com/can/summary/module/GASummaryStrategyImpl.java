@@ -84,9 +84,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		
 		List<Integer> indexes = GeneHandler.getSummaryIndexes(genotype.getFittestChromosome());
 		LOGGER.info("summary indexes:"+indexes);
-		indexes=sentenceOrder.orderSentence(indexes, getDocumentToBeSummarized());
-		LOGGER.info("summary indexes:"+indexes);
 		Document summaryDocument = createSummaryDocument(aDocument, indexes);
+		indexes=null;
 		/******************************************************/
 		long t2=System.currentTimeMillis();
 		LOGGER.info("summarization takes "+(t2-t1)/1000.0+" seconds.");
@@ -191,6 +190,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 
 	private Graph createGraph(Graph graph,Document document) {
 		int senteceNumber=document.getSentenceList().size();
+		
 		for(int i=0;i<senteceNumber;i++){
 			
 			for(int j=0;j<senteceNumber;j++){
@@ -199,16 +199,19 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 				}else if(i==j){
 					graph.setWeight(i, j, 0.0);
 				}else{
+					//if(validForSemanticCalc(ms,))
 					//double semanticValue = SemanticSimilarity.calculate(document.getSentenceList().get(i), document.getSentenceList().get(j));
-					double ngd=NormalisedGoogleDistance.ngd(document.getSentenceList().get(i), document.getSentenceList().get(j), document);
-					//graph.setWeight(i, j, ngd*0.5 + 0.5*calculateSimilarityForSentences(i,j,document));
-					graph.setWeight(i, j, ngd);
+					//double ngd=NormalisedGoogleDistance.ngd(document.getSentenceList().get(i), document.getSentenceList().get(j), document);
+					graph.setWeight(i, j, calculateSimilarityForSentences(i,j,document));
+					//graph.setWeight(i, j, ngd);
 				}
 			}
 		}
 		return graph;
 	}
 
+
+	
 
 	
 

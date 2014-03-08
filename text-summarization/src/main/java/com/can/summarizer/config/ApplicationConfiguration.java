@@ -25,9 +25,14 @@ import com.can.cluster.handling.CosSimilarityForCluster;
 import com.can.cluster.sentence.chooser.MaxUniqueWordChooser;
 import com.can.cluster.sentence.chooser.SimpleSentenceChooser;
 import com.can.document.handler.module.StopWordHandler;
+import com.can.graph.similarities.CompositionOfSim;
+import com.can.graph.similarities.GraphSemanticSimilarity;
+import com.can.graph.similarities.NGDSimilarity;
+import com.can.graph.similarities.NiladriChatterjeeGraphSim;
 import com.can.pos.tagger.OpenNLPPosTagger;
 import com.can.summarizer.interfaces.ClusterChooseSentenceStrategy;
 import com.can.summarizer.interfaces.ClusterChooseStrategy;
+import com.can.summarizer.interfaces.GraphSimilarity;
 import com.can.summarizer.interfaces.ICalculateSimilarity;
 import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.interfaces.SentenceOrder;
@@ -173,6 +178,25 @@ public class ApplicationConfiguration {
 			return new MaxWordNumberOrder();
 		}
 		return new TfIdfOrder();
+	}
+	
+	//#graphSimilarity=graphNGD,Niladri,graphSemantic,composition
+	@Bean
+	public GraphSimilarity getGraphSimilarity(){
+		String propList = environment.getProperty("graphSimilarity");
+		String[] splitted = propList.split(",");
+		if(splitted.length > 1){
+			return new CompositionOfSim();
+		}
+		if(propList.equals("graphNGD")){
+			return new NGDSimilarity();
+		}else if(propList.equals("Niladri")){
+			return new NiladriChatterjeeGraphSim();
+		}else if(propList.equals("graphSemantic")){
+			return new GraphSemanticSimilarity();
+		}
+		
+		return new NiladriChatterjeeGraphSim();
 	}
 	
 	

@@ -1,6 +1,7 @@
 package com.can.summary.module;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -52,7 +53,7 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		List<Sentence> sumSentence=new ArrayList<Sentence>(30);
 		int wordCount=0;
 		int i=0;
-		while (i < indexes.size() /*&& wordCount < propertyHandler.getMaxWordNumber()*/) {
+		while (i < indexes.size()) {
 				sumSentence.add(document.getSentenceList().get(indexes.get(i)));
 				//wordCount+=document.getSentenceList().get(indexes.get(i)).getOriginalSentencesWordNumber();
 				i++;
@@ -92,10 +93,44 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		}
 		
 		setNumberOfSentences(aDocument.getSentenceList().size());
-		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
+		//setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
+		int averageWords=calculateAverageWordInSentence(getDocumentToBeSummarized());
+		int expectedSentenceNumber=propertyHandler.getMaxWordNumber()/averageWords;
+		if(expectedSentenceNumber>getNumberOfSentences()){
+			LOGGER.warn("expectedSentenceNumber>getNumberOfSentences()");
+			LOGGER.error("expectedSentenceNumber>getNumberOfSentences()");
+			setDesiredNumberOfSentenceInSum(getNumberOfSentences());
+		}else{
+			setDesiredNumberOfSentenceInSum(expectedSentenceNumber);
+		}
+		
+		if(getDesiredNumberOfSentenceInSum()<1){
+			LOGGER.error("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
+		}
 		return null;
 	}
 	
+	private int calculateAverageWordInSentence(Document document) {
+		int average=0;
+		List<Sentence> sentences = document.getSentenceList();
+		List<Integer>wordSizeList=new ArrayList<Integer>();
+		for (Sentence sentence : sentences) {
+			wordSizeList.add(sentence.getWords().size());
+		}
+		Collections.sort(wordSizeList);
+		Collections.reverse(wordSizeList);
+		int size=3;
+		if(wordSizeList.size()<size){
+			size=wordSizeList.size();
+		}
+		for(int i=0;i<size;i++){
+			average+=wordSizeList.get(i);
+		}
+		average=(int) (average/(double)size);
+		wordSizeList=null;
+		return average;
+	}
+
 	public void getStemmingFromProperty() {
 		setStemming(propertyHandler.isStemming());
 		

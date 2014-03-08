@@ -32,21 +32,22 @@ public class SummaryFitness extends FitnessFunction {
 		double CF=calculateCohesionFactor(chromosome);
 		double RF=calculateReadibilityFactor(chromosome);
 		//double sentenceToTitleSim=calculateSentenceToTitleSim(chromosome);
+		double titleSim=calculateSentenceToTitleSim(chromosome);
 		double returnValue=0.0;
-		if(0.5*CF+0.5*RF>1){
+		//returnValue=0.3*CF+0.2*RF+0.5*sentenceToTitleSim;
+		returnValue=0.5*CF+0.4*RF+0.2*titleSim;
+		if(returnValue>1){
 			LOGGER.debug("CF:"+CF);
 			LOGGER.debug("RF:"+RF);
+			LOGGER.debug("simToTitle:"+titleSim);
 			if(LOGGER.isTraceEnabled()){
 				printGene(chromosome.getGenes());
 			}
 		}
-		//returnValue=0.3*CF+0.2*RF+0.5*sentenceToTitleSim;
-		returnValue=0.5*CF+0.5*RF;
 		if(Double.isNaN(returnValue)){
 			LOGGER.error("fitness : NaN value !!!!!!!!");
 			returnValue=0.0;
 		}
-		returnValue+=calculateSentenceToTitleSim(chromosome);
 		return returnValue;
 	}
 	
@@ -59,6 +60,7 @@ public class SummaryFitness extends FitnessFunction {
 		for (Integer index : indexList) {
 			retVal+=CosineSimilarity.calculate(document.getTitle(), document.getSentenceList().get(index));
 		}
+		retVal=retVal/indexList.size();
 		return retVal;
 	}
 

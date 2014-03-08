@@ -2,6 +2,7 @@ package com.can.reporter;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -83,6 +84,11 @@ public class SummaryReport implements IVisitor {
 					+curData.getSummWordNumber()/bulkDocumentHandler.getRun()+":"
 					+formatter.format(curData.getFitnessValue()/bulkDocumentHandler.getRun())+"\n");
 					total+=curData.getRougeNValue();
+			
+		}
+		List<Double> averageRougeNValueList = bulkDocumentHandler.getAverageRougeN();
+		for (int i = 0; i < averageRougeNValueList.size(); i++) {
+			stringBuffer.append("Rouge ("+(i+1)+"): "+averageRougeNValueList.get(i)+"\n");
 			
 		}
 		double average = total/(keySet.size()*bulkDocumentHandler.getRun());

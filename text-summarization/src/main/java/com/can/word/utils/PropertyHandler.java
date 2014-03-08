@@ -132,6 +132,8 @@ public class PropertyHandler {
 			this.run=1;
 		}
 		
+		String propList = environment.getProperty("graphSimilarity");
+		
 	}
 	private void setSummaryStrategy(String strategies) {
 		List<SummaryStrategy> summaryStrategies=new ArrayList<SummaryStrategy>();
