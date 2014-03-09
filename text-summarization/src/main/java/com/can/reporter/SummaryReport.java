@@ -53,6 +53,9 @@ public class SummaryReport implements IVisitor {
 		stringBuffer.append("summary word number:"+singleDocumentHandler.getSummarizedWordNumber()+"\n");
 		stringBuffer.append("orig word number:"+singleDocumentHandler.getOriginalDocumentWordNumber()+"\n");
 		stringBuffer.append("Rouge -N result:"+formatter.format(singleDocumentHandler.getRougeNResult())+"\n");
+		stringBuffer.append("presicion:"+singleDocumentHandler.getPresicion()+"\n");
+		stringBuffer.append("recall:"+singleDocumentHandler.getRecall()+"\n");
+		stringBuffer.append("f1:"+singleDocumentHandler.getF1()+"\n");
 		stringBuffer.append(singleDocumentHandler.getSummarizedDocument()+"\n");
 	}
 
@@ -72,7 +75,7 @@ public class SummaryReport implements IVisitor {
 		stringBuffer.append("Cluster Numebr:"+(bulkDocumentHandler.getClusterNumber())+"\n");
 		Map<String, AnalysisData> analysisData = bulkDocumentHandler.getBulkDataAnalysis();
 		Set<String> keySet = analysisData.keySet();
-		stringBuffer.append("file:rouge-n:# of words in original doc:# of words in reference doc:# of words in summary doc:fitness value"+"\n");
+		stringBuffer.append("file:rouge-n:# of words in original doc:# of words in reference doc:# of words in summary doc:fitness value:presicion:recall:f1"+"\n");
 		double total=0.0;
 		for (String key : keySet) {
 			AnalysisData curData = analysisData.get(key);
@@ -82,7 +85,10 @@ public class SummaryReport implements IVisitor {
 					+curData.getOriginalWordNumber()+":"
 					+curData.getRefWordNumber()+":"
 					+curData.getSummWordNumber()/bulkDocumentHandler.getRun()+":"
-					+formatter.format(curData.getFitnessValue()/bulkDocumentHandler.getRun())+"\n");
+					+formatter.format(curData.getFitnessValue()/bulkDocumentHandler.getRun())+":"
+					+curData.getPresicion()+":"
+					+curData.getRecall()+":"
+					+curData.getF1()+"\n");
 					total+=curData.getRougeNValue();
 			
 		}

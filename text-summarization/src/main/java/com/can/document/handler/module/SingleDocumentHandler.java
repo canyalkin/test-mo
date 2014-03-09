@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.can.document.reader.SingleDocumentReader;
+import com.can.success.calculations.PresicionRecallCalculator;
 import com.can.success.calculations.RougeNCalculator;
 import com.can.summarizer.interfaces.IStopWord;
 import com.can.summarizer.interfaces.IStrategyDirector;
@@ -53,6 +54,7 @@ public class SingleDocumentHandler implements Visitable {
 	private double rougeNResult;
 	private Document summarizedDocument;
 	private double summarizationTime;
+	private double presicion,recall,f1;
 
 	public void readDocument(String file) {
 		singleDoc = singleDocumentReader.readDocument(file,false);
@@ -168,6 +170,41 @@ public class SingleDocumentHandler implements Visitable {
 
 	public double getSummarizationTime() {
 		return summarizationTime;
+	}
+
+	public double getRecall() {
+		return recall;
+	}
+
+	public void setRecall(double recall) {
+		this.recall = recall;
+	}
+
+	public double getPresicion() {
+		return presicion;
+	}
+
+	public void setPresicion(double presicion) {
+		this.presicion = presicion;
+	}
+
+	public double getF1() {
+		return f1;
+	}
+
+	public void setF1(double f1) {
+		this.f1 = f1;
+	}
+
+	public void calculatePresicion(Document sysSum, Document refDocument) {
+		PresicionRecallCalculator presicionRecallCalculator=new PresicionRecallCalculator();
+		presicionRecallCalculator.setRefDocument(refDocument);
+		presicionRecallCalculator.setSysDocument(sysSum);
+		presicionRecallCalculator.doCalulations();
+		setPresicion(presicionRecallCalculator.getPresicion());
+		setRecall(presicionRecallCalculator.getRecall());
+		setF1(presicionRecallCalculator.getF1());
+		
 	}
 
 

@@ -13,6 +13,7 @@ import com.can.document.handler.module.BulkDocumentHandler;
 import com.can.document.handler.module.SingleDocumentHandler;
 import com.can.document.reader.BulkDocumentReader;
 import com.can.reporter.SummaryReport;
+import com.can.success.calculations.PresicionRecallCalculator;
 import com.can.summarizer.config.ApplicationConfiguration;
 import com.can.summarizer.interfaces.IOutput;
 import com.can.summarizer.model.Document;
@@ -56,6 +57,8 @@ public class SummarizerMain {
 			long t2=System.currentTimeMillis();
 			Double result=singleDocumentHandler.calculateRougeN(sysSum,refDocument,propertyHandler.getRougeNType(),
 					propertyHandler.getRougeNNumber());
+			singleDocumentHandler.calculatePresicion(sysSum,refDocument);
+						
 			singleDocumentHandler.accept(summaryReport);
 			String report = summaryReport.createReport();
 			output.write("output"+i+".txt",report);

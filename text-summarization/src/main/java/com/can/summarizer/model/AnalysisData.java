@@ -8,6 +8,9 @@ public class AnalysisData {
 	private double summWordNumber=0;
 	private double rougeNValue=0;
 	private double fitnessValue=-1;
+	private double presicion=0;
+	private double recall=0;
+	private double f1=0;
 	
 	public AnalysisData(String name) {
 		this.name=name;
@@ -55,6 +58,48 @@ public class AnalysisData {
 
 	public void setFitnessValue(double fitnessValue) {
 		this.fitnessValue = fitnessValue;
+	}
+
+	/**
+	 * @return the presicion
+	 */
+	public double getPresicion() {
+		return presicion;
+	}
+
+	/**
+	 * @param presicion the presicion to set
+	 */
+	public void setPresicion(double presicion) {
+		this.presicion = presicion;
+	}
+
+	/**
+	 * @return the recall
+	 */
+	public double getRecall() {
+		return recall;
+	}
+
+	/**
+	 * @param recall the recall to set
+	 */
+	public void setRecall(double recall) {
+		this.recall = recall;
+	}
+
+	/**
+	 * @return the f1
+	 */
+	public double getF1() {
+		return f1;
+	}
+
+	/**
+	 * @param f1 the f1 to set
+	 */
+	public void setF1(double f1) {
+		this.f1 = f1;
 	}
 	
 

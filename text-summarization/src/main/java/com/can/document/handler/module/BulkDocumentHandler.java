@@ -22,8 +22,10 @@ import com.can.summarizer.interfaces.SummaryStrategy;
 import com.can.summarizer.interfaces.Visitable;
 import com.can.summarizer.model.AnalysisData;
 import com.can.summarizer.model.Document;
+import com.can.summarizer.model.PresicionRecallData;
 import com.can.summarizer.model.RougeNType;
 import com.can.summarizer.model.Sentence;
+import com.can.summary.evaluator.BulkPresicionCalculator;
 import com.can.summary.evaluator.BulkRougeNEvaluator;
 import com.can.summary.exceptions.MissingFileException;
 import com.can.summary.module.AbstractSummarizer;
@@ -125,6 +127,7 @@ public class BulkDocumentHandler implements Visitable{
 		long evaluation1=System.currentTimeMillis();
 		BulkRougeNEvaluator bulkRougeNEvaluator=new BulkRougeNEvaluator(
 				summaryDocuments, referenceDocuments, propertyHandler.getRougeNNumber(), propertyHandler.getRougeNType());
+		BulkPresicionCalculator bulkPresicionCalculator=new BulkPresicionCalculator(summaryDocuments,referenceDocuments);
 		rougeNType=propertyHandler.getRougeNType();
 		rougeNNumber=propertyHandler.getRougeNNumber();
 		summaryProportion=propertyHandler.getSummaryProportion();
@@ -137,8 +140,9 @@ public class BulkDocumentHandler implements Visitable{
 		run=propertyHandler.getRun();
 		try {
 			Map<String, Double> results = bulkRougeNEvaluator.calculateRougeN();
+			HashMap<String, PresicionRecallData> presicionResults = bulkPresicionCalculator.calculatePresicionvalues();
 			averageRougeN.add(calculateAverageRougeN(results));
-			updateRougeNResults(results,orginalDocuments,referenceDocuments,summaryDocuments);
+			updateRougeNResults(presicionResults,results,orginalDocuments,referenceDocuments,summaryDocuments);
 			results=null;
 		} catch (MissingFileException e) {
 			LOGGER.error(e.getMessage());
@@ -160,7 +164,7 @@ public class BulkDocumentHandler implements Visitable{
 		total=total/rougeValues.size();
 		return total;
 	}
-	private void updateRougeNResults(Map<String, Double> results, Map<String, Document> orginalDocuments,
+	private void updateRougeNResults(HashMap<String, PresicionRecallData> presicionResults, Map<String, Double> results, Map<String, Document> orginalDocuments,
 			Map<String, Document> referenceDocuments, Map<String, Document> summaryDocuments) {
 
 		if(bulkDataAnalysis==null){
@@ -174,6 +178,9 @@ public class BulkDocumentHandler implements Visitable{
 				curValue.setSummWordNumber(curValue.getSummWordNumber()+SummaryUtils.calculateOriginalSentenceWordNumber(summaryDocuments.get(curFile)));
 				curValue.setRougeNValue(results.get(curFile)+curValue.getRougeNValue());
 				curValue.setFitnessValue(fitnessValues.get(curFile));
+				curValue.setPresicion(curValue.getPresicion()+presicionResults.get(curFile).getPresicion());
+				curValue.setRecall(curValue.getRecall()+presicionResults.get(curFile).getRecall());
+				curValue.setF1(curValue.getF1()+presicionResults.get(curFile).getF1());
 				bulkDataAnalysis.put(curFile, curValue);
 			}else{
 				AnalysisData analysisData=new AnalysisData(curFile);
@@ -184,6 +191,9 @@ public class BulkDocumentHandler implements Visitable{
 				if(fitnessValues!=null){
 					analysisData.setFitnessValue(fitnessValues.get(curFile));
 				}
+				analysisData.setPresicion(presicionResults.get(curFile).getPresicion());
+				analysisData.setRecall(presicionResults.get(curFile).getRecall());
+				analysisData.setF1(presicionResults.get(curFile).getF1());
 				bulkDataAnalysis.put(curFile, analysisData);
 			}
 		}
