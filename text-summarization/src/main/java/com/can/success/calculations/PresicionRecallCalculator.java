@@ -3,11 +3,14 @@ package com.can.success.calculations;
 import java.util.HashMap;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import com.can.document.handler.module.BulkDocumentHandler;
 import com.can.summarizer.model.Document;
 import com.can.summary.calculations.FrequencyCalculator;
 
 public class PresicionRecallCalculator {
-	
+	private static final Logger LOGGER = Logger.getLogger(PresicionRecallCalculator.class);
 	private Document refDocument=null;
 	private Document sysDocument=null;
 	
@@ -26,7 +29,16 @@ public class PresicionRecallCalculator {
 		
 		presicion=intersection/(double)wordsInSystem;
 		recall=intersection/(double)wordsInRef;
-		f1=(presicion*recall)/(presicion+recall);
+		f1=2*(presicion*recall)/(presicion+recall);
+		
+		if(Double.isNaN(presicion)||Double.isNaN(recall)||Double.isNaN(f1)){
+			LOGGER.error("presicion:"+presicion);
+			LOGGER.error("recall:"+recall);
+			LOGGER.error("f1:"+f1);
+			LOGGER.error("intersection:"+intersection);
+			LOGGER.error("wordsInSystem:"+wordsInSystem);
+			LOGGER.error("wordsInRef:"+wordsInRef);
+		}
 		
 	}
 	

@@ -86,9 +86,9 @@ public class SummaryReport implements IVisitor {
 					+curData.getRefWordNumber()+":"
 					+curData.getSummWordNumber()/bulkDocumentHandler.getRun()+":"
 					+formatter.format(curData.getFitnessValue()/bulkDocumentHandler.getRun())+":"
-					+curData.getPresicion()+":"
-					+curData.getRecall()+":"
-					+curData.getF1()+"\n");
+					+curData.getPresicion()/bulkDocumentHandler.getRun()+":"
+					+curData.getRecall()/bulkDocumentHandler.getRun()+":"
+					+curData.getF1()/bulkDocumentHandler.getRun()+"\n");
 					total+=curData.getRougeNValue();
 			
 		}
