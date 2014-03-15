@@ -38,6 +38,7 @@ public class PresicionRecallCalculator {
 			LOGGER.error("intersection:"+intersection);
 			LOGGER.error("wordsInSystem:"+wordsInSystem);
 			LOGGER.error("wordsInRef:"+wordsInRef);
+			f1=0.0;
 		}
 		
 	}
