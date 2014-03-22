@@ -52,8 +52,8 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	@Autowired
 	private PropertyHandler propertyHandler;
 	
-	@Autowired
-	private SentenceOrder sentenceOrder;
+	/*@Autowired
+	private SentenceOrder sentenceOrder;*/
 	
 	
 	public GASummaryStrategyImpl() {

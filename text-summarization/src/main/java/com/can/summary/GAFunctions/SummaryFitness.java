@@ -33,9 +33,12 @@ public class SummaryFitness extends FitnessFunction {
 		double RF=calculateReadibilityFactor(chromosome);
 		//double sentenceToTitleSim=calculateSentenceToTitleSim(chromosome);
 		double titleSim=calculateSentenceToTitleSim(chromosome);
+		double sentenceLength=calculateSentenceLength(chromosome);
 		double returnValue=0.0;
 		//returnValue=0.3*CF+0.2*RF+0.5*sentenceToTitleSim;
-		returnValue=0.5*CF+0.4*RF+0.2*titleSim;
+		//returnValue=0.3*CF+0.3*RF+0.2*titleSim+0.2*sentenceLength;
+		//returnValue=0.3*CF+0.3*RF+0.4*sentenceLength;
+		returnValue=0.5*CF+0.5*RF;
 		if(returnValue>1){
 			LOGGER.debug("CF:"+CF);
 			LOGGER.debug("RF:"+RF);
@@ -51,6 +54,15 @@ public class SummaryFitness extends FitnessFunction {
 		return returnValue;
 	}
 	
+	private double calculateSentenceLength(IChromosome chromosome) {
+		List<Integer> indexList = GeneHandler.getSummaryIndexes(chromosome);
+		double retVal=0.0;
+		for (Integer index : indexList) {
+			retVal+=document.getSentenceList().get(index).getWords().size();
+		}
+		return retVal/indexList.size();
+	}
+
 	private double calculateSentenceToTitleSim(IChromosome chromosome) {
 		List<Integer> indexList = GeneHandler.getSummaryIndexes(chromosome);
 		if (document.getTitle()==null){

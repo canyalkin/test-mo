@@ -80,7 +80,8 @@ public class Document {
 	}
 
 	public void clear() {
-		structuralProperties.clear();
+		if(structuralProperties!=null)
+			structuralProperties.clear();
 		structuralProperties=null;
 		for (Sentence sentence : sentenceList) {
 			sentence.clear();
