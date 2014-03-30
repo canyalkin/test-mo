@@ -32,8 +32,8 @@ public class SummaryFitness extends FitnessFunction {
 		double CF=calculateCohesionFactor(chromosome);
 		double RF=calculateReadibilityFactor(chromosome);
 		//double sentenceToTitleSim=calculateSentenceToTitleSim(chromosome);
-		double titleSim=calculateSentenceToTitleSim(chromosome);
-		double sentenceLength=calculateSentenceLength(chromosome);
+		//double titleSim=calculateSentenceToTitleSim(chromosome);
+		//double sentenceLength=calculateSentenceLength(chromosome);
 		double returnValue=0.0;
 		//returnValue=0.3*CF+0.2*RF+0.5*sentenceToTitleSim;
 		//returnValue=0.3*CF+0.3*RF+0.2*titleSim+0.2*sentenceLength;
@@ -42,7 +42,7 @@ public class SummaryFitness extends FitnessFunction {
 		if(returnValue>1){
 			LOGGER.debug("CF:"+CF);
 			LOGGER.debug("RF:"+RF);
-			LOGGER.debug("simToTitle:"+titleSim);
+			//LOGGER.debug("simToTitle:"+titleSim);
 			if(LOGGER.isTraceEnabled()){
 				printGene(chromosome.getGenes());
 			}

@@ -93,8 +93,8 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		}
 		
 		setNumberOfSentences(aDocument.getSentenceList().size());
-		//setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
-		int averageWords=calculateAverageWordInSentence(getDocumentToBeSummarized());
+		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
+		/*int averageWords=calculateAverageWordInSentence(getDocumentToBeSummarized());
 		int expectedSentenceNumber=propertyHandler.getMaxWordNumber()/averageWords;
 		if(expectedSentenceNumber>getNumberOfSentences()){
 			LOGGER.warn("expectedSentenceNumber>getNumberOfSentences()");
@@ -106,7 +106,7 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		
 		if(getDesiredNumberOfSentenceInSum()<1){
 			LOGGER.error("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
-		}
+		}*/
 		return null;
 	}
 	

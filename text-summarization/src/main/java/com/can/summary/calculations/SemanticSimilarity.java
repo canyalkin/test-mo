@@ -23,10 +23,11 @@ public class SemanticSimilarity {
 	private static ILexicalDatabase db;
 	private static RelatednessCalculator rc;
 	static{
-		db = new NictWordNet();
-		rc= new WuPalmer(db);
+		WS4JConfiguration.getInstance().setStem(false);
 		WS4JConfiguration.getInstance().setMFS(true);
 		WS4JConfiguration.getInstance().setCache(true);
+		db = new NictWordNet();
+		rc= new WuPalmer(db);
 	}
 	private SemanticSimilarity(){
 	}
@@ -55,6 +56,43 @@ public class SemanticSimilarity {
 		
 		return maxScore;
 	}
+	
+	public static double calculate(String word1,String word2,String pos){
+		if(pos.startsWith("NN")){
+			word1=word1+"#n";
+			word2=word2+"#n";
+		}else if(pos.startsWith("VB")){
+			word1=word1+"#v";
+			word2=word2+"#v";
+		}
+		double maxScore=rc.calcRelatednessOfWords(word1, word2);
+		if(maxScore<0 || maxScore>1){
+			LOGGER.debug("error on calculate semantic similarity- word1: "+word1+" word2: "+word2+"score: "+maxScore);
+			maxScore=maxScore/Double.MAX_VALUE;
+			LOGGER.debug("valu normalized to: "+maxScore);
+		}
+		/*double maxScore = -1D;
+		
+			List<Concept> synsets1 = (List<Concept>)db.getAllConcepts(word1, pos);
+			List<Concept> synsets2 = (List<Concept>)db.getAllConcepts(word2, pos);
+
+			for(Concept synset1: synsets1) {
+				for (Concept synset2: synsets2) {
+					Relatedness relatedness = rc.calcRelatednessOfSynset(synset1, synset2);
+					double score = relatedness.getScore();
+					if (score > maxScore) { 
+						maxScore = score;
+					}
+				}
+			}
+		
+
+		if (maxScore == -1D) {
+			maxScore = 0.0;
+		}*/
+		
+		return maxScore;
+	}
 
 	public static double calculate(Sentence sentence,Sentence sentence2){
 		List<String> nounBase=new ArrayList<String>();
@@ -67,7 +105,7 @@ public class SemanticSimilarity {
 		FrequencyCalculator.addWordsToListWrtPos(nouns2, sentence2, "NN");
 		List<Double>list1=new ArrayList<Double>();
 		List<Double>list2=new ArrayList<Double>();
-		fillArray(nounBase,nouns1,nouns2,list1,list2);
+		fillArray(nounBase,nouns1,nouns2,list1,list2,"NN");
 		double cosValueNoun = CosineSimilarity.calculate(list1, list2);
 		
 		
@@ -81,7 +119,7 @@ public class SemanticSimilarity {
 		FrequencyCalculator.addWordsToListWrtPos(verbs2, sentence2, "VB");
 		List<Double>verbList1=new ArrayList<Double>();
 		List<Double>verbList2=new ArrayList<Double>();
-		fillArray(verbBase,verbs1,verbs2,verbList1,verbList2);
+		fillArray(verbBase,verbs1,verbs2,verbList1,verbList2,"VB");
 		double cosValueVerb = CosineSimilarity.calculate(verbList1, verbList2);
 		
 		
@@ -108,6 +146,35 @@ public class SemanticSimilarity {
 			max=0.0;
 			for(String noun2:wordsFor2stSentence){//senB
 				double val=SemanticSimilarity.calculate(vectorNoun, noun2);
+				if(val>max){
+					max=val;
+				}
+			}
+			list2.add(max);
+			
+			
+		}
+		
+	}
+	
+	private static void fillArray(List<String> base, List<String> wordsFor1stSentence,
+			List<String> wordsFor2stSentence, List<Double> list1, List<Double> list2,String pos) {
+		
+		
+		for (String vectorNoun : base) {
+			
+			double max=0.0;
+			for(String noun1:wordsFor1stSentence){//senA
+				double val=SemanticSimilarity.calculate(vectorNoun, noun1,pos);
+				if(val>max){
+					max=val;
+				}
+			}
+			list1.add(max);
+			
+			max=0.0;
+			for(String noun2:wordsFor2stSentence){//senB
+				double val=SemanticSimilarity.calculate(vectorNoun, noun2,pos);
 				if(val>max){
 					max=val;
 				}

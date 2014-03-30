@@ -15,6 +15,7 @@ import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.Word;
+import com.can.summary.calculations.CosineSimilarity;
 import com.can.summary.calculations.NormalisedGoogleDistance;
 import com.can.summary.calculations.SemanticSimilarity;
 
@@ -35,8 +36,8 @@ public class TextRankStrategy extends AbstractSummarizer {
 	public Document doSummary(Document aDocument) {
 		super.doSummary(aDocument);
 		edgeWeights=new HashMap<Integer, Number>();
-		getDocumentToBeSummarized().createStructuralProperties();
-		//tagger.createPosTags(getDocumentToBeSummarized());
+		//getDocumentToBeSummarized().createStructuralProperties();
+		tagger.createPosTags(getDocumentToBeSummarized());
 		UndirectedSparseGraph<Integer, Integer> graph=new UndirectedSparseGraph<Integer, Integer>();
 		PageRankWithPriors<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph,MapTransformer.getInstance(edgeWeights), 0.85);
 
@@ -48,15 +49,21 @@ public class TextRankStrategy extends AbstractSummarizer {
 		for(int i=0;i<aDocument.getSentenceList().size();i++){
 			for(int j=i+1;j<aDocument.getSentenceList().size();j++){
 				graph.addEdge(edgeCnt,i,j);
+				//double weight=CosineSimilarity.calculate(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j));
 				//double weight=NormalisedGoogleDistance.ngd(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j), aDocument);
-				//double weight=SemanticSimilarity.calculate(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j));
-				double weight=calculateContentOverlap(aDocument.getSentenceList().get(i),aDocument.getSentenceList().get(j));
+				//LOGGER.info("before-weight");
+				double weight=SemanticSimilarity.calculate(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j));
+				//LOGGER.info("after-weight:"+weight);
+				//double weight=calculateContentOverlap(aDocument.getSentenceList().get(i),aDocument.getSentenceList().get(j));
+				if(Double.isNaN(weight)){
+					LOGGER.error("Nan Value");
+				}
 				edgeWeights.put(edgeCnt,weight);
 				edgeCnt++;
 			}
 		}
 		
-		pageRank.setMaxIterations(5);
+		pageRank.setMaxIterations(1);
 		pageRank.initialize();
 		pageRank.evaluate();
 		List<RankIndex> rankIndexList=new ArrayList<RankIndex>();
