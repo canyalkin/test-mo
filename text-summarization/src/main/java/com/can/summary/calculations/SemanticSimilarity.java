@@ -67,9 +67,9 @@ public class SemanticSimilarity {
 		}
 		double maxScore=rc.calcRelatednessOfWords(word1, word2);
 		if(maxScore<0 || maxScore>1){
-			LOGGER.debug("error on calculate semantic similarity- word1: "+word1+" word2: "+word2+"score: "+maxScore);
+			LOGGER.error("error on calculate semantic similarity- word1: "+word1+" word2: "+word2+"score: "+maxScore);
 			maxScore=maxScore/Double.MAX_VALUE;
-			LOGGER.debug("valu normalized to: "+maxScore);
+			LOGGER.error("valu normalized to: "+maxScore);
 		}
 		/*double maxScore = -1D;
 		

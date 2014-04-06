@@ -23,6 +23,7 @@ import com.can.summarizer.interfaces.IVisitor;
 import com.can.summarizer.interfaces.SentenceOrder;
 import com.can.summarizer.interfaces.Visitable;
 import com.can.summarizer.model.Document;
+import com.can.summarizer.model.Sentence;
 import com.can.summary.GAFunctions.GeneHandler;
 import com.can.summary.GAFunctions.SummaryCrossover;
 import com.can.summary.GAFunctions.SummaryFitness;
@@ -63,6 +64,7 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	public Document doSummary(Document aDocument) {
 		
 		super.doSummary(aDocument);
+		calculateDesiredSentenceNumber();
 		long t1=System.currentTimeMillis();
 		LOGGER.debug("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
 		createStructuralProperties(aDocument);//frequency table ,tf, isf
@@ -91,6 +93,23 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 		LOGGER.info("summarization takes "+(t2-t1)/1000.0+" seconds.");
 		
 		return summaryDocument;
+	}
+
+	private void calculateDesiredSentenceNumber() {
+		int averageWords=super.calculateAverageWordInSentence(getDocumentToBeSummarized());
+		int expectedSentenceNumber=propertyHandler.getMaxWordNumber()/averageWords;
+		if(expectedSentenceNumber>getNumberOfSentences()){
+			LOGGER.warn("expectedSentenceNumber>getNumberOfSentences()");
+			LOGGER.error("expectedSentenceNumber>getNumberOfSentences()");
+			setDesiredNumberOfSentenceInSum(getNumberOfSentences());
+		}else{
+			setDesiredNumberOfSentenceInSum(expectedSentenceNumber);
+		}
+		
+		if(getDesiredNumberOfSentenceInSum()<1){
+			LOGGER.error("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
+		}
+		
 	}
 
 	private void doEvolution(Genotype genotype) {
@@ -211,10 +230,6 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 	}
 
 
-	
-
-	
-
 	private double calculateSimilarityForSentences(int i, int j,Document aDocument) {
 		
 		Iterator<String> keyIterator = aDocument.getStructuralProperties().getFreqTable().keySet().iterator();
@@ -233,7 +248,9 @@ public class GASummaryStrategyImpl extends AbstractSummarizer implements Visitab
 			LOGGER.error("error on calculating similarity: denominatorLeft==0 || denominatorRight == 0");
 			return 0.0;
 		}
-		return nominator/(Math.sqrt(denominatorLeft) * (Math.sqrt(denominatorRight)) );
+		int s1 = aDocument.getSentenceList().get(i).getWords().size();
+		int s2 = aDocument.getSentenceList().get(j).getWords().size();
+		return (nominator/(Math.sqrt(denominatorLeft) * (Math.sqrt(denominatorRight)) )) + Math.abs(s2-s1)+Math.abs( (1/(i+1))-(1/(j+1)));
 	}
 
 

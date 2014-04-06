@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
 
+import com.can.summarizer.interfaces.ISentenceSimilarity;
 import com.can.summarizer.interfaces.SummaryStrategy;
 import com.can.summarizer.model.RougeNType;
 
@@ -134,6 +135,13 @@ public class PropertyHandler {
 		
 		String propList = environment.getProperty("graphSimilarity");
 		
+		try{
+			iSentenceSimilarity=applicationContext.getBean(environment.getProperty("sentenceSimilarity"),ISentenceSimilarity.class);
+		}catch(RuntimeException re){
+			iSentenceSimilarity=(ISentenceSimilarity)applicationContext.getBean("SentenceContentOverlap");
+			System.out.println(re.getMessage());
+		}
+		
 	}
 	private void setSummaryStrategy(String strategies) {
 		List<SummaryStrategy> summaryStrategies=new ArrayList<SummaryStrategy>();
@@ -170,6 +178,7 @@ public class PropertyHandler {
 	private boolean analysisMode=false;
 	private String  sentenceOrder;
 	private int run;
+	private ISentenceSimilarity iSentenceSimilarity;
 	
 	private int clusterNumber;
 	private List<SummaryStrategy> summaryStrategy;
@@ -394,6 +403,12 @@ public class PropertyHandler {
 	}
 	public void setRun(int run) {
 		this.run = run;
+	}
+	public ISentenceSimilarity getiSentenceSimilarity() {
+		return iSentenceSimilarity;
+	}
+	public void setiSentenceSimilarity(ISentenceSimilarity iSentenceSimilarity) {
+		this.iSentenceSimilarity = iSentenceSimilarity;
 	}
 	
 	

@@ -94,23 +94,11 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		
 		setNumberOfSentences(aDocument.getSentenceList().size());
 		setDesiredNumberOfSentenceInSum((int)Math.round(getNumberOfSentences()*getSummaryProportion()));
-		/*int averageWords=calculateAverageWordInSentence(getDocumentToBeSummarized());
-		int expectedSentenceNumber=propertyHandler.getMaxWordNumber()/averageWords;
-		if(expectedSentenceNumber>getNumberOfSentences()){
-			LOGGER.warn("expectedSentenceNumber>getNumberOfSentences()");
-			LOGGER.error("expectedSentenceNumber>getNumberOfSentences()");
-			setDesiredNumberOfSentenceInSum(getNumberOfSentences());
-		}else{
-			setDesiredNumberOfSentenceInSum(expectedSentenceNumber);
-		}
 		
-		if(getDesiredNumberOfSentenceInSum()<1){
-			LOGGER.error("DesiredNumberOfSentenceInSum:"+getDesiredNumberOfSentenceInSum());
-		}*/
 		return null;
 	}
 	
-	private int calculateAverageWordInSentence(Document document) {
+	protected int calculateAverageWordInSentence(Document document) {
 		int average=0;
 		List<Sentence> sentences = document.getSentenceList();
 		List<Integer>wordSizeList=new ArrayList<Integer>();

@@ -15,9 +15,12 @@ import com.can.summarizer.interfaces.IPOSTagger;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.Word;
+import com.can.summary.calculations.ContentOverlap;
 import com.can.summary.calculations.CosineSimilarity;
+import com.can.summary.calculations.JaccardSimilarity;
 import com.can.summary.calculations.NormalisedGoogleDistance;
 import com.can.summary.calculations.SemanticSimilarity;
+import com.can.word.utils.PropertyHandler;
 
 import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.algorithms.scoring.PageRankWithPriors;
@@ -32,12 +35,15 @@ public class TextRankStrategy extends AbstractSummarizer {
 	@Autowired
 	private IPOSTagger tagger;
 	
+	@Autowired
+	private PropertyHandler propertyHandler;
+	
 	@Override
 	public Document doSummary(Document aDocument) {
 		super.doSummary(aDocument);
 		edgeWeights=new HashMap<Integer, Number>();
 		//getDocumentToBeSummarized().createStructuralProperties();
-		tagger.createPosTags(getDocumentToBeSummarized());
+		//tagger.createPosTags(getDocumentToBeSummarized());
 		UndirectedSparseGraph<Integer, Integer> graph=new UndirectedSparseGraph<Integer, Integer>();
 		PageRankWithPriors<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph,MapTransformer.getInstance(edgeWeights), 0.85);
 
@@ -52,11 +58,15 @@ public class TextRankStrategy extends AbstractSummarizer {
 				//double weight=CosineSimilarity.calculate(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j));
 				//double weight=NormalisedGoogleDistance.ngd(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j), aDocument);
 				//LOGGER.info("before-weight");
-				double weight=SemanticSimilarity.calculate(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j));
+				//double weight=SemanticSimilarity.calculate(aDocument.getSentenceList().get(i), aDocument.getSentenceList().get(j));
 				//LOGGER.info("after-weight:"+weight);
 				//double weight=calculateContentOverlap(aDocument.getSentenceList().get(i),aDocument.getSentenceList().get(j));
+				//double weight=ContentOverlap.calculate(aDocument.getSentenceList().get(i),aDocument.getSentenceList().get(j));
+				//double weight=JaccardSimilarity.calculate(aDocument.getSentenceList().get(i),aDocument.getSentenceList().get(j));
+				double weight=propertyHandler.getiSentenceSimilarity().calculate(i, j, aDocument);
 				if(Double.isNaN(weight)){
 					LOGGER.error("Nan Value");
+					weight=0.0;
 				}
 				edgeWeights.put(edgeCnt,weight);
 				edgeCnt++;
@@ -82,18 +92,7 @@ public class TextRankStrategy extends AbstractSummarizer {
 		return finalizeSummaryWithPropertyWordNumber(super.createSummaryDocument(getDocumentToBeSummarized(), index));
 	}
 
-	private double calculateContentOverlap(Sentence sentence, Sentence sentence2) {
-		List<Word> words = sentence.getWords();
-		List<Word> sentenceList2 = sentence2.getWords();
-		double cnt=0;
-		for (Word word : words) {
-			if(sentenceList2.contains(word)){
-				cnt++;
-			}
-		}
-		cnt = cnt / (Math.log(words.size()) + Math.log10(sentenceList2.size()));
-		return cnt;
-	}
+	
 	private class RankIndex implements Comparable<RankIndex>{
 		private final int index;
 		private final double rank;
