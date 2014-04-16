@@ -1,5 +1,6 @@
 package com.can.summarizer.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Document {
@@ -9,6 +10,7 @@ public class Document {
 	private boolean isRef=false;
 	private boolean hasPosTag=false;
 	private StructuralProperties structuralProperties=null; 
+	
 	
 	public Document(boolean isRef) {
 		
@@ -65,6 +67,8 @@ public class Document {
 		this.structuralProperties = new StructuralProperties(this);
 	}
 
+	
+
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
@@ -87,6 +91,7 @@ public class Document {
 			sentence.clear();
 		}
 		hasPosTag=false;
+		
 		
 	}
 	

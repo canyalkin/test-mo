@@ -1,5 +1,6 @@
 package com.can.summarizer.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Sentence {
 	private List<String> wordListAsString=null;
 	private List<String> ngramList=null;
 	private HashMap<String, Integer> hypernym=null;
+	private List<Double> featureVector=null;
 	
 	public Sentence(String originalSentence) {
 		super();
@@ -136,6 +138,26 @@ public class Sentence {
 		if(posTags!=null){
 			posTags=null;
 		}
+		if(featureVector!=null){
+			featureVector=null;
+		}
+	}
+	
+	/**
+	 * @return the featureVector
+	 */
+	public List<Double> getFeatureVector() {
+		if(featureVector==null){
+			featureVector=new ArrayList<Double>(25);
+		}
+		return featureVector;
+	}
+
+	/**
+	 * @param featureVector the featureVector to set
+	 */
+	public void setFeatureVector(List<Double> featureVector) {
+		this.featureVector = featureVector;
 	}
 	
 
