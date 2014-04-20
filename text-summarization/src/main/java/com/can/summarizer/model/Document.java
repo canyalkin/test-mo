@@ -1,6 +1,5 @@
 package com.can.summarizer.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Document {
@@ -10,10 +9,11 @@ public class Document {
 	private boolean isRef=false;
 	private boolean hasPosTag=false;
 	private StructuralProperties structuralProperties=null; 
+	private boolean featureVectorCreated=false;
 	
 	
 	public Document(boolean isRef) {
-		
+		this.isRef=isRef;
 	}
 	
 	/**
@@ -68,6 +68,14 @@ public class Document {
 	}
 
 	
+
+	public boolean isFeatureVectorCreated() {
+		return featureVectorCreated;
+	}
+
+	public void setFeatureVectorCreated(boolean featureVectorCreated) {
+		this.featureVectorCreated = featureVectorCreated;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

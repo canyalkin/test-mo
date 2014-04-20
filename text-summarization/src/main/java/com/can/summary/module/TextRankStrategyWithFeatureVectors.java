@@ -9,9 +9,12 @@ import java.util.Map;
 import org.apache.commons.collections15.functors.MapTransformer;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.can.summarizer.feature.vector.FeatureVectorHandler;
 import com.can.summarizer.interfaces.IPOSTagger;
+import com.can.summarizer.interfaces.ISentenceSimilarity;
 import com.can.summarizer.model.Document;
 import com.can.summarizer.model.Sentence;
 import com.can.summarizer.model.Word;
@@ -26,25 +29,29 @@ import edu.uci.ics.jung.algorithms.scoring.PageRank;
 import edu.uci.ics.jung.algorithms.scoring.PageRankWithPriors;
 import edu.uci.ics.jung.graph.UndirectedSparseGraph;
 
-@Component("TextRankStrategyBean")
-public class TextRankStrategy extends AbstractSummarizer {
-	private static final Logger LOGGER = Logger.getLogger(TextRankStrategy.class);
+@Component("TextRankStrategyWFeatureVectorBean")
+public class TextRankStrategyWithFeatureVectors extends AbstractSummarizer {
+	private static final Logger LOGGER = Logger.getLogger(TextRankStrategyWithFeatureVectors.class);
 	
 	private Map<Integer,Number> edgeWeights;
 	
 	@Autowired
-	private IPOSTagger tagger;
+	private PropertyHandler propertyHandler;
 	
 	@Autowired
-	private PropertyHandler propertyHandler;
+	private FeatureVectorHandler featureVectorHandler;
+	
+	@Autowired
+	@Qualifier("FeatureVectorSimilarity")
+	private ISentenceSimilarity sentenceSimilarity;
 	
 	@Override
 	public Document doSummary(Document aDocument) {
 		super.doSummary(aDocument);
 		edgeWeights=new HashMap<Integer, Number>();
+		featureVectorHandler.createFeatureVector(aDocument);
 		UndirectedSparseGraph<Integer, Integer> graph=new UndirectedSparseGraph<Integer, Integer>();
 		PageRankWithPriors<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph,MapTransformer.getInstance(edgeWeights), 0.85);
-
 		for(int i=0;i<aDocument.getSentenceList().size();i++)
 		{
 			graph.addVertex(new Integer(i));
@@ -53,7 +60,7 @@ public class TextRankStrategy extends AbstractSummarizer {
 		for(int i=0;i<aDocument.getSentenceList().size();i++){
 			for(int j=i+1;j<aDocument.getSentenceList().size();j++){
 				graph.addEdge(edgeCnt,i,j);
-				double weight=propertyHandler.getiSentenceSimilarity().calculate(i, j, aDocument);
+				double weight=sentenceSimilarity.calculate(i, j, aDocument);
 				if(Double.isNaN(weight)){
 					LOGGER.error("Nan Value");
 					weight=0.0;
@@ -63,7 +70,7 @@ public class TextRankStrategy extends AbstractSummarizer {
 			}
 		}
 		
-		pageRank.setMaxIterations(3);
+		pageRank.setMaxIterations(1);
 		pageRank.initialize();
 		pageRank.evaluate();
 		List<RankIndex> rankIndexList=new ArrayList<RankIndex>();

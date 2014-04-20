@@ -24,6 +24,7 @@ import com.can.cluster.chooser.SimpleClusterChooseStrategy;
 import com.can.cluster.handling.CosSimilarityForCluster;
 import com.can.cluster.sentence.chooser.MaxUniqueWordChooser;
 import com.can.cluster.sentence.chooser.SimpleSentenceChooser;
+import com.can.document.handler.module.CueWordHandler;
 import com.can.document.handler.module.StopWordHandler;
 import com.can.graph.similarities.CompositionOfSim;
 import com.can.graph.similarities.GraphSemanticSimilarity;
@@ -68,6 +69,12 @@ public class ApplicationConfiguration {
 	public StopWordHandler getStopWordHandler(){
 		File stopWordFile= new File(environment.getProperty("stopWordsFile"));
 		return StopWordHandler.getInstance(stopWordFile);
+	}
+	
+	@Bean 
+	public CueWordHandler getCueWordHandler(){
+		File cueWordsFile= new File(environment.getProperty("cueWordsFile"));
+		return CueWordHandler.getInstance(cueWordsFile);
 	}
 	
 	@Bean(initMethod="init")

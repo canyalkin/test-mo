@@ -71,7 +71,7 @@ public class StopWordHandler implements IStopWord {
 	public synchronized Document doStopWordElimination(Document aDocument){
 		
 		List<Sentence> sentenceList = aDocument.getSentenceList();
-		if(propertyHandler.isTitle() && !aDocument.isRef()){
+		if(propertyHandler.isTitle() /*&& !aDocument.isRef()*/){
 			LOGGER.info("-------------The Title-----------");
 			deleteStopWordsForTheGivenSentence(aDocument.getTitle());
 			LOGGER.info("-------------The Title ENDS!!!-----------");

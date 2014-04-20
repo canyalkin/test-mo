@@ -55,7 +55,7 @@ public class WordNetStemmer implements IWordStemmer,BeanPostProcessor {
 	
 	public Document doStemming(Document document){
 		LOGGER.info("Stemming Starts...");
-		if(propertyHandler.isTitle() && !document.isRef()){
+		if(propertyHandler.isTitle() /*&& !document.isRef()*/){
 			LOGGER.debug("-------------The Title-----------");
 			stemTheGivenSentence(document.getTitle());
 			LOGGER.debug("-------------The Title ENDS!!!-----------");

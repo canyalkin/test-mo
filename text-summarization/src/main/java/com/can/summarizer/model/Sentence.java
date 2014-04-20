@@ -159,6 +159,46 @@ public class Sentence {
 	public void setFeatureVector(List<Double> featureVector) {
 		this.featureVector = featureVector;
 	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((originalSentence == null) ? 0 : originalSentence.hashCode());
+		result = prime * result + originalSentencesWordNumber;
+		result = prime * result + ((words == null) ? 0 : words.hashCode());
+		return result;
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sentence other = (Sentence) obj;
+		if (originalSentence == null) {
+			if (other.originalSentence != null)
+				return false;
+		} else if (!originalSentence.equals(other.originalSentence))
+			return false;
+		if (originalSentencesWordNumber != other.originalSentencesWordNumber)
+			return false;
+		if (words == null) {
+			if (other.words != null)
+				return false;
+		} else if (!words.equals(other.words))
+			return false;
+		return true;
+	}
 	
 
 }
