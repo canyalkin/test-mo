@@ -43,7 +43,8 @@ public class TextRankStrategy extends AbstractSummarizer {
 		super.doSummary(aDocument);
 		edgeWeights=new HashMap<Integer, Number>();
 		UndirectedSparseGraph<Integer, Integer> graph=new UndirectedSparseGraph<Integer, Integer>();
-		PageRankWithPriors<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph,MapTransformer.getInstance(edgeWeights), 0.85);
+		//PageRankWithPriors<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph,MapTransformer.getInstance(edgeWeights), 0.85);
+		
 
 		for(int i=0;i<aDocument.getSentenceList().size();i++)
 		{
@@ -62,8 +63,8 @@ public class TextRankStrategy extends AbstractSummarizer {
 				edgeCnt++;
 			}
 		}
-		
-		pageRank.setMaxIterations(3);
+		PageRank<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph, MapTransformer.getInstance(edgeWeights), 0.85);
+		pageRank.setMaxIterations(1);
 		pageRank.initialize();
 		pageRank.evaluate();
 		List<RankIndex> rankIndexList=new ArrayList<RankIndex>();
