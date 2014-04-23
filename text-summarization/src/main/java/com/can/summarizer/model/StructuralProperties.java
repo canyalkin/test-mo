@@ -14,7 +14,7 @@ public class StructuralProperties {
 	private HashMap<String, List<Double>> tfTable;
 	private HashMap<String, Double> isf;
 	private HashMap<String, Double> idfTable;
-	private HashMap<String, Double> idf;
+
 	private HashMap<String, Double> tfIdf;
 	private HashMap<String, Integer> numberOfSentenceContains;
 	private HashMap<String, Integer> containsWordsTogether;
@@ -29,11 +29,9 @@ public class StructuralProperties {
 		LOGGER.debug("TermFreq table created..."+tfTable);
 		isf = FrequencyCalculator.calculateInverseSentenceFreqTable(freqTable, document);
 		LOGGER.debug("isf..."+isf);
-		idfTable=FrequencyCalculator.calculateInverseSentenceFreqTable(freqTable, document);
+		idfTable=isf;
 		LOGGER.debug("InverseSentenceFreqTable created..."+idfTable);
-		idf=FrequencyCalculator.createIdfTable(freqTable);
-		LOGGER.debug("IDF created..."+idf);
-		tfIdf=FrequencyCalculator.createTfIdfTable(freqTable, idf);
+		tfIdf=FrequencyCalculator.createTfIdfTable(freqTable, isf);
 		LOGGER.debug("TF IDF created..."+tfIdf);
 		numberOfSentenceContains=FrequencyCalculator.calculateNumberOfSentenceContains(freqTable,document);
 		containsWordsTogether=FrequencyCalculator.getWordsTogetherMap(freqTable, document);
@@ -69,13 +67,7 @@ public class StructuralProperties {
 		return idfTable;
 	}
 
-	/**
-	 * @return the idf
-	 */
-	public HashMap<String, Double> getIdf() {
-		return idf;
-	}
-
+	
 	/**
 	 * @return the tfIdf
 	 */
@@ -101,7 +93,7 @@ public class StructuralProperties {
 		tfTable=null;
 		isf=null;
 		idfTable=null;
-		idf=null;
+		
 		tfIdf=null;
 		numberOfSentenceContains=null;
 		containsWordsTogether=null;
@@ -115,7 +107,7 @@ public class StructuralProperties {
 	public String toString() {
 		return "StructuralProperties [freqTable=" + freqTable + ", tfTable="
 				+ tfTable + ", isf=" + isf + ", idfTable=" + idfTable
-				+ ", idf=" + idf + ", tfIdf=" + tfIdf
+				+ ", tfIdf=" + tfIdf
 				+ ", numberOfSentenceContains=" + numberOfSentenceContains
 				+ ", containsWordsTogether=" + containsWordsTogether + "]";
 	}
