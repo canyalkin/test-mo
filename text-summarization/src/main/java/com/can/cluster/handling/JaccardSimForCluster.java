@@ -1,37 +1,26 @@
 package com.can.cluster.handling;
 
-import java.util.HashMap;
-
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.can.summarizer.interfaces.ICalculateSimilarity;
 import com.can.summarizer.model.Document;
-import com.can.summary.calculations.CosineSimilarity;
-import com.can.summary.calculations.FrequencyCalculator;
+import com.can.summary.calculations.JaccardSimilarity;
 
-@Component("CosSimilarity")
-public class CosSimilarityForCluster extends AbstractSimForCluster implements ICalculateSimilarity{
+@Component("JaccardSimCluster")
+public class JaccardSimForCluster extends AbstractSimForCluster implements ICalculateSimilarity {
 
-	private static final Logger LOGGER = Logger.getLogger(CosSimilarityForCluster.class);
-	
-	private HashMap<String, Integer> ft = null ;
-	private HashMap<String, Double> idf = null;
-	private HashMap<String, Double> tfIdf = null;
-	
-	
+	private static final Logger LOGGER = Logger.getLogger(JaccardSimForCluster.class);
 	
 	@Override
 	public double[][] calculateSimilarity(Document document) {
 		int numberOfSentence=document.getSentenceList().size();
 		double[][] simMatrix = createMatrix(numberOfSentence);
-		ft = FrequencyCalculator.createFrequencyTable(document);
-		idf = FrequencyCalculator.calculateInverseSentenceFreqTable(ft, document);
-		tfIdf = FrequencyCalculator.createTfIdfTable(ft, idf);
+		
 		for(int i = 0; i < numberOfSentence; i++){
 			for(int j = 0; j < numberOfSentence; j++){
 				if(i!=j){
-					double sim=CosineSimilarity.calculate(document.getSentenceList().get(i),document.getSentenceList().get(j),tfIdf);
+					double sim=JaccardSimilarity.calculate(document.getSentenceList().get(i),document.getSentenceList().get(j));
 					if(sim==0){
 						sim=Double.MAX_VALUE;
 					}else{//single link küçük deðerleri yakýn olarak hesaplar ama cosinus de büyük deðerler yakýn demektir.
@@ -44,5 +33,8 @@ public class CosSimilarityForCluster extends AbstractSimForCluster implements IC
 			LOGGER.trace("");
 		}
 		return simMatrix;
+		
 	}
+	
+	
 }

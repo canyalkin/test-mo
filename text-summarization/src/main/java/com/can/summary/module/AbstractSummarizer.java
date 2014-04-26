@@ -74,6 +74,7 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 				wordCount+=document.getSentenceList().get(i).getOriginalSentencesWordNumber();
 				i++;
 		}
+		LOGGER.info("selected senteces size:"+i);
 		summaryDocument.setSentenceList(sumSentence);
 		
 		return summaryDocument;

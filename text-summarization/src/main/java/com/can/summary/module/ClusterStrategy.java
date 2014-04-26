@@ -56,9 +56,11 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 		Dendrom dendrom=hac.createCluster();
 		LOGGER.debug(dendrom);
 		List<Cluster> clusterList = clusterChooseStrategy.chooseCluster(dendrom, getNumberOfSentences(),aDocument);
+		LOGGER.info("cluster List:"+clusterList);
 		LOGGER.info("cluster number:"+clusterList.size());
 		List<Integer> indexes = chooseSentenceStrategy.createSentence(clusterList,aDocument);
-		return createSummaryDocument(getDocumentToBeSummarized(), indexes);
+		LOGGER.info("final indexes:"+indexes);
+		return finalizeSummaryWithPropertyWordNumber(super.createSummaryDocument(getDocumentToBeSummarized(), indexes));
 	}
 
 	private double[][] createSentenceSimilarityMatrix() {
