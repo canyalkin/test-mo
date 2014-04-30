@@ -60,7 +60,7 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 		LOGGER.info("cluster number:"+clusterList.size());
 		List<Integer> indexes = chooseSentenceStrategy.createSentence(clusterList,aDocument);
 		LOGGER.info("final indexes:"+indexes);
-		return finalizeSummaryWithPropertyWordNumber(super.createSummaryDocument(getDocumentToBeSummarized(), indexes));
+		return finalizeSummary(super.createSummaryDocument(getDocumentToBeSummarized(), indexes));
 	}
 
 	private double[][] createSentenceSimilarityMatrix() {

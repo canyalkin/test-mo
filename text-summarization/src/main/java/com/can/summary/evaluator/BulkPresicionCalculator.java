@@ -32,6 +32,9 @@ public class BulkPresicionCalculator {
 			double recall = presicionRecallCalculator.getRecall();
 			double f1 = presicionRecallCalculator.getF1();
 			presicionRecallData=new PresicionRecallData(presicion, recall, f1);
+			presicionRecallData.setSentenceF1(presicionRecallCalculator.getSentenceF1());
+			presicionRecallData.setSentencePrecision(presicionRecallCalculator.getSentencePrecision());
+			presicionRecallData.setSentenceRecall(presicionRecallCalculator.getSentenceRecall());
 			presicionMap.put(key, presicionRecallData);		
 		}
 		return presicionMap;

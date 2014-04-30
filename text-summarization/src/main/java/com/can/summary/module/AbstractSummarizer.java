@@ -63,6 +63,33 @@ public abstract class AbstractSummarizer implements SummaryStrategy {
 		return summaryDocument;
 	}
 	
+	public Document finalizeSummary(Document document){
+		Document summaryDocument=new Document(false);
+		
+		if(propertyHandler.getMaxWordNumber()>0){
+			return finalizeSummaryWithPropertyWordNumber(document);
+		}else if(propertyHandler.getSummaryProportion()<1 && propertyHandler.getSummaryProportion()>0){
+			return finalizeSummaryWithProportion(document);
+		}
+		
+		return summaryDocument;
+	}
+	
+	private Document finalizeSummaryWithProportion(Document document) {
+		Document summaryDocument=new Document(false);
+		summaryDocument.setTitle(document.getTitle());
+		List<Sentence> sumSentence=new ArrayList<Sentence>(30);
+		int i=0;
+		while ( i<document.getSentenceList().size() && i<getDesiredNumberOfSentenceInSum()) {
+				sumSentence.add(document.getSentenceList().get(i));
+				i++;
+		}
+		LOGGER.info("selected senteces size:"+i);
+		summaryDocument.setSentenceList(sumSentence);
+		
+		return summaryDocument;
+	}
+
 	public Document finalizeSummaryWithPropertyWordNumber(Document document){
 		Document summaryDocument=new Document(false);
 		summaryDocument.setTitle(document.getTitle());

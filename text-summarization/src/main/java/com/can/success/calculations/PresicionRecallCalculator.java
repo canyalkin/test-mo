@@ -1,12 +1,14 @@
 package com.can.success.calculations;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import com.can.document.handler.module.BulkDocumentHandler;
 import com.can.summarizer.model.Document;
+import com.can.summarizer.model.Sentence;
 import com.can.summary.calculations.FrequencyCalculator;
 
 public class PresicionRecallCalculator {
@@ -18,8 +20,49 @@ public class PresicionRecallCalculator {
 	private double recall;
 	private double f1;
 	
+	private double sentencePrecision;
+	private double sentenceRecall;
+	private double sentenceF1;
 	
 	public void doCalulations(){
+		calculateWrtWords();
+		calculateWrtSentence();
+		
+	}
+	
+	private void calculateWrtSentence() {
+		int intersection=calculateSentenceIntersection();
+		
+		sentencePrecision=intersection/(double)sysDocument.getSentenceList().size();
+		sentenceRecall=intersection/(double)refDocument.getSentenceList().size();
+		sentenceF1=2*(sentencePrecision*sentenceRecall)/(sentencePrecision+sentenceRecall);
+		
+		if(Double.isNaN(sentencePrecision)||Double.isNaN(sentenceRecall)||Double.isNaN(sentenceF1)){
+			LOGGER.error("sentencePrecision:"+sentencePrecision);
+			LOGGER.error("sentenceRecall:"+sentenceRecall);
+			LOGGER.error("sentenceF1:"+sentenceF1);
+			LOGGER.error("intersection:"+intersection);
+			sentenceF1=0.0;
+		}
+		
+	}
+
+	private int calculateSentenceIntersection() {
+		List<Sentence> refSentenceList = refDocument.getSentenceList();
+		List<Sentence> sysSentenceList = sysDocument.getSentenceList();
+		int intersection=0;
+		for (Sentence curSysSentence : sysSentenceList) {
+			for (Sentence curRefSentence : refSentenceList) {
+				if(curRefSentence.getOriginalSentence().equalsIgnoreCase(curSysSentence.getOriginalSentence())){
+					intersection++;
+				}
+			}
+		}
+		
+		return intersection;
+	}
+
+	private void calculateWrtWords() {
 		HashMap<String, Integer> systemFreqTable = FrequencyCalculator.createFrequencyTable(sysDocument);
 		HashMap<String, Integer> refFrequencyTable = FrequencyCalculator.createFrequencyTable(refDocument);
 		
@@ -40,7 +83,6 @@ public class PresicionRecallCalculator {
 			LOGGER.error("wordsInRef:"+wordsInRef);
 			f1=0.0;
 		}
-		
 	}
 	
 	public double getPresicion(){
@@ -79,6 +121,30 @@ public class PresicionRecallCalculator {
 	public void setSysDocument(Document sysDocument) {
 		this.sysDocument = sysDocument;
 	}
+	
+	/**
+	 * @return the sentencePrecision
+	 */
+	public double getSentencePrecision() {
+		return sentencePrecision;
+	}
+
+	/**
+	 * @return the sentenceRecall
+	 */
+	public double getSentenceRecall() {
+		return sentenceRecall;
+	}
+
+	/**
+	 * @return the sentenceF1
+	 */
+	public double getSentenceF1() {
+		return sentenceF1;
+	}
+
+	
+
 	
 	
 

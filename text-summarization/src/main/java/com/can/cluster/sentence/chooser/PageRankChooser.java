@@ -1,6 +1,7 @@
 package com.can.cluster.sentence.chooser;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +28,9 @@ public class PageRankChooser implements ClusterChooseSentenceStrategy {
 	public List<Integer> createSentence(List<Cluster> clusterList,
 			Document document) {
 		
+		Collections.sort(clusterList, new ClusterComparator());
+		//Collections.reverseOrder(new ClusterComparator());
+		LOGGER.info("cluster List after sorting :"+clusterList);
 		List<Integer> index=new ArrayList<Integer>();
 		
 		List<List<Integer>> indexesFromCluster=new ArrayList<List<Integer>>();
@@ -40,22 +44,14 @@ public class PageRankChooser implements ClusterChooseSentenceStrategy {
 		}
 		
 		int baseIndex=0;
-		//TreeSet<IndexWordNumber> indexTree=new TreeSet<PageRankChooser.IndexWordNumber>(new IndexWordNumberComparator());
 		for(int size=0;size<maxSize;size++){
-			//indexTree.clear();
 			for(int i=0;i<indexesFromCluster.size();i++){
 				if(indexesFromCluster.get(i).size() > baseIndex){
 					int sentenceIndex=indexesFromCluster.get(i).get(baseIndex);
-					//indexTree.add(new IndexWordNumber(sentenceIndex,document.getSentenceList().get(sentenceIndex).getWords().size()));
 					index.add(sentenceIndex);
 				}
 			}
 			baseIndex++;
-			//Iterator<IndexWordNumber> descendingIt = indexTree.descendingIterator();
-			/*while(descendingIt.hasNext()){
-				IndexWordNumber item = descendingIt.next();
-				index.add(item.index);
-			}*/
 		}
 		
 		return index;

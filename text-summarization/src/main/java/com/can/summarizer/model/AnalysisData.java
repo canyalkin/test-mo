@@ -11,6 +11,11 @@ public class AnalysisData {
 	private double presicion=0;
 	private double recall=0;
 	private double f1=0;
+	private double sentencePrecision=0;
+	private double sentenceRecall=0;
+	private double sentenceF1=0;
+	private int refSentenceNumber=0;
+	private int sumSentenceNumber=0;
 	
 	public AnalysisData(String name) {
 		this.name=name;
@@ -100,6 +105,76 @@ public class AnalysisData {
 	 */
 	public void setF1(double f1) {
 		this.f1 = f1;
+	}
+
+	/**
+	 * @return the sentencePrecision
+	 */
+	public double getSentencePrecision() {
+		return sentencePrecision;
+	}
+
+	/**
+	 * @param sentencePrecision the sentencePrecision to set
+	 */
+	public void setSentencePrecision(double sentencePrecision) {
+		this.sentencePrecision = sentencePrecision;
+	}
+
+	/**
+	 * @return the sentenceRecall
+	 */
+	public double getSentenceRecall() {
+		return sentenceRecall;
+	}
+
+	/**
+	 * @param sentenceRecall the sentenceRecall to set
+	 */
+	public void setSentenceRecall(double sentenceRecall) {
+		this.sentenceRecall = sentenceRecall;
+	}
+
+	/**
+	 * @return the sentenceF1
+	 */
+	public double getSentenceF1() {
+		return sentenceF1;
+	}
+
+	/**
+	 * @param sentenceF1 the sentenceF1 to set
+	 */
+	public void setSentenceF1(double sentenceF1) {
+		this.sentenceF1 = sentenceF1;
+	}
+
+	/**
+	 * @return the refSentenceNumber
+	 */
+	public int getRefSentenceNumber() {
+		return refSentenceNumber;
+	}
+
+	/**
+	 * @param refSentenceNumber the refSentenceNumber to set
+	 */
+	public void setRefSentenceNumber(int refSentenceNumber) {
+		this.refSentenceNumber = refSentenceNumber;
+	}
+
+	/**
+	 * @return the sumSentenceNumber
+	 */
+	public int getSumSentenceNumber() {
+		return sumSentenceNumber;
+	}
+
+	/**
+	 * @param sumSentenceNumber the sumSentenceNumber to set
+	 */
+	public void setSumSentenceNumber(int sumSentenceNumber) {
+		this.sumSentenceNumber = sumSentenceNumber;
 	}
 	
 

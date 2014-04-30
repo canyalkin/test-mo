@@ -181,6 +181,11 @@ public class BulkDocumentHandler implements Visitable{
 				curValue.setPresicion(curValue.getPresicion()+presicionResults.get(curFile).getPresicion());
 				curValue.setRecall(curValue.getRecall()+presicionResults.get(curFile).getRecall());
 				curValue.setF1(curValue.getF1()+presicionResults.get(curFile).getF1());
+				curValue.setSentencePrecision(curValue.getPresicion()+presicionResults.get(curFile).getSentencePrecision());
+				curValue.setSentenceRecall(curValue.getRecall()+presicionResults.get(curFile).getSentenceRecall());
+				curValue.setSentenceF1(curValue.getF1()+presicionResults.get(curFile).getSentenceF1());
+				curValue.setRefSentenceNumber(curValue.getRefSentenceNumber()+referenceDocuments.get(curFile).getSentenceList().size());
+				curValue.setSumSentenceNumber(curValue.getSumSentenceNumber()+summaryDocuments.get(curFile).getSentenceList().size());
 				bulkDataAnalysis.put(curFile, curValue);
 			}else{
 				AnalysisData analysisData=new AnalysisData(curFile);
@@ -194,6 +199,11 @@ public class BulkDocumentHandler implements Visitable{
 				analysisData.setPresicion(presicionResults.get(curFile).getPresicion());
 				analysisData.setRecall(presicionResults.get(curFile).getRecall());
 				analysisData.setF1(presicionResults.get(curFile).getF1());
+				analysisData.setSentencePrecision(presicionResults.get(curFile).getSentencePrecision());
+				analysisData.setSentenceRecall(presicionResults.get(curFile).getSentenceRecall());
+				analysisData.setSentenceF1(presicionResults.get(curFile).getSentenceF1());
+				analysisData.setRefSentenceNumber(referenceDocuments.get(curFile).getSentenceList().size());
+				analysisData.setSumSentenceNumber(summaryDocuments.get(curFile).getSentenceList().size());
 				bulkDataAnalysis.put(curFile, analysisData);
 			}
 		}

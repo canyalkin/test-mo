@@ -8,7 +8,7 @@ import com.can.summarizer.model.Document;
 import com.can.summary.calculations.NormalisedGoogleDistance;
 
 @Component("NGD")
-public class NGDSimilarityForCluster implements ICalculateSimilarity{
+public class NGDSimilarityForCluster extends AbstractSimForCluster implements ICalculateSimilarity{
 
 	private static final Logger LOGGER = Logger.getLogger(NGDSimilarityForCluster.class);
 	@Override
@@ -36,15 +36,6 @@ public class NGDSimilarityForCluster implements ICalculateSimilarity{
 		return simMatrix;
 		
 	}
-	private double[][] createMatrix(int numberOfSentence) {
-		double [][]simMatrix=new double[numberOfSentence][];
-		for(int i=0;i<numberOfSentence;i++){
-			simMatrix[i]=new double[numberOfSentence];
-			for(int j=0;j<numberOfSentence;j++){
-				simMatrix[i][j]=0.0;
-			}
-		}
-		return simMatrix;
-	}
+
 
 }

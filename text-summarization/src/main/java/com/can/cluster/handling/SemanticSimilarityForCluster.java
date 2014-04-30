@@ -13,7 +13,7 @@ import com.can.summary.calculations.FrequencyCalculator;
 import com.can.summary.calculations.SemanticSimilarity;
 
 @Component("SemanticSimilarity")
-public class SemanticSimilarityForCluster implements ICalculateSimilarity {
+public class SemanticSimilarityForCluster extends AbstractSimForCluster implements ICalculateSimilarity {
 
 	private static final Logger LOGGER = Logger.getLogger(SemanticSimilarityForCluster.class);
 	
@@ -50,19 +50,5 @@ public class SemanticSimilarityForCluster implements ICalculateSimilarity {
 		
 		return simMatrix;
 	}
-
-	
-	private double[][] createMatrix(int numberOfSentence) {
-		double [][]simMatrix=new double[numberOfSentence][];
-		for(int i=0;i<numberOfSentence;i++){
-			simMatrix[i]=new double[numberOfSentence];
-			for(int j=0;j<numberOfSentence;j++){
-				simMatrix[i][j]=0.0;
-			}
-		}
-		return simMatrix;
-	}
-	
-	
 
 }

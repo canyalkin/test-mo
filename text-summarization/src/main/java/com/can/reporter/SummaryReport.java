@@ -75,7 +75,7 @@ public class SummaryReport implements IVisitor {
 		stringBuffer.append("Cluster Numebr:"+(bulkDocumentHandler.getClusterNumber())+"\n");
 		Map<String, AnalysisData> analysisData = bulkDocumentHandler.getBulkDataAnalysis();
 		Set<String> keySet = analysisData.keySet();
-		stringBuffer.append("file:rouge-n:# of words in original doc:# of words in reference doc:# of words in summary doc:fitness value:presicion:recall:f1"+"\n");
+		stringBuffer.append("file:rouge-n:# of words in original doc:# of words in reference doc:# of words in summary doc:fitness value:presicion:recall:f1:sentence_presicion:sentence_recall:sentence_f1:ref_sentence_num:sum_sentence_num"+"\n");
 		double total=0.0;
 		for (String key : keySet) {
 			AnalysisData curData = analysisData.get(key);
@@ -88,7 +88,14 @@ public class SummaryReport implements IVisitor {
 					+formatter.format(curData.getFitnessValue()/bulkDocumentHandler.getRun())+":"
 					+formatter.format(curData.getPresicion()/bulkDocumentHandler.getRun())+":"
 					+formatter.format(curData.getRecall()/bulkDocumentHandler.getRun())+":"
-					+formatter.format(curData.getF1()/bulkDocumentHandler.getRun())+"\n");
+					+formatter.format(curData.getF1()/bulkDocumentHandler.getRun())+":"
+					+formatter.format(curData.getSentencePrecision()/bulkDocumentHandler.getRun())+":"
+					+formatter.format(curData.getSentenceRecall()/bulkDocumentHandler.getRun())+":"
+					+formatter.format(curData.getSentenceF1()/bulkDocumentHandler.getRun())+":"
+					+formatter.format(curData.getRefSentenceNumber()/bulkDocumentHandler.getRun())+":"
+					+formatter.format(curData.getSumSentenceNumber()/bulkDocumentHandler.getRun())
+					+"\n");
+			
 					total+=curData.getRougeNValue();
 			
 		}
