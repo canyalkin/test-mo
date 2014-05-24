@@ -92,24 +92,16 @@ public class PageRankChooser implements ClusterChooseSentenceStrategy {
 		pageRank.initialize();
 		pageRank.evaluate();
 		
-		//List<RankIndex> rankIndexList=new ArrayList<RankIndex>();
 		TreeSet<RankIndex> treeRankIndex=new TreeSet<RankIndex>(new RankIndexComparator());
 		for(int i=0;i<cluster.clusterSize();i++)
 		{
-			//rankIndexList.add(new RankIndex(cluster.getItem(i), pageRank.getVertexScore(i)));
 			treeRankIndex.add(new RankIndex(cluster.getItem(i), pageRank.getVertexScore(i)));
 		}
-		//Collections.sort(rankIndexList);
-		//Collections.reverse(rankIndexList);
 		Iterator<RankIndex> it = treeRankIndex.descendingIterator();
 		while(it.hasNext()){
 			RankIndex item = it.next();
 			index.add(item.index);
 		}
-		/*for(int i=0;i<rankIndexList.size();i++){
-			index.add(rankIndexList.get(i).index);
-		}*/
-		
 		return index;
 	}
 	

@@ -1,6 +1,7 @@
 package com.can.success.calculations;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,6 +51,15 @@ public class PresicionRecallCalculator {
 	private int calculateSentenceIntersection() {
 		List<Sentence> refSentenceList = refDocument.getSentenceList();
 		List<Sentence> sysSentenceList = sysDocument.getSentenceList();
+		
+		Set<Sentence> s1=new HashSet<Sentence>(refSentenceList);
+		
+		Set<Sentence> s2=new HashSet<Sentence>(sysSentenceList);
+		
+		
+		s1.retainAll(s2);
+		
+		
 		int intersection=0;
 		for (Sentence curSysSentence : sysSentenceList) {
 			for (Sentence curRefSentence : refSentenceList) {
@@ -58,7 +68,12 @@ public class PresicionRecallCalculator {
 				}
 			}
 		}
-		
+		if(s1.size()!=intersection){
+			LOGGER.info("refSentenceList.size:"+refSentenceList.size()+" set1.size:"+s1.size());
+			LOGGER.info("sysSentenceList.size:"+sysSentenceList.size()+" set2.size:"+s2.size());
+			LOGGER.info("intersection size1:"+s1.size());
+			LOGGER.info("my intersection size:"+intersection);
+		}
 		return intersection;
 	}
 
