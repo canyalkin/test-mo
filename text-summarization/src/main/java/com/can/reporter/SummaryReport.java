@@ -11,6 +11,7 @@ import com.can.document.handler.module.SingleDocumentHandler;
 import com.can.summarizer.interfaces.IVisitor;
 import com.can.summarizer.model.AnalysisData;
 import com.can.summary.module.ClusterStrategy;
+import com.can.summary.module.ClusterStrategyNew;
 import com.can.summary.module.GASummaryStrategyImpl;
 import com.can.word.utils.SummaryUtils;
 
@@ -112,6 +113,14 @@ public class SummaryReport implements IVisitor {
 	
 	public String createReport(){
 		return stringBuffer.toString();
+	}
+
+
+
+	@Override
+	public void visit(ClusterStrategyNew clusterStrategyNew) {
+		// TODO Auto-generated method stub
+		
 	}
 
 

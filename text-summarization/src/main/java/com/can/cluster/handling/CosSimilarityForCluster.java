@@ -32,10 +32,12 @@ public class CosSimilarityForCluster extends AbstractSimForCluster implements IC
 			for(int j = 0; j < numberOfSentence; j++){
 				if(i!=j){
 					double sim=CosineSimilarity.calculate(document.getSentenceList().get(i),document.getSentenceList().get(j),tfIdf);
+					LOGGER.debug("cluster cos sim:"+sim);
 					if(sim==0){
 						sim=Double.MAX_VALUE;
 					}else{//single link küçük deðerleri yakýn olarak hesaplar ama cosinus de büyük deðerler yakýn demektir.
 						sim=1/sim;
+						//sim=1-sim;
 					}
 					simMatrix[i][j]=sim;
 				}

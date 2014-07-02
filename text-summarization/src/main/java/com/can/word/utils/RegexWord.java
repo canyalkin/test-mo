@@ -13,6 +13,8 @@ public class RegexWord {
 		//"([a-zA-Z0-9]\\.[a-zA-Z0-9]\\.|[a-zA-Z0-9].*[a-zA-Z0-9]|[a-zA-Z0-9])"
 		// \\w _ karakterini de içeriyor
 		Pattern p = Pattern.compile( "([a-zA-Z0-9]\\.[a-zA-Z0-9]\\.|[a-zA-Z0-9].*[a-zA-Z0-9]|[a-zA-Z0-9])" );
+		//Pattern p = Pattern.compile( "(\\w+)" );
+		//\b([^A-Za-z]|A-Za-z[^A-Za-z]+)(text)([^A-Za-z]|[^A-Za-z]+A-Za-z)\b
 		LOGGER.trace("initial curWord:>"+curWord+"<");
 		Matcher matcher = p.matcher(curWord);
 		if(matcher.find()){

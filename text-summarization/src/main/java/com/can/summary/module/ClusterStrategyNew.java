@@ -22,13 +22,13 @@ import com.clustering.HAC.Dendrom;
 import com.clustering.HAC.HAC;
 import com.clustering.HAC.SingleLink;
 
-@Component("ClusterStrategyBean")
+@Component("ClusterStrategyNewBean")
 @Scope("singleton")
-public class ClusterStrategy extends AbstractSummarizer implements Visitable {
+public class ClusterStrategyNew  extends AbstractSummarizer implements Visitable{
 
 	private static final Logger LOGGER = Logger.getLogger(ClusterStrategy.class);
 	
-	public ClusterStrategy() {
+	public ClusterStrategyNew() {
 	}
 	
 	@Autowired
@@ -53,15 +53,33 @@ public class ClusterStrategy extends AbstractSummarizer implements Visitable {
 		LOGGER.debug("abstract summary finished...");
 		double [][]simMatrix=createSentenceSimilarityMatrix();
 		LOGGER.debug("Similarity Matrix created");
-		HAC hac=new HAC(getNumberOfSentences(), simMatrix, new SingleLink());
+		HAC hac=new HAC(getNumberOfSentences(), simMatrix, new CompleteLink());
 		Dendrom dendrom=hac.createCluster();
 		LOGGER.debug(dendrom);
-		List<Cluster> clusterList = clusterChooseStrategy.chooseCluster(dendrom, getNumberOfSentences(),aDocument);
-		LOGGER.info("cluster number:"+clusterList.size());
-		LOGGER.info("cluster List:"+clusterList);
-		List<Integer> indexes = chooseSentenceStrategy.createSentence(clusterList,aDocument);
+		int curClusterNumber=2;
+		int wordNumber=0;
+		List<Cluster> clusterList;
+		List<Integer> indexes = null ;
+		while(wordNumber<propertyHandler.getMaxWordNumber()){
+			LOGGER.info("current Cluster number:"+curClusterNumber);
+			clusterList=dendrom.getClusterAccordingToClusterNumber(curClusterNumber);
+			//LOGGER.info("cluster List:"+clusterList);
+			LOGGER.info("cluster number:"+clusterList.size());
+			indexes = chooseSentenceStrategy.createSentence(clusterList,aDocument);
+			wordNumber=calculateWordNumber(indexes,aDocument);
+			curClusterNumber++;
+		}
+		
 		LOGGER.info("final indexes:"+indexes);
 		return finalizeSummary(super.createSummaryDocument(getDocumentToBeSummarized(), indexes));
+	}
+
+	private int calculateWordNumber(List<Integer> indexes, Document aDocument) {
+		int wordCount=0;
+		for (Integer integer : indexes) {
+			wordCount+=aDocument.getSentenceList().get(integer).getOriginalSentencesWordNumber();
+		}
+		return wordCount;
 	}
 
 	private double[][] createSentenceSimilarityMatrix() {

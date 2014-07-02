@@ -14,7 +14,9 @@ public class RegexTest extends TestCase {
 	protected void setUp() throws Exception {
 		// TODO Auto-generated method stub
 		//"([\\w]\\.[\\w]\\.|[\\w].*[\\w]|[\\w])"
-		p = Pattern.compile( "([a-zA-Z0-9]\\.[a-zA-Z0-9]\\.|[a-zA-Z0-9].*[a-zA-Z0-9]|[a-zA-Z0-9])" );
+		//p = Pattern.compile( "([a-zA-Z0-9]\\.[a-zA-Z0-9]\\.|[a-zA-Z0-9].*[a-zA-Z0-9]|[a-zA-Z0-9])" );
+		//p=Pattern.compile( "(\\w*?.*\\w)" );
+		p=Pattern.compile( "(\\w+)" );
 		super.setUp();
 	}
 	

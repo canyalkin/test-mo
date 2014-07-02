@@ -68,6 +68,7 @@ public class TextRankStrategy extends AbstractSummarizer {
 		List<RankIndex> indexToBeSorted=new ArrayList<TextRankStrategy.RankIndex>();
 		for(int i=0;i<aDocument.getSentenceList().size();i++)
 		{
+			//LOGGER.info("vertex score:"+pageRank.getVertexScore(i));
 			if(!Double.isInfinite(pageRank.getVertexScore(i))){
 				boolean inserted=indexToBeSorted.add(new RankIndex(i, pageRank.getVertexScore(i)));
 				if(!inserted){
@@ -154,6 +155,43 @@ public class TextRankStrategy extends AbstractSummarizer {
 		}
 
 		
+		
+	}
+	
+	public static void main(String[] args){
+		
+		HashMap<Integer,Number> edgeWeights=new HashMap<Integer, Number>();
+		UndirectedSparseGraph<Integer, Integer> graph=new UndirectedSparseGraph<Integer, Integer>();
+		List<Integer> myList=new ArrayList<Integer>();
+		myList.add(1);
+		myList.add(2);
+		myList.add(3);
+		myList.add(4);
+		for(int i=0;i<myList.size();i++)
+		{
+			boolean added=graph.addVertex(new Integer(i));
+			if(!added){
+				LOGGER.error("vertex "+(i)+" cannot be added");
+			}
+		}
+		int edgeCnt=0;
+		double w=123.01;
+		for(int i=0;i<myList.size();i++){
+			for(int j=i+1;j<myList.size();j++){
+				boolean added=graph.addEdge(edgeCnt,i,j);
+				edgeWeights.put(edgeCnt,w);
+				w=w+0.04;
+				edgeCnt++;
+			}
+		}
+		PageRank<Integer, Integer> pageRank=new PageRank<Integer, Integer>(graph, MapTransformer.getInstance(edgeWeights), 0.99);
+		pageRank.setMaxIterations(10);
+		pageRank.initialize();
+		pageRank.evaluate();
+		for(int i=0;i<myList.size();i++)
+		{
+			System.out.println("score:"+pageRank.getVertexScore(i));
+		}
 		
 	}
 }

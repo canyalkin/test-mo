@@ -18,12 +18,14 @@ import org.springframework.core.env.Environment;
 
 import com.can.analysis.AnalysisHandler;
 import com.can.analysis.AnalysisProperty;
+import com.can.cluster.chooser.AliguliyevChooser;
 import com.can.cluster.chooser.MaxDiffStrategy;
 import com.can.cluster.chooser.ProportionalClusterChooser;
 import com.can.cluster.chooser.SimpleClusterChooseStrategy;
 import com.can.cluster.handling.CosSimilarityForCluster;
 import com.can.cluster.sentence.chooser.MaxUniqueWordChooser;
 import com.can.cluster.sentence.chooser.PageRankChooser;
+import com.can.cluster.sentence.chooser.PageRankChooserNew;
 import com.can.cluster.sentence.chooser.SimpleSentenceChooser;
 import com.can.document.handler.module.CueWordHandler;
 import com.can.document.handler.module.StopWordHandler;
@@ -129,6 +131,9 @@ public class ApplicationConfiguration {
 		}else if(propList.equals("proportional")){
 			return new ProportionalClusterChooser();
 			
+		}else if(propList.equals("aliguliyev")){
+			return new AliguliyevChooser();
+			
 		}else{
 		
 			return new SimpleClusterChooseStrategy();
@@ -144,7 +149,10 @@ public class ApplicationConfiguration {
 			return new MaxUniqueWordChooser();
 		}else if ( propList.equals("PageRankChooser")){
 			return new PageRankChooser();
-		}else{
+		}else if ( propList.equals("PageRankChooserNew")){
+			return new PageRankChooserNew();
+		}
+		else{
 			return new SimpleSentenceChooser();
 		}
 		
